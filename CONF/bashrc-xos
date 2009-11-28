@@ -1,2 +1,2 @@
 # are we an interactive shell?
-    PS1="[\u@\h xos0 \W]\\$ "
+    PS1="[\u@\h $XOSHOST \W]\\$ "
