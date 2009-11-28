@@ -1,2 +1,0 @@
-# are we an interactive shell?
-    PS1="[\u@\h $XOSHOST \W]\\$ "

@@ -126,7 +126,7 @@ for n in alias:
 
 for n in alias:
   cmd = """
-     ssh root@__HOST__ hostname __ALIAS__
+     ssh root@__HOST__ hostname __HOST__
      scp OUT/hosts root@__HOST__:/etc/hosts
      scp OUT/hosts root@__HOST__:/etc/xos/xosautoconfig/etc/hosts
      scp OUT/__HOST__/* root@__HOST__:/etc/xos/xosautoconfig/
@@ -136,6 +136,11 @@ for n in alias:
      ssh root@__HOST__ 'urpmi git-core'
      ssh root@__HOST__ 'git clone ssh://skortas@paramount/home/orsay/skortas/XOSI'
      ssh root@__HOST__ 'git clone ssh://skortas@paramount/home/orsay/skortas/XOST'
+     ssh root@__HOST__ 'ln -s XOSI/CONF/emacs.g5j .emacs'
+     ssh root@__HOST__ 'ln -s XOSI/CONF/bashrc-xos .bashrc-xos'
+     ssh root@__HOST__ 'XOSHOST=__ALIAS__ >> .bashrc'
+     ssh root@__HOST__ 'echo ". .bashrc-xos" >> .bashrc'
+     
      """
   cmd = str.replace(cmd,"__HOST__",n)
   cmd = str.replace(cmd,"__ALIAS__",alias[n])
