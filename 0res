@@ -1,11 +1,15 @@
- urpmi task-xtreemos-coreservice
+
+ urpmi task-xtreemos-resource
  urpmi --auto-update
- urpmi rootca-config
- create-rootca /opt/xtreemosca
- urpmi create-csr
- 
-   chmod +x make_cert 
-   ./make_cert cda cda
-   ./make_cert vops vops
-   ./make_cert mrc mrc
-   ./make_cert dir dir
+
+ scp root@xos0:/etc/xos/truststore/certs/*.crt /etc/xos/truststore/certs/
+ chmod a+r /etc/xos/truststore/certs/*.crt 
+ c_rehash /etc/xos/truststore/certs/ 
+
+ cd /etc/xos/xosautoconfig
+ xosautoconfig
+ rca_list_pending
+ rca_apply
+ rca_confirm
+ rca_list_registered
+ finishConfig
