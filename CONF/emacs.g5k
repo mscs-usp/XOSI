@@ -420,3 +420,4 @@
 " (quote other-window))
 
 (global-set-key "" (quote run-line-in-other-window))
+(global-set-key "" (quote undo))
