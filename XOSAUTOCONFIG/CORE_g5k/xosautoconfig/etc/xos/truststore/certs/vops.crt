@@ -1,0 +1,77 @@
+Certificate:
+    Data:
+        Version: 3 (0x2)
+        Serial Number: 6 (0x6)
+        Signature Algorithm: sha1WithRSAEncryption
+        Issuer: CN=XtreemOS CA, O=XtreemOS Project, OU=XtreemOS Project Root Certification Authority at INRIA
+        Validity
+            Not Before: Jul 28 14:06:37 2009 GMT
+            Not After : Jul 28 14:06:37 2010 GMT
+        Subject: O=INRIA, OU=vops, CN=paraxos1.irisa.fr/vops
+        Subject Public Key Info:
+            Public Key Algorithm: rsaEncryption
+            RSA Public Key: (1024 bit)
+                Modulus (1024 bit):
+                    00:cf:4c:11:36:c2:68:dc:87:14:e9:65:60:01:a6:
+                    78:de:4a:98:85:89:b8:c8:bb:2f:1d:fc:cf:1b:a2:
+                    7f:54:57:c1:5e:00:2e:ad:07:19:f7:2c:fd:39:ca:
+                    e1:4e:f8:fa:40:72:5c:5b:c5:de:cf:75:6e:85:2f:
+                    d4:13:c2:bb:9e:40:9b:91:05:c2:c9:33:f2:0e:44:
+                    e4:4a:a1:c0:1f:ec:e5:03:4a:52:93:7d:c2:c6:ef:
+                    12:57:9f:1b:dc:66:f5:44:eb:44:aa:46:a3:3a:56:
+                    aa:b1:c5:8d:33:f9:9a:1b:65:89:50:95:41:da:f8:
+                    7b:49:ff:e5:80:6d:a6:c4:8b
+                Exponent: 65537 (0x10001)
+        X509v3 extensions:
+            Netscape Comment: 
+                XtreemOS Certificate
+            X509v3 Subject Key Identifier: 
+                BC:8F:ED:54:F7:51:90:2F:68:27:1E:64:34:78:07:7C:90:A4:03:94
+            X509v3 Authority Key Identifier: 
+                DirName:/CN=XtreemOS CA/O=XtreemOS Project/OU=XtreemOS Project Root Certification Authority at INRIA
+                serial:AB:E7:AF:1F:79:33:63:81
+
+            X509v3 Basic Constraints: 
+                CA:FALSE
+            X509v3 Subject Alternative Name: 
+                DNS:paraxos1.irisa.fr
+            X509v3 Key Usage: 
+                Digital Signature, Key Encipherment
+    Signature Algorithm: sha1WithRSAEncryption
+        b8:cb:3e:c4:e3:3d:ad:1a:5d:c2:09:ea:5b:5b:55:83:5c:30:
+        17:53:c4:64:10:93:e8:bd:2b:e4:77:80:46:c6:b1:40:9d:bb:
+        7c:ab:86:62:20:7c:34:94:d9:f9:33:d3:8b:cf:b0:4a:86:4d:
+        e9:04:45:00:fd:f3:bf:ee:78:f2:52:8e:ed:cf:b0:ea:2b:2e:
+        fa:0f:54:82:88:5d:8b:71:4c:02:2e:0a:87:cb:25:76:29:43:
+        27:d6:1d:a4:18:63:88:36:5c:37:84:78:fc:d6:ef:a9:3d:80:
+        d5:47:bd:71:a5:81:ca:39:92:ae:63:8c:99:ca:4b:a4:a5:40:
+        23:2e:9e:54:8f:dc:ec:be:84:c0:85:ca:c8:2c:92:df:ac:6a:
+        87:b5:99:4d:56:7f:25:06:d9:f0:b1:62:e7:c7:5e:c4:21:22:
+        4a:17:ab:30:46:0d:0e:a1:9a:af:41:9c:68:54:aa:15:6f:2e:
+        2a:37:61:c4:82:1d:17:67:4a:76:e7:e0:ac:90:17:14:9f:57:
+        a9:ef:a2:bd:8d:7a:bd:4a:90:15:2a:88:25:a9:6f:c5:48:09:
+        c7:6f:fd:8a:e0:23:a2:ee:8f:69:41:21:90:49:16:29:0f:59:
+        63:00:af:d7:a5:46:09:5a:1a:77:95:4c:87:7b:8c:cb:03:cc:
+        26:5e:bd:f6
+-----BEGIN CERTIFICATE-----
+MIIDujCCAqKgAwIBAgIBBjANBgkqhkiG9w0BAQUFADByMRQwEgYDVQQDEwtYdHJl
+ZW1PUyBDQTEZMBcGA1UEChMQWHRyZWVtT1MgUHJvamVjdDE/MD0GA1UECxM2WHRy
+ZWVtT1MgUHJvamVjdCBSb290IENlcnRpZmljYXRpb24gQXV0aG9yaXR5IGF0IElO
+UklBMB4XDTA5MDcyODE0MDYzN1oXDTEwMDcyODE0MDYzN1owQDEOMAwGA1UEChMF
+SU5SSUExDTALBgNVBAsTBHZvcHMxHzAdBgNVBAMTFnBhcmF4b3MxLmlyaXNhLmZy
+L3ZvcHMwgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAM9METbCaNyHFOllYAGm
+eN5KmIWJuMi7Lx38zxuif1RXwV4ALq0HGfcs/TnK4U74+kByXFvF3s91boUv1BPC
+u55Am5EFwskz8g5E5EqhwB/s5QNKUpN9wsbvElefG9xm9UTrRKpGozpWqrHFjTP5
+mhtliVCVQdr4e0n/5YBtpsSLAgMBAAGjggEPMIIBCzAjBglghkgBhvhCAQ0EFhYU
+WHRyZWVtT1MgQ2VydGlmaWNhdGUwHQYDVR0OBBYEFLyP7VT3UZAvaCceZDR4B3yQ
+pAOUMIGOBgNVHSMEgYYwgYOhdqR0MHIxFDASBgNVBAMTC1h0cmVlbU9TIENBMRkw
+FwYDVQQKExBYdHJlZW1PUyBQcm9qZWN0MT8wPQYDVQQLEzZYdHJlZW1PUyBQcm9q
+ZWN0IFJvb3QgQ2VydGlmaWNhdGlvbiBBdXRob3JpdHkgYXQgSU5SSUGCCQCr568f
+eTNjgTAJBgNVHRMEAjAAMBwGA1UdEQQVMBOCEXBhcmF4b3MxLmlyaXNhLmZyMAsG
+A1UdDwQEAwIFoDANBgkqhkiG9w0BAQUFAAOCAQEAuMs+xOM9rRpdwgnqW1tVg1ww
+F1PEZBCT6L0r5HeARsaxQJ27fKuGYiB8NJTZ+TPTi8+wSoZN6QRFAP3zv+548lKO
+7c+w6isu+g9Ugohdi3FMAi4Kh8sldilDJ9YdpBhjiDZcN4R4/NbvqT2A1Ue9caWB
+yjmSrmOMmcpLpKVAIy6eVI/c7L6EwIXKyCyS36xqh7WZTVZ/JQbZ8LFi58dexCEi
+SherMEYNDqGar0GcaFSqFW8uKjdhxIIdF2dKdufgrJAXFJ9Xqe+ivY16vUqQFSqI
+JalvxUgJx2/9iuAjou6PaUEhkEkWKQ9ZYwCv16VGCVoad5VMh3uMywPMJl699g==
+-----END CERTIFICATE-----
