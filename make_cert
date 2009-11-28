@@ -4,12 +4,12 @@ process-csr /opt/xtreemosca host-$1.csr
 openssl x509 -text -in host-$1.crt -noout
 
 certdir=/etc/xos/truststore/certs
-cp host-cda.crt ${certdir}/$2.crt
+cp host-$1.crt ${certdir}/$2.crt
 chmod a+r ${certdir}/$2.crt
 chown cdauser.cdauser ${certdir}/$2.crt
 
 keydir=/etc/xos/truststore/private
-cp host-cda.key ${keydir}/$2.key
+cp host-$1.key ${keydir}/$2.key
 chmod a+r ${keydir}/$2.key
 chown cdauser.cdauser ${keydir}/$2.key
 
