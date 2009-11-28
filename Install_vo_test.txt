@@ -43,8 +43,13 @@ xos-policy-admin-chk -pem /root/.xos/truststore/certs/user.crt
 cp user.crt user.key /home/sk/
 chown sk.sk /home/sk/user*
 
+pam_app_conv -pem /root/.xos/truststore/certs/user.crt 
+
+
 # en sk sur la ressource
 # comme sk
+
+su - sk
 
 mkdir -p /home/sk/.xos/truststore/certs/
 mkdir -p /home/sk/.xos/truststore/private/
