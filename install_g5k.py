@@ -137,7 +137,7 @@ for n in alias:
      ssh root@__HOST__ 'urpmi emacs'
      ssh root@__HOST__ 'git clone ssh://skortas@paramount/home/orsay/skortas/XOSI'
      ssh root@__HOST__ 'git clone ssh://skortas@paramount/home/orsay/skortas/XOST'
-     ssh root@__HOST__ 'ln -s XOSI/CONF/emacs.g5j .emacs'
+     ssh root@__HOST__ 'ln -s XOSI/CONF/emacs.g5k .emacs'
      ssh root@__HOST__ 'ln -s XOSI/CONF/bashrc-xos .bashrc-xos'
      ssh root@__HOST__ 'echo "export XOSHOST=__ALIAS__" >> .bashrc'
      ssh root@__HOST__ 'echo ". .bashrc-xos" >> .bashrc'
