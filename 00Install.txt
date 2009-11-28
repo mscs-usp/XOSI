@@ -1,0 +1,4 @@
+  urpmi git-core
+  git clone ssh://skortas@paramount/home/orsay/skortas/XOSI
+  git clone ssh://skortas@paramount/home/orsay/skortas/XOST
+  git clone ssh://skortas@paramount/home/orsay/skortas/XOSO
