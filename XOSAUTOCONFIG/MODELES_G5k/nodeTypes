@@ -1,2 +1,2 @@
-head-node: __HOST__
-resource-node: __HOST__
+head-node: __XOS0__
+resource-node: __RES__
