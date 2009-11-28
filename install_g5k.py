@@ -134,9 +134,8 @@ for n in alias:
      scp ~/.ssh/id_rsa_sk.pub root@__HOST__:.ssh/
      ssh root@__HOST__ 'cat .ssh/id_rsa_sk.pub >> .ssh/authorized_keys'
      ssh root@__HOST__ 'urpmi git-core'
-     ssh root@__HOST__ 'mkdir XOSI XOSO XOST'
-     ssh root@__HOST__ 'cd XOSI; git init'
-     ssh root@__HOST__ 'git push ssh://root@__HOST__/root/XOSI/ master'
+     ssh root@__HOST__ 'git clone ssh://skortas@paramount/home/orsay/skortas/XOSI'
+     ssh root@__HOST__ 'git clone ssh://skortas@paramount/home/orsay/skortas/XOST'
      """
   cmd = str.replace(cmd,"__HOST__",n)
   cmd = str.replace(cmd,"__ALIAS__",alias[n])
