@@ -6,6 +6,7 @@
  
    chmod +x make_cert 
    ./make_cert cda cda
+   ./make_cert rca rcaserver
    ./make_cert vops vops
    ./make_cert mrc mrc
    ./make_cert dir dir
