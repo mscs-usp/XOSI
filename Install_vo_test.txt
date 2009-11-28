@@ -3,23 +3,13 @@
 # get user key and cert
 
 
-# comme sk
-mkdir -p /home/sk/.xos/truststore/certs/
-mkdir -p /home/sk/.xos/truststore/private/
-
-cp /home/sk/Desktop/user.crt  /home/sk/.xos/truststore/certs/user.crt
-cp /home/sk/Desktop/user.key  /home/sk/.xos/truststore/private/user.key
-cp /home/sk/Desktop/user.key  /home/sk/.xos/user.key
 # comme root
 mkdir -p /root/.xos/truststore/certs/
 mkdir -p /root/.xos/truststore/private/
-cp /home/sk/Desktop/user.crt  /root/.xos/truststore/certs/user.crt
-cp /home/sk/Desktop/user.key  /root/.xos/truststore/private/user.key
+cp user.crt  /root/.xos/truststore/certs/user.crt
+cp user.key  /root/.xos/truststore/private/user.key
 
 openssl verify -CApath /etc/xos/truststore/certs/ /root/.xos/truststore/certs/user.crt
-#/root/.xos/truststore/certs/user.crt: OK
-openssl verify -CApath /etc/xos/truststore/certs/ /home/sk/.xos/truststore/certs/user.crt
-#/home/sk/.xos/truststore/certs/user.crt: OK
 
 service xos-amsd restart
 
@@ -38,7 +28,7 @@ PAM:fail in mapping connect !
          *                            -gidmax <num> -gidmin <num> *
 Oops: Permission denied
 
-VO=ec46d3e4-507b-4c58-a65c-3e71a9187917
+VO=ee683f51-1c83-4ce4-8110-2a97919e8fa2
 
 
 xos-policy-admin-am -vo $VO  --force
@@ -46,7 +36,11 @@ xos-policy-admin-gm -vo $VO  --force
 
 xos-policy-admin-chk -pem /root/.xos/truststore/certs/user.crt
 
-# en sk
+
+
+
+
+# en sk sur la ressource
 
 cat > /home/sk/.ssh/config-xos.modele <<EOF
 Host __HOST__
