@@ -1,6 +1,6 @@
 
 import os
-from socket import *
+import socket
 
 nodes_file = os.getenv("OAR_FILE_NODES")
 
@@ -14,9 +14,8 @@ nodes = {}
 
 for n in nodes_all:
   if not n in nodes.keys():
-     print n	
-     res  = os.system(" gethostip "+n)
-     print str(res).split(' ')
-     nodes[n] = addr+" "+name
+     n=n[:-1]
+     res  = socket.gethostbyname(n)
+     nodes[n] = res
 
 print nodes
