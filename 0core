@@ -4,3 +4,9 @@
  create-rootca /opt/xtreemosca
  urpmi create-csr
  
+   chmod +x make_cert 
+   ./make_cert cda cda
+   ./make_cert vops vops
+   ./make_cert mrc
+   ./make_cert mrc mrc
+   ./make_cert dir dir
