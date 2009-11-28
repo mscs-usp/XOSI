@@ -13,3 +13,7 @@
  rca_confirm
  rca_list_registered
  finishConfig
+
+adduser sk
+passwd sk
+
