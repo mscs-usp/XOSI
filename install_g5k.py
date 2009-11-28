@@ -87,7 +87,7 @@ SETMEDIA=false
 CONFIGUREVO=
 MYHOSTNAME=__HOST__
 MYIP=__IP__
-MYINTERFACE=
+MYINTERFACE=eth0_rename
 MYDISK=/dev/sda3
 MYNODETYPE=
 XOSDADDRESSEXTERNALADDRESS=__IP__
@@ -97,7 +97,8 @@ NOPROMPT=true
 """
 
   
-
+# creations de hosts, globalDEfs, localDefs, nodeType
+# pour chacun des noeuds
 
 try:
   os.rmtree("OUT")
@@ -123,6 +124,23 @@ for n in alias:
             (xos0,resources))
   
 
+for n in alias:
+  cmd = """
+     ssh root@__HOST__ hostname __ALIAS__
+     scp OUT/hosts root@__HOST__:/etc/hosts
+     scp OUT/hosts root@__HOST__:/etc/xos/xosautoconfig/etc/hosts
+     scp OUT/__HOST__/* root@__HOST__:/etc/xos/xosautoconfig/
+     scp ~/.ssh/id_rsa root@__HOST__:.ssh/
+     scp ~/.ssh/id_rsa_sk.pub root@__HOST__:.ssh/
+     ssh root@__HOST__ 'cat .ssh/id_rsa_sk.pub >> .ssh/authorized_keys'
+     """
+  cmd = str.replace(cmd,"__HOST__",n)
+  cmd = str.replace(cmd,"__ALIAS__",alias[n])
+  if debug:
+    print cmd
+
+  os.system(cmd)
+  
 
 
 
