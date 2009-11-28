@@ -1,0 +1,11 @@
+ urpmi task-xtreemos-coreservice
+ urpmi --auto-update
+ urpmi rootca-config
+ create-rootca /opt/xtreemosca
+ urpmi create-csr
+ 
+   chmod +x make_cert 
+   ./make_cert cda cda
+   ./make_cert vops vops
+   ./make_cert mrc mrc
+   ./make_cert dir dir
