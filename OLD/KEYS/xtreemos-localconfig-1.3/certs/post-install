@@ -1,0 +1,93 @@
+#!/bin/sh
+
+#
+# Post-install script for the XtreemOS 'localhost' certificate configuration
+#
+# Author: Ian Johnson, STFC Rutherford Appleton Laboratory. 24/10/08.
+
+#
+# Copy the minimal set of pre-configured certificates to their correct locations
+# 
+# Copy configuration files for CDA client (/usr/bin/get-xos-cert) and CDA server 
+# (cdaserver.properties), with appropriate settings for these certificates, into
+# the correct locations.
+#
+
+
+ts=/etc/xos/truststore
+pri=${ts}/private
+crt=${ts}/certs
+
+#
+# Copy Root CA private key and public key certificate ('root certificate')
+# into the correct locations
+# 
+# Remove read access to private key
+# Ensure root certificate is readable by everyone (in case root umask isn't
+# set to allow this)
+#
+
+echo -n "Copying root credentials into place..."
+
+cp xtreemos.key	${pri}/xtreemos.key
+chmod go-r ${pri}/xtreemos.key
+
+cp xtreemos.crt	${crt}/xtreemos.crt
+chmod a+r ${crt}/xtreemos.crt
+
+echo "done."
+
+#
+# The CDA certificate is the only application certificate needed in the
+# 'localhost' configuration (the CDA client/server always need SSL enabled).
+#
+# Copy CDA private key and CDA public key certificate into correct location
+#	
+
+echo -n "Copy CDA, RCA and VOPS credentials into place..."
+
+cp localhost-cda.key ${pri}/cda.key
+chown cdauser.cdauser ${pri}/cda.key
+chmod a+r ${pri}/cda.key
+
+cp localhost-cda.crt ${crt}/cda.crt
+chown cdauser.cdauser ${crt}/cda.crt
+chmod a+r ${crt}/cda.crt
+
+cp localhost-rca.key ${pri}/rcaserver.key
+cp localhost-rca.crt ${crt}/rcaserver.crt
+
+cp localhost-vops.key ${pri}/vops.key
+cp localhost-vops.crt ${crt}/vops.crt
+
+
+echo "done."
+
+#
+# Install configuration files for CDA client and CDA server
+#
+
+echo -n "Copy CDA server and X-VOMS configuration files into place..."
+
+cdap=/etc/xos/config/cdaserver/cdaserver.properties
+cp cdaserver.properties ${cdap}
+chown cdauser.cdauser ${cdap}
+chmod go-r  ${cdap}
+
+volp=/etc/xos/config/volife/volife.properties
+cp cdaserver.properties ${volp}
+chown tomcat.tomcat ${volp}
+chmod go-r ${volp}
+
+
+cp MRC.properties /usr/share/tomcat5/webapps/volifecycle/WEB-INF/classes/
+
+
+
+echo "done."
+
+echo "Running c_rehash on ${crt} directory for OpenSSL verification..."
+
+c_rehash ${crt}
+
+echo "done."

@@ -1,0 +1,27 @@
+cd ~/XOS/INSTALL/2.0
+
+urpmi rootca
+Y
+
+create-rootca /opt/xtreemosca
+[key = xtreemos]
+
+urpmi create-csr
+
+create-csr claui2s0 "EDF" cda
+ls
+
+process-csr /opt/xtreemosca claui2s0-cda.csr
+y
+y
+
+openssl x509 -text -in claui2s0-cda.crt -noout
+
+
+certdir=/etc/xos/truststore/certs # short-cut to reduce typin
+cp claui2s0-cda.crt ${certdir}/cda.crt
+chmod a+r ${certdir}/cda.crt # Anyone can read the public key
+chown cdauser.cdauser ${certdir}/cda.crt
+
+c_rehash /etc/xos/truststore/certs
+

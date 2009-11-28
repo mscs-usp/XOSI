@@ -1,0 +1,2 @@
+export DISPLAY=192.168.111.77:0
+svn co http://subversion.assembla.com/svn/xos

@@ -1,0 +1,422 @@
+(custom-set-variables
+  ;; custom-set-variables was added by Custom.
+  ;; If you edit it by hand, you could mess it up, so be careful.
+  ;; Your init file should contain only one such instance.
+  ;; If there is more than one, they won't work right.
+ '(case-fold-search t)
+ '(current-language-environment "English")
+ '(dta-default-cfg "default")
+ '(global-font-lock-mode t nil (font-lock))
+ '(show-paren-mode t nil (paren))
+ '(transient-mark-mode t))
+(custom-set-faces
+  ;; custom-set-faces was added by Custom.
+  ;; If you edit it by hand, you could mess it up, so be careful.
+  ;; Your init file should contain only one such instance.
+  ;; If there is more than one, they won't work right.
+ )
+
+
+
+(global-set-key (quote [C-S-return]) (quote save-buffer))
+(global-set-key (quote [C-insert]) (quote bookmark-bmenu-list))
+(global-set-key (quote [C-pause]) (quote direct-kill-buffer))
+
+;(global-set-key (quote [C-delete]) (quote kill-this-buffer))
+
+(global-set-key (quote [67108925]) (quote bookmark-bmenu-list))
+
+(global-set-key (quote [C-kp-enter]) (quote other-window))
+(global-set-key (quote [C-S-kp-enter]) (quote save-buffer))
+(global-set-key (quote [C-delete]) (quote clear-buffer))
+
+(fset 'run-line-in-other-window  "\^ \^e\M-w\^xo\^y\^M\^xo\^n\^a")
+(global-set-key (quote [67108906]) (quote run-line-in-other-window))   ; C-*
+
+
+
+;; Take entire current line and execute it as a shell command:
+;; from http://linux.hostweb.com/TopicMessages/comp.os.linux.misc/1859693/25/Default.aspx
+ (defun my-execute-line ()
+   "Execute the line the cursor is on in a subshell"
+   (interactive)
+   (beginning-of-line)
+   (if (eobp) (error "End of buffer"))
+   (require 'sh-script)
+   (let ((beg (point)))
+     (forward-line 1)
+     (sh-execute-region beg (point))))
+;;; RDU:
+;;; I'd like this to work as in ESS, but I can't simply
+;;; do a global-set-key because that would break ESS, the python-ess like, etc.
+;;; But I don't want them local now, because I sometimes execute pieces
+;;; of shell code that are in arbitrary files (R, C, python, etc).
+;(global-set-key "\C-cy" 'my-execute-line)
+;(global-set-key "\C-cr" 'sh-execute-region)
+
+
+
+
+
+
+(global-set-key "c" (quote compile))
+(global-set-key (quote [C-backspace]) (quote undo))
+
+(global-set-key "E" (quote eval-current-buffer))
+
+(fset 'switch-to-other-buffer   "\C-xb\C-m")
+(global-set-key (quote [C-tab]) (quote switch-to-other-buffer))
+
+(global-set-key "" (quote switch-to-buffer))
+
+(fset 'clear-buffer "\^xh\^w\^j")
+
+(global-set-key "w" (quote clear-buffer))
+
+(global-set-key (quote [C-delete]) (quote clear-buffer))
+
+(fset 'edit-notes "\^x\^f\^a\^k~/?NOTES/NOTES.txt\^j\M->")
+(global-set-key (quote [C-kp-0]) (quote edit-notes))
+
+
+(fset 'edit-install "\^x\^f\^a\^k~/?NOTES/INSTALL.txt\^j\M->")
+(global-set-key (quote [C-kp-1]) (quote edit-install))
+
+
+(fset 'edit-emacs "\^x\^f\^a\^k~/.emacs")
+(global-set-key (quote [C-kp-8]) (quote edit-emacs))
+
+
+
+;
+; Gestion shell multiples
+; 
+
+(fset 'create-shell-1  "\M-xshell\^jbash\^m\M-xrename-buffer\^j*shell-1*\^j")
+(global-set-key "," (quote create-shell-1))
+(fset 'create-shell-2  "\M-xshell\^jbash\^m\M-xrename-buffer\^j*shell-2*\^j")
+(global-set-key ";" (quote create-shell-2))
+(fset 'create-shell-3  "\M-xshell\^jbash\^m\M-xrename-buffer\^j*shell-3*\^j")
+(global-set-key ":" (quote create-shell-3))
+(fset 'create-shell-4  "\M-xshell\^jbash\^m\M-xrename-buffer\^j*shell-4*\^j")
+(global-set-key "!" (quote create-shell-4))
+
+(defun create-all-shells ()
+        (interactive "p")
+        (quote create-shell-1)
+        (quote create-shell-2)
+        (quote create-shell-3)
+        (quote create-shell-4)
+)
+
+(global-set-key (quote [24 249]) (quote create-all-shells))
+
+(fset 'shell-1 "\^xb\^a*shell 1*\^j")
+(fset 'shell-2 "\^xb\^a*shell 2*\^j")
+(fset 'shell-3 "\^xb\^a*shell 3*\^j")
+(fset 'shell-4 "\^xb\^a*shell 4*\^j")
+
+(global-set-key (quote [67108908]) (quote shell-1))
+(global-set-key (quote [67108923]) (quote shell-2))
+(global-set-key (quote [67108922]) (quote shell-3))
+(global-set-key (quote [67108897]) (quote shell-4))
+
+
+
+    
+(global-set-key (quote [f1 f1]) (quote delete-other-windows))
+(global-set-key (quote [f2 f2]) (quote split-window-vertically))
+(global-set-key (quote [f3]) (quote split-window-horizontally))
+
+
+(global-set-key (quote [C-return]) (quote other-window))
+
+(fset 'unother-window  "\^u-1\^xo")
+(global-set-key (quote [C-S-return]) (quote unother-window))
+
+(fset 'direct-kill-buffer "\^xk\^j")
+
+(global-set-key (quote [C-kp-subtract]) (quote direct-kill-buffer))
+
+(fset 'direct-list-buffers "\^x2\^x\^b\^o")
+(global-set-key (quote [C-kp-multiply]) (quote direct-list-buffers))
+
+(fset 'erase-list-buffers "\^x0\^u-1\^x0")
+(global-set-key (quote [C-kp-divide]) (quote erase-list-buffers))
+
+(put 'upcase-region 'disabled nil)
+
+(global-set-key (quote [C-kp-enter]) (quote save-buffer))
+
+(require 'mwheel)
+(mwheel-install) 
+;(set-background-color "gray")
+
+
+
+;;; Emacs/W3 Configuration
+(setq load-path (cons "/home/kortas/TEST/EMACS/local-site//share/emacs/site-lisp" load-path))
+(condition-case () (require 'w3-auto "w3-auto") (error nil))
+
+(setq load-path (cons "/usr/share/emacs21/site-lisp/auctex" load-path))
+(setq load-path (cons "/root" load-path))
+
+(require 'vc-git)
+
+(add-to-list 'vc-handled-backends 'Git)
+
+;;; Sauvegarde des positions de windows
+
+(fset 'save-pos1  "\C-xrw1" )   (global-set-key (quote [C-S-f1])  (quote save-pos1 ))
+(fset 'save-pos2  "\C-xrw2" )   (global-set-key (quote [C-S-f2])  (quote save-pos2 )) 
+(fset 'save-pos3  "\C-xrw3" )   (global-set-key (quote [C-S-f3])  (quote save-pos3 )) 
+(fset 'save-pos4  "\C-xrw4" )   (global-set-key (quote [C-S-f4])  (quote save-pos4 )) 
+(fset 'save-pos5  "\C-xrw5" )   (global-set-key (quote [C-S-f5])  (quote save-pos5 )) 
+(fset 'save-pos6  "\C-xrw6" )   (global-set-key (quote [C-S-f6])  (quote save-pos6 )) 
+(fset 'save-pos7  "\C-xrw7" )   (global-set-key (quote [C-S-f7])  (quote save-pos7 )) 
+(fset 'save-pos8  "\C-xrw8" )   (global-set-key (quote [C-S-f8])  (quote save-pos8 )) 
+(fset 'save-pos9  "\C-xrw9" )   (global-set-key (quote [C-S-f9])  (quote save-pos9 )) 
+(fset 'save-pos10 "\C-xrwa" )   (global-set-key (quote [C-S-f10]) (quote save-pos )) 
+
+(fset 'retrieve-pos1 "\C-xrj1" )   (global-set-key (quote [C-f1])  (quote retrieve-pos1 ))
+(fset 'retrieve-pos2 "\C-xrj2"  )   (global-set-key (quote [C-f2])  (quote retrieve-pos2 )) 
+(fset 'retrieve-pos3 "\C-xrj3"  )   (global-set-key (quote [C-f3])  (quote retrieve-pos3 )) 
+(fset 'retrieve-pos4 "\C-xrj4"  )   (global-set-key (quote [C-f4])  (quote retrieve-pos4 )) 
+(fset 'retrieve-pos5 "\C-xrj5"  )   (global-set-key (quote [C-f5])  (quote retrieve-pos5 )) 
+(fset 'retrieve-pos6 "\C-xrj6"  )   (global-set-key (quote [C-f6])  (quote retrieve-pos6 )) 
+(fset 'retrieve-pos7 "\C-xrj7"  )   (global-set-key (quote [C-f7])  (quote retrieve-pos7 )) 
+(fset 'retrieve-pos8 "\C-xrj8"  )   (global-set-key (quote [C-f8])  (quote retrieve-pos8 )) 
+(fset 'retrieve-pos9 "\C-xrj9"  )   (global-set-key (quote [C-f9])  (quote retrieve-pos9 )) 
+(fset 'retrieve-pos10"\C-xrja"  )   (global-set-key (quote [C-f10]) (quote retrieve-pos )) 
+
+
+
+
+
+
+(require 'python-mode)
+  (setq load-path (cons "/home/kortas/TEST/EMACS/local-site//share/emacs/site-lisp" load-path))
+(setq load-path (cons "/usr/share/emacs21/site-lisp/auctex" load-path))
+
+
+;(require 'latex)
+
+(put 'downcase-region 'disabled nil)
+
+;(require 'password)
+
+(setq default-fortran-format-mode nil)
+
+
+
+
+(defun text2html ()
+     (interactive)
+     (goto-char (point-min)) (query-replace "¡" "&iexcl;" nil nil nil)
+     (goto-char (point-min)) (query-replace "¢" "&cent;" nil nil nil)
+     (goto-char (point-min)) (query-replace "£" "&pound;" nil nil nil)
+     (goto-char (point-min)) (query-replace "¤" "&curren;" nil nil nil)
+     (goto-char (point-min)) (query-replace "¥" "&yen;" nil nil nil)
+     (goto-char (point-min)) (query-replace "¦" "&brvbar;" nil nil nil)
+     (goto-char (point-min)) (query-replace "§" "&sect;" nil nil nil)
+     (goto-char (point-min)) (query-replace "¨" "&uml;" nil nil nil)
+     (goto-char (point-min)) (query-replace "©" "&copy;" nil nil nil)
+     (goto-char (point-min)) (query-replace "ª" "&ordf;" nil nil nil)
+     (goto-char (point-min)) (query-replace "«" "&laquo;" nil nil nil)
+     (goto-char (point-min)) (query-replace "¬" "&not;" nil nil nil)
+     (goto-char (point-min)) (query-replace "­" "&shy;" nil nil nil)
+     (goto-char (point-min)) (query-replace "®" "&reg;" nil nil nil)
+     (goto-char (point-min)) (query-replace "¯" "&macr;" nil nil nil)
+     (goto-char (point-min)) (query-replace "°" "&deg;" nil nil nil)
+     (goto-char (point-min)) (query-replace "±" "&plusmn;" nil nil nil)
+     (goto-char (point-min)) (query-replace "²" "&sup2;" nil nil nil)
+     (goto-char (point-min)) (query-replace "³" "&sup3;" nil nil nil)
+     (goto-char (point-min)) (query-replace "´" "&acute;" nil nil nil)
+     (goto-char (point-min)) (query-replace "µ" "&micro;" nil nil nil)
+     (goto-char (point-min)) (query-replace "¶" "&para;" nil nil nil)
+     (goto-char (point-min)) (query-replace "·" "&middot;" nil nil nil)
+     (goto-char (point-min)) (query-replace "¸" "&ccedil;" nil nil nil)
+     (goto-char (point-min)) (query-replace "¹" "&sup1;" nil nil nil)
+     (goto-char (point-min)) (query-replace "º" "&ordm;" nil nil nil)
+     (goto-char (point-min)) (query-replace "»" "&raquo;" nil nil nil)
+     (goto-char (point-min)) (query-replace "¼" "&frac14;" nil nil nil)
+     (goto-char (point-min)) (query-replace "½" "&frac12;" nil nil nil)
+     (goto-char (point-min)) (query-replace "¾" "&frac34;" nil nil nil)
+     (goto-char (point-min)) (query-replace "¿" "&iquest;" nil nil nil)
+     (goto-char (point-min)) (query-replace "À" "&Agrave;" nil nil nil)
+     (goto-char (point-min)) (query-replace "Á" "&Aacute;" nil nil nil)
+     (goto-char (point-min)) (query-replace "Â" "&Acirc;" nil nil nil)
+     (goto-char (point-min)) (query-replace "Ã" "&Atilde;" nil nil nil)
+     (goto-char (point-min)) (query-replace "Ä" "&Auml;" nil nil nil)
+     (goto-char (point-min)) (query-replace "Å" "&Aring;" nil nil nil)
+     (goto-char (point-min)) (query-replace "Æ" "&AElig;" nil nil nil)
+     (goto-char (point-min)) (query-replace "Ç" "&Ccedil;" nil nil nil)
+     (goto-char (point-min)) (query-replace "È" "&Egrave;" nil nil nil)
+     (goto-char (point-min)) (query-replace "É" "&Eacute;" nil nil nil)
+     (goto-char (point-min)) (query-replace "Ê" "&Ecirc;" nil nil nil)
+     (goto-char (point-min)) (query-replace "Ë" "&Euml;" nil nil nil)
+     (goto-char (point-min)) (query-replace "Ì" "&Igrave;" nil nil nil)
+     (goto-char (point-min)) (query-replace "Í" "&Iacute;" nil nil nil)
+     (goto-char (point-min)) (query-replace "Î" "&Icirc;" nil nil nil)
+     (goto-char (point-min)) (query-replace "Ï" "&Iuml;" nil nil nil)
+     (goto-char (point-min)) (query-replace "Ð" "&ETH;" nil nil nil)
+     (goto-char (point-min)) (query-replace "Ñ" "&Ntilde;" nil nil nil)
+     (goto-char (point-min)) (query-replace "Ò" "&Ograve;" nil nil nil)
+     (goto-char (point-min)) (query-replace "Ó" "&Oacute;" nil nil nil)
+     (goto-char (point-min)) (query-replace "Ô" "&Ocirc;" nil nil nil)
+     (goto-char (point-min)) (query-replace "Õ" "&Otilde;" nil nil nil)
+     (goto-char (point-min)) (query-replace "Ö" "&Ouml;" nil nil nil)
+     (goto-char (point-min)) (query-replace "×" "&times;" nil nil nil)
+     (goto-char (point-min)) (query-replace "Ø" "&Oslash;" nil nil nil)
+     (goto-char (point-min)) (query-replace "Ù" "&Ugrave;" nil nil nil)
+     (goto-char (point-min)) (query-replace "Ú" "&Uacute;" nil nil nil)
+     (goto-char (point-min)) (query-replace "Û" "&Ucirc;" nil nil nil)
+     (goto-char (point-min)) (query-replace "Ü" "&Uuml;" nil nil nil)
+     (goto-char (point-min)) (query-replace "Ý" "&Yacute;" nil nil nil)
+     (goto-char (point-min)) (query-replace "Þ" "&THORN;" nil nil nil)
+     (goto-char (point-min)) (query-replace "ß" "&szlig;" nil nil nil)
+     (goto-char (point-min)) (query-replace "à" "&agrave;" nil nil nil)
+     (goto-char (point-min)) (query-replace "á" "&aacute;" nil nil nil)
+     (goto-char (point-min)) (query-replace "â" "&acirc;" nil nil nil)
+     (goto-char (point-min)) (query-replace "ã" "&atilde;" nil nil nil)
+     (goto-char (point-min)) (query-replace "ä" "&auml;" nil nil nil)
+     (goto-char (point-min)) (query-replace "å" "&aring;" nil nil nil)
+     (goto-char (point-min)) (query-replace "æ" "&aelig;" nil nil nil)
+     (goto-char (point-min)) (query-replace "ç" "&ccedil;" nil nil nil)
+     (goto-char (point-min)) (query-replace "è" "&egrave;" nil nil nil)
+     (goto-char (point-min)) (query-replace "é" "&eacute;" nil nil nil)
+     (goto-char (point-min)) (query-replace "ê" "&ecirc;" nil nil nil)
+     (goto-char (point-min)) (query-replace "ë" "&euml;" nil nil nil)
+     (goto-char (point-min)) (query-replace "ì" "&igrave;" nil nil nil)
+     (goto-char (point-min)) (query-replace "í" "&iacute;" nil nil nil)
+     (goto-char (point-min)) (query-replace "î" "&icirc;" nil nil nil)
+     (goto-char (point-min)) (query-replace "ï" "&iuml;" nil nil nil)
+     (goto-char (point-min)) (query-replace "ð" "&eth;" nil nil nil)
+     (goto-char (point-min)) (query-replace "ñ" "&ntilde;" nil nil nil)
+     (goto-char (point-min)) (query-replace "ò" "&ograve;" nil nil nil)
+     (goto-char (point-min)) (query-replace "ó" "&oacute;" nil nil nil)
+     (goto-char (point-min)) (query-replace "ô" "&ocirc;" nil nil nil)
+     (goto-char (point-min)) (query-replace "õ" "&otilde;" nil nil nil)
+     (goto-char (point-min)) (query-replace "ö" "&ouml;" nil nil nil)
+     (goto-char (point-min)) (query-replace "÷" "&divide;" nil nil nil)
+     (goto-char (point-min)) (query-replace "ø" "&oslash;" nil nil nil)
+     (goto-char (point-min)) (query-replace "ù" "&ugrave;" nil nil nil)
+     (goto-char (point-min)) (query-replace "ú" "&uacute;" nil nil nil)
+     (goto-char (point-min)) (query-replace "û" "&ucirc;" nil nil nil)
+     (goto-char (point-min)) (query-replace "ü" "&uuml;" nil nil nil)
+     (goto-char (point-min)) (query-replace "ý" "&yacute;" nil nil nil)
+     (goto-char (point-min)) (query-replace "þ" "&thorn;" nil nil nil)
+     (goto-char (point-min)) (query-replace "ÿ" "&yuml;" nil nil nil)
+)
+
+
+(defun html2text ()
+    (interactive )
+    (goto-char (point-min)) (query-replace "&iexcl;" "¡" nil nil nil)
+    (goto-char (point-min)) (query-replace "&cent;" "¢" nil nil nil)
+    (goto-char (point-min)) (query-replace "&pound;" "£" nil nil nil)
+    (goto-char (point-min)) (query-replace "&curren;" "¤" nil nil nil)
+    (goto-char (point-min)) (query-replace "&yen;" "¥" nil nil nil)
+    (goto-char (point-min)) (query-replace "&brvbar;" "¦" nil nil nil)
+    (goto-char (point-min)) (query-replace "&sect;" "§" nil nil nil)
+    (goto-char (point-min)) (query-replace "&uml;" "¨" nil nil nil)
+    (goto-char (point-min)) (query-replace "&copy;" "©" nil nil nil)
+    (goto-char (point-min)) (query-replace "&ordf;" "ª" nil nil nil)
+    (goto-char (point-min)) (query-replace "&laquo;" "«" nil nil nil)
+    (goto-char (point-min)) (query-replace "&not;" "¬" nil nil nil)
+    (goto-char (point-min)) (query-replace "&shy;" "­" nil nil nil)
+    (goto-char (point-min)) (query-replace "&reg;" "®" nil nil nil)
+    (goto-char (point-min)) (query-replace "&macr;" "¯" nil nil nil)
+    (goto-char (point-min)) (query-replace "&deg;" "°" nil nil nil)
+    (goto-char (point-min)) (query-replace "&plusmn;" "±" nil nil nil)
+    (goto-char (point-min)) (query-replace "&sup2;" "²" nil nil nil)
+    (goto-char (point-min)) (query-replace "&sup3;" "³" nil nil nil)
+    (goto-char (point-min)) (query-replace "&acute;" "´" nil nil nil)
+    (goto-char (point-min)) (query-replace "&micro;" "µ" nil nil nil)
+    (goto-char (point-min)) (query-replace "&para;" "¶" nil nil nil)
+    (goto-char (point-min)) (query-replace "&middot;" "·" nil nil nil)
+    (goto-char (point-min)) (query-replace "&ccedil;" "¸" nil nil nil)
+    (goto-char (point-min)) (query-replace "&sup1;" "¹" nil nil nil)
+    (goto-char (point-min)) (query-replace "&ordm;" "º" nil nil nil)
+    (goto-char (point-min)) (query-replace "&raquo;" "»" nil nil nil)
+    (goto-char (point-min)) (query-replace "&frac14;" "¼" nil nil nil)
+    (goto-char (point-min)) (query-replace "&frac12;" "½" nil nil nil)
+    (goto-char (point-min)) (query-replace "&frac34;" "¾" nil nil nil)
+    (goto-char (point-min)) (query-replace "&iquest;" "¿" nil nil nil)
+    (goto-char (point-min)) (query-replace "&Agrave;" "À" nil nil nil)
+    (goto-char (point-min)) (query-replace "&Aacute;" "Á" nil nil nil)
+    (goto-char (point-min)) (query-replace "&Acirc;" "Â" nil nil nil)
+    (goto-char (point-min)) (query-replace "&Atilde;" "Ã" nil nil nil)
+    (goto-char (point-min)) (query-replace "&Auml;" "Ä" nil nil nil)
+    (goto-char (point-min)) (query-replace "&Aring;" "Å" nil nil nil)
+    (goto-char (point-min)) (query-replace "&AElig;" "Æ" nil nil nil)
+    (goto-char (point-min)) (query-replace "&Ccedil;" "Ç" nil nil nil)
+    (goto-char (point-min)) (query-replace "&Egrave;" "È" nil nil nil)
+    (goto-char (point-min)) (query-replace "&Eacute;" "É" nil nil nil)
+    (goto-char (point-min)) (query-replace "&Ecirc;" "Ê" nil nil nil)
+    (goto-char (point-min)) (query-replace "&Euml;" "Ë" nil nil nil)
+    (goto-char (point-min)) (query-replace "&Igrave;" "Ì" nil nil nil)
+    (goto-char (point-min)) (query-replace "&Iacute;" "Í" nil nil nil)
+    (goto-char (point-min)) (query-replace "&Icirc;" "Î" nil nil nil)
+    (goto-char (point-min)) (query-replace "&Iuml;" "Ï" nil nil nil)
+    (goto-char (point-min)) (query-replace "&ETH;" "Ð" nil nil nil)
+    (goto-char (point-min)) (query-replace "&Ntilde;" "Ñ" nil nil nil)
+    (goto-char (point-min)) (query-replace "&Ograve;" "Ò" nil nil nil)
+    (goto-char (point-min)) (query-replace "&Oacute;" "Ó" nil nil nil)
+    (goto-char (point-min)) (query-replace "&Ocirc;" "Ô" nil nil nil)
+    (goto-char (point-min)) (query-replace "&Otilde;" "Õ" nil nil nil)
+    (goto-char (point-min)) (query-replace "&Ouml;" "Ö" nil nil nil)
+    (goto-char (point-min)) (query-replace "&times;" "×" nil nil nil)
+    (goto-char (point-min)) (query-replace "&Oslash;" "Ø" nil nil nil)
+    (goto-char (point-min)) (query-replace "&Ugrave;" "Ù" nil nil nil)
+    (goto-char (point-min)) (query-replace "&Uacute;" "Ú" nil nil nil)
+    (goto-char (point-min)) (query-replace "&Ucirc;" "Û" nil nil nil)
+    (goto-char (point-min)) (query-replace "&Uuml;" "Ü" nil nil nil)
+    (goto-char (point-min)) (query-replace "&Yacute;" "Ý" nil nil nil)
+    (goto-char (point-min)) (query-replace "&THORN;" "Þ" nil nil nil)
+    (goto-char (point-min)) (query-replace "&szlig;" "ß" nil nil nil)
+    (goto-char (point-min)) (query-replace "&agrave;" "à" nil nil nil)
+    (goto-char (point-min)) (query-replace "&aacute;" "á" nil nil nil)
+    (goto-char (point-min)) (query-replace "&acirc;" "â" nil nil nil)
+    (goto-char (point-min)) (query-replace "&atilde;" "ã" nil nil nil)
+    (goto-char (point-min)) (query-replace "&auml;" "ä" nil nil nil)
+    (goto-char (point-min)) (query-replace "&aring;" "å" nil nil nil)
+    (goto-char (point-min)) (query-replace "&aelig;" "æ" nil nil nil)
+    (goto-char (point-min)) (query-replace "&ccedil;" "ç" nil nil nil)
+    (goto-char (point-min)) (query-replace "&egrave;" "è" nil nil nil)
+    (goto-char (point-min)) (query-replace "&eacute;" "é" nil nil nil)
+    (goto-char (point-min)) (query-replace "&ecirc;" "ê" nil nil nil)
+    (goto-char (point-min)) (query-replace "&euml;" "ë" nil nil nil)
+    (goto-char (point-min)) (query-replace "&igrave;" "ì" nil nil nil)
+    (goto-char (point-min)) (query-replace "&iacute;" "í" nil nil nil)
+    (goto-char (point-min)) (query-replace "&icirc;" "î" nil nil nil)
+    (goto-char (point-min)) (query-replace "&iuml;" "ï" nil nil nil)
+    (goto-char (point-min)) (query-replace "&eth;" "ð" nil nil nil)
+    (goto-char (point-min)) (query-replace "&ntilde;" "ñ" nil nil nil)
+    (goto-char (point-min)) (query-replace "&ograve;" "ò" nil nil nil)
+    (goto-char (point-min)) (query-replace "&oacute;" "ó" nil nil nil)
+    (goto-char (point-min)) (query-replace "&ocirc;" "ô" nil nil nil)
+    (goto-char (point-min)) (query-replace "&otilde;" "õ" nil nil nil)
+    (goto-char (point-min)) (query-replace "&ouml;" "ö" nil nil nil)
+    (goto-char (point-min)) (query-replace "&divide;" "÷" nil nil nil)
+    (goto-char (point-min)) (query-replace "&oslash;" "ø" nil nil nil)
+    (goto-char (point-min)) (query-replace "&ugrave;" "ù" nil nil nil)
+    (goto-char (point-min)) (query-replace "&uacute;" "ú" nil nil nil)
+    (goto-char (point-min)) (query-replace "&ucirc;" "û" nil nil nil)
+    (goto-char (point-min)) (query-replace "&uuml;" "ü" nil nil nil)
+    (goto-char (point-min)) (query-replace "&yacute;" "ý" nil nil nil)
+    (goto-char (point-min)) (query-replace "&thorn;" "þ" nil nil nil)
+    (goto-char (point-min)) (query-replace "&yuml;" "ÿ" nil nil nil)
+)
+
+
+(add-to-list 'auto-mode-alist '("\\.js\\'" . java-mode))
+
+
+
+
+(global-set-key "" (quote goto-line))
+
+
+(add-to-list 'auto-mode-alist '("\\.F90\\'" . fortran-mode))
+(add-to-list 'auto-mode-alist '("\\.gcf\\'" . makefile-mode))

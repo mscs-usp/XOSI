@@ -1,0 +1,77 @@
+Certificate:
+    Data:
+        Version: 3 (0x2)
+        Serial Number: 8 (0x8)
+        Signature Algorithm: sha1WithRSAEncryption
+        Issuer: CN=XtreemOS CA, O=XtreemOS Project, OU=XtreemOS Project Root Certification Authority
+        Validity
+            Not Before: Mar 23 13:20:12 2009 GMT
+            Not After : Mar 23 13:20:12 2010 GMT
+        Subject: O=EDF, OU=cda, CN=xos1.edf.fr/cda
+        Subject Public Key Info:
+            Public Key Algorithm: rsaEncryption
+            RSA Public Key: (1024 bit)
+                Modulus (1024 bit):
+                    00:c0:79:28:6e:2a:f7:e7:d6:8b:39:f2:f2:ff:98:
+                    fa:86:ba:8a:bd:79:28:12:c2:69:7e:51:b5:9b:ef:
+                    2d:86:65:7a:d1:7a:27:98:76:33:ca:f9:d0:ad:7e:
+                    76:71:d9:2f:65:1d:ee:dc:b6:01:db:7b:e8:94:7a:
+                    3e:b2:50:ba:05:56:a5:97:a1:7c:c0:f0:e1:95:fb:
+                    e3:2f:ff:fa:a9:fc:a5:62:43:ec:7e:d4:f2:98:ed:
+                    45:90:fc:05:1b:d5:dc:b8:a1:93:3c:27:34:8a:20:
+                    a4:c4:6e:72:35:d1:24:d2:70:4b:84:86:15:76:6f:
+                    8a:04:72:06:c2:36:2f:a6:cd
+                Exponent: 65537 (0x10001)
+        X509v3 extensions:
+            Netscape Comment: 
+                XtreemOS Certificate
+            X509v3 Subject Key Identifier: 
+                CB:C1:77:2A:EE:0A:C8:E0:4E:94:1D:FF:17:B0:0F:AB:91:DB:AD:60
+            X509v3 Authority Key Identifier: 
+                DirName:/CN=XtreemOS CA/O=XtreemOS Project/OU=XtreemOS Project Root Certification Authority
+                serial:BF:7E:38:FF:8D:F6:B7:1E
+
+            X509v3 Basic Constraints: 
+                CA:TRUE
+            X509v3 Subject Alternative Name: 
+                DNS:xos1.edf.fr
+            X509v3 Key Usage: 
+                Digital Signature, Key Encipherment, Certificate Sign
+    Signature Algorithm: sha1WithRSAEncryption
+        6c:5c:b9:9e:50:62:01:e4:01:96:5b:e3:82:35:d7:e7:66:b9:
+        80:41:87:9f:c1:78:db:81:d1:8b:09:c1:86:a6:dd:48:5f:dc:
+        16:b4:c8:d0:85:13:94:34:26:bc:83:64:ca:84:ef:ef:6b:e4:
+        0e:42:47:23:a3:fa:73:aa:9d:fe:f7:f1:a3:5a:00:08:74:b4:
+        d9:cd:0d:59:43:a9:b1:d2:46:f0:df:ec:fa:0f:2d:2a:1e:d9:
+        89:24:48:6f:4c:df:e9:e2:0a:84:a9:3b:49:09:53:66:c6:e3:
+        cd:da:8c:a1:22:24:86:32:ef:8c:74:a6:a2:0f:c8:93:d2:50:
+        28:fa:2e:f3:71:8f:34:95:63:3f:8d:c5:47:65:a1:03:ef:b3:
+        4e:73:61:5c:bb:65:a6:e9:5e:1a:0f:94:ee:54:6b:19:2a:9a:
+        8f:0b:90:ab:13:c6:74:7a:5a:1c:d7:61:6a:a9:bd:4c:91:cb:
+        49:7d:3e:27:de:f2:a4:3c:26:3c:37:f4:e8:71:02:e7:42:41:
+        ff:3a:0c:5a:f9:1f:9b:25:88:82:a9:c5:2c:0d:28:0f:c4:2d:
+        3f:1f:06:4b:7e:8d:d6:11:bd:76:ad:95:a4:5e:5b:9e:bd:55:
+        8c:b0:4f:31:bf:9e:7d:4d:50:46:20:42:2e:da:d6:f6:fb:0a:
+        98:f3:c2:18
+-----BEGIN CERTIFICATE-----
+MIIDmDCCAoCgAwIBAgIBCDANBgkqhkiG9w0BAQUFADBpMRQwEgYDVQQDEwtYdHJl
+ZW1PUyBDQTEZMBcGA1UEChMQWHRyZWVtT1MgUHJvamVjdDE2MDQGA1UECxMtWHRy
+ZWVtT1MgUHJvamVjdCBSb290IENlcnRpZmljYXRpb24gQXV0aG9yaXR5MB4XDTA5
+MDMyMzEzMjAxMloXDTEwMDMyMzEzMjAxMlowNjEMMAoGA1UEChMDRURGMQwwCgYD
+VQQLEwNjZGExGDAWBgNVBAMTD3hvczEuZWRmLmZyL2NkYTCBnzANBgkqhkiG9w0B
+AQEFAAOBjQAwgYkCgYEAwHkobir359aLOfLy/5j6hrqKvXkoEsJpflG1m+8thmV6
+0XonmHYzyvnQrX52cdkvZR3u3LYB23volHo+slC6BVall6F8wPDhlfvjL//6qfyl
+YkPsftTymO1FkPwFG9XcuKGTPCc0iiCkxG5yNdEk0nBLhIYVdm+KBHIGwjYvps0C
+AwEAAaOCAQAwgf0wIwYJYIZIAYb4QgENBBYWFFh0cmVlbU9TIENlcnRpZmljYXRl
+MB0GA1UdDgQWBBTLwXcq7grI4E6UHf8XsA+rkdutYDCBgwYDVR0jBHwweqFtpGsw
+aTEUMBIGA1UEAxMLWHRyZWVtT1MgQ0ExGTAXBgNVBAoTEFh0cmVlbU9TIFByb2pl
+Y3QxNjA0BgNVBAsTLVh0cmVlbU9TIFByb2plY3QgUm9vdCBDZXJ0aWZpY2F0aW9u
+IEF1dGhvcml0eYIJAL9+OP+N9rceMAwGA1UdEwQFMAMBAf8wFgYDVR0RBA8wDYIL
+eG9zMS5lZGYuZnIwCwYDVR0PBAQDAgKkMA0GCSqGSIb3DQEBBQUAA4IBAQBsXLme
+UGIB5AGWW+OCNdfnZrmAQYefwXjbgdGLCcGGpt1IX9wWtMjQhROUNCa8g2TKhO/v
+a+QOQkcjo/pzqp3+9/GjWgAIdLTZzQ1ZQ6mx0kbw3+z6Dy0qHtmJJEhvTN/p4gqE
+qTtJCVNmxuPN2oyhIiSGMu+MdKaiD8iT0lAo+i7zcY80lWM/jcVHZaED77NOc2Fc
+u2Wm6V4aD5TuVGsZKpqPC5CrE8Z0eloc12Fqqb1MkctJfT4n3vKkPCY8N/TocQLn
+QkH/Ogxa+R+bJYiCqcUsDSgPxC0/HwZLfo3WEb12rZWkXluevVWMsE8xv559TVBG
+IEIu2tb2+wqY88IY
+-----END CERTIFICATE-----

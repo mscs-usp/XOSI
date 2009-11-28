@@ -1,0 +1,54 @@
+[Xtreemos-developers] packages of xtreemos 2.0
+Nicolas Vigier nvigier at mandriva.com
+Thu May 7 18:42:04 CEST 2009
+
+    * Previous message: [Xtreemos-developers] XtreemOS documentation update.
+    * Next message: [Xtreemos-developers] CDA server and VOLife web application on xtreemos-a.esc.rl.ac.uk unavailable from 15:30 UTC today
+    * Messages sorted by: [ date ] [ thread ] [ subject ] [ author ]
+
+Hello,
+
+We planned to make a first install CD of the version 2 of XtreemOS, but
+unfortunatly we won't be able to do finish it today and plan to do it
+next week (tomorrow is holiday in france).
+
+However it is already possible to test some packages using a Mandriva
+2009.0 install.
+
+To do that, download Mandriva 2009.0 :
+ftp://ftp.free.fr/mirrors/ftp.mandriva.com/MandrivaLinux/official/iso/2009.0/mandriva-linux-free-2009-dvd-i586.iso
+or x86_64 :
+ftp://ftp.free.fr/mirrors/ftp.mandriva.com/MandrivaLinux/official/iso/2009.0/mandriva-linux-free-2009-dvd-x86_64.iso
+
+Install it.
+
+Add mandriva 2009.0 repositories (replace i586 with x86_64 if using x86_64) :
+ # urpmi.removemedia -a
+ # urpmi.addmedia --distrib ftp://ftp.free.fr/mirrors/ftp.mandriva.com/MandrivaLinux/official/2009.0/i586
+
+Add xtreemos repository :
+ # urpmi.addmedia xtreemos ftp://ftp.free.fr/mirrors/ftp.mandriva.com/MandrivaLinux/devel/xtreemos/2009.0/i586/media/xtreemos/release
+
+Install all updates :
+ # urpmi --auto-update
+
+Install xtreemos packages :
+ # urpmi xtreemfs-server
+ # urpmi xtreemfs-client
+ # urpmi xtreemos-nss-pam
+And I have just noticed that we have a problem on i586 with dixi (I will
+fix it on monday), so only if you are running x86_86 :
+ # urpmi srds
+ # urpmi xtreemrss
+ # urpmi dixi-main
+
+We'll add the missing packages for the other components and fix problems
+that are reported on existing packages next week.
+
+Nicolas
+-- 
+Nicolas Vigier
+Mandriva R&D                          Web: http://www.mandriva.com/
+Email: nvigier at mandriva.com     Telephone: +33 (0)1 40 41 17 60
+
+

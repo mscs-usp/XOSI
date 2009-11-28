@@ -1,0 +1,208 @@
+
+#----------------------------------------------
+# connecting with subversion
+#----------------------------------------------
+
+#installation subversion
+urpmi subversion
+O
+
+
+cd /root
+#svn co https://clasz013.cla.edfgdf.fr/svn/osis/trunk/NOTES
+svn co http://subversion/assembla/xos
+p
+
+kortas
+
+cd
+ln -s /root/xos/CONF/emacs /root/.emacs
+ln -s /root/xos/CONF/emacs-places /root/.emacs-places
+mv .bashrc .bashrc.old
+ln -s /root/xos/CONF/bashrc /root/.bashrc
+ln -s /root/xos/CONF/wgetrc /etc/wgetrc
+echo Change xxxxxxxx dans wgetrc!!!!!!!
+ln -s /root/xos/CONF/hosts.virtualbox /etc/hosts
+
+
+
+
+
+
+
+#----------------------------------------------
+# setting package connection
+#----------------------------------------------
+
+urpmi.removemedia -a
+urpmi.addmedia  --distrib http://distrib-coffee.ipsl.jussieu.fr/pub/linux/MandrivaLinux/devel/xtreemos/2008.0/i586/
+urpmq --list-media
+
+urpmi.addmedia --wget xtreemos http://xtreemos:F_z3M]7qz@ftp.ext.mandriva.com/xtreemos/packages/i586/2008.0/RPMS
+
+urpmi.addmedia --distrib ftp://ftp.free.fr/mirrors/ftp.mandriva.com/MandrivaLinux/devel/xtreemos/2008.0/i586
+urpmi.addmedia --distrib ftp://ftp.free.fr/mirrors/ftp.mandriva.com/MandrivaLinux/official/2008.1/i586
+urpmi  --auto-update
+o
+
+#----------------------------------------------
+# configuration du noeud 0
+#----------------------------------------------
+
+
+
+# CREATE CRT
+
+urpmi rootca
+
+
+cd /root/xos/SCRIPTS_NEW
+init-rootca /opt/xtreemosca
+create-rootca-creds /opt/xtreemosca/
+mkdir /etc/xos/truststore/public
+mkdir /etc/xos/truststore/private
+cp /opt/xtreemosca/private/xtreemos.key /etc/xos/truststore/private
+cp /opt/xtreemosca/public/xtreemos.crt /etc/xos/truststore/public
+
+#create-rootca-creds /etc/xos/truststore/
+cp /etc/xos/truststore/public/xtreemos.crt /etc/xos/truststore/certs/xtreemos.crt
+y
+c_rehash /etc/xos/truststore/certs/
+
+
+# checking...
+cat /etc/xos/nss_pam/pam_xos.conf | grep AutoMount
+# should be        OpenAutoMount                  yes
+
+cat /etc/xos/nss_pam/pam_xos.conf | grep VOCA
+#should be
+#...
+#VOCACertDir         /etc/xos/truststore/certs #beware: no / at the end
+#VOCACertFile         xtreemos.crt
+#...
+
+# if needed
+#  cp pam_xos.conf /etc/xos/nss_pam/pam_xos.conf 
+
+
+grep cdaserver /etc/xos/config/cdaserver/cdaserver.properties
+grep xtreemos /etc/xos/config/cdaserver/cdaserver.properties
+
+# if needed 
+# cp cdaserver.properties /etc/xos/config/cdaserver/cdaserver.properties
+
+
+
+# BUG: missing dir /etc/xos/config/volife
+mkdir -p /etc/xos/config/volife
+grep cdaserver /etc/xos/config/volife/volife.properties
+# if needed
+cp  /root/xos/volife.properties /etc/xos/config/volife/volife.properties 
+
+grep mrc /usr/share/tomcat5/webapps/volifecycle/WEB-INF/classes/MRC.properties
+
+
+service tomcat5 restart
+
+grep dir_service /etc/xos/xtreemfs/mrcconfig.properties
+grep dir_service /etc/xos/xtreemfs/osdconfig.properties
+grep object_dir /etc/xos/xtreemfs/osdconfig.properties
+# should be object_dir = /xfs/objs/
+
+
+# if needed
+# cp osdconfig.properties /etc/xos/xtreemfs/osdconfig.properties
+
+grep dir_service /etc/xos/xtreemfs/default_dir
+mkdir /xfs
+chown -R xtreemfs:xtreemfs /xfs/
+service xtreemfs-osd stop
+service xtreemfs-mrc stop
+service xtreemfs-dir stop
+service xtreemfs-dir start
+service xtreemfs-mrc start
+service xtreemfs-osd start
+
+/sbin/service xtreemfs-dir restart
+/sbin/service xtreemfs-mrc restart
+/sbin/service xtreemfs-osd restart
+
+modprobe fuse
+
+
+# testing XtreemFS
+
+ xtfs_mkvol -a 2 http://localhost:32636/TestVolume
+ xtfs_lsvol http://localhost:32636/
+
+mkdir $HOME/TestVolume
+xtfs_mount -o dirservice=http://localhost   volume_url=http://localhost:32636/TestVolume/   direct_io,allow_other $HOME/TestVolume
+
+
+
+
+#to get around a bug in volifecycle
+mkdir /usr/share/tomcat5/certs
+chown tomcat.tomcat /usr/share/tomcat5/certs
+
+urpmi create-csr
+
+urpmi cdaserver
+urpmi xtreemos-localconfig
+
+# create VO
+
+/usr/share/xvoms/bin/xvoms_prepare_database.sh
+
+# start CDA server
+
+/sbin/service cdaserver restart
+
+# use CDA Client
+
+get-xos-cert localhost:6730 vo1 vouser.key vouser.crt test
+
+http://localhost:8080/volifecycle/view/uni_view.jsp?module=default&js=user_signin
+creer un compte
+creer une vo2
+get an XOS-cert --> download, le placer dans SCRIPT_NEW
+
+
+echo checking....
+
+view-xos-cert user.crt
+cat vouser.crt
+
+view-xos-cert user.crt | awk '/GlobalPrimaryVOName/,/GlobalSecondaryVONames/ {gsub(/^ */,""); i++; if (i==2) { print $0}}' > myVO
+cat myVO
+export VO=`cat myVO`
+
+mkdir -p /root/.xos/truststore/certs/
+cp user.crt /root/.xos/truststore/certs/
+
+service xos-amsd restart
+xos-policy-admin-am -vo $VO  --force
+xos-policy-admin-gm -vo $VO  --force
+xos-policy-admin-chk -pem /root/.xos/truststore/certs/user.crt
+
+
+pam_app_conv -pem user.crt
+
+
+cat > ~/.ssh/config-xos
+Host localhost
+  XosProxyFile /root/.xos/truststore/certs/user.crt
+  XosVoName    vo2
+
+
+
+mkdir /root/.ssh/config
+
+
+#must remove w from group (due to umask?)
+
+chmod g-w /root/.ssh/config-xos
+chmod g-w /root/.ssh/config
+
+ssh-xos localhost
+

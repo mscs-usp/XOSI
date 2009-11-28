@@ -1,0 +1,5 @@
+#Config file for xosd service.
+#Tue May 19 18:05:54 CEST 2009
+service=eu.xtreemos.xosd.security.rca.server.service.RCAServerHandler
+enabled=true
+numThreads=1

@@ -1,0 +1,56 @@
+
+localhost-CA certificates
+
+Pre-configured credentials to only be used on the 'localhost'
+configuration of XtreemOS.
+
+Contains:
+
+1) Root CA credentials - Root private key and root public key certificate ('root CA certificate').
+
+This certificate is used to 
+a) verify certificates issued by the CDA server, and
+b) check SSL connections between clients and servers.
+
+To remove the need for setting up an operating a root Certificate Authority, these credentials
+are supplied pre-configured.
+
+The root private key is protected by a pass-phrase 'changeme'.  However, in the 'localhost' 
+configuration of XtreemOS, you are not expected to use the root private key: it is only used 
+for signing new application certificates, which this configuration of XtreemOS is designed to avoid.
+
+
+2) Credentials for the CDA server - CDA private key and CDA application public key certificate.
+
+The CDA server application cannot run without an SSL connection, so its certificate and key are
+pre-configured. 
+
+The post-install script puts these credentials in the correct locations, and installs configuration
+files for the CDA client and CDA server which have the correct settings (credential filenames and pass-
+phrase protecting the CDA private key). The script also re-hashes the directory containing the root
+certificate and the CDA certificate, to allow the OpenSSL 'verify' command to work properly.
+
+These settings should be sufficient to run the CDA server with the pre-configured credentials,
+
+
+Changing the pass-phrase on the CDA private key
+
+The pass-phrase protecting the private key is 'changeme' - you are strongly
+advised to change this by the following means:
+
+openssl rsa -in cda.key -des3 -out cda-new.key
+
+This will prompt for the existing pass-phrase on the key, and write the key to the file cda-new.key,
+prompting for a new pass-phrase.
+
+Then replace the file 'cda.key' with 'cda-new.key' and update the property 'cdaserver.keyPassphrase' in
+the configuration file '/etc/xos/config/cdaserver/cdaserver.properties' with the new pass-phrase.
+
+
+Credentials for RCA and VOPS servers
+
+The private key and public key certificate (used for signing responses to clients) for these services are provided
+in localhost-rca.{key,crt} and localhost-vops.{key,crt}, and they are copied into the appropriate directories under
+/etc/xos/truststore.
+
+

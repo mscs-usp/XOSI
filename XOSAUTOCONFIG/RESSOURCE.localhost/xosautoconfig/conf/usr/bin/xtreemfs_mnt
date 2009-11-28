@@ -1,0 +1,74 @@
+#!/bin/bash 
+
+#xtreemfs_mnt: mount/umount the home volume of user $1
+#              creates the mount point before mounting
+#              creates the home volume if it does not exist
+#              deletes the mount point after umount
+#author: Yvon.Jegou @ inria.fr
+#written from the original xtreemfs_mnt script from ? 
+#
+#bug: passing the port number in the mrcurl makes xtfs_mount to fail
+
+DEFAULT_DIR=/etc/xos/xtreemfs/default_dir
+DEFAULT_MRC=/etc/xos/xtreemfs/default_mrc
+
+GUID=$2
+
+#workaround to bug #8533: do not execute xtfs_ commands in directory /
+cd /root
+case "$1" in
+	mount)
+		mrcport=`grep -e 'mrc.port' $DEFAULT_MRC | \
+			 cut -d ' ' -f 3`
+		mrchost=`grep -e 'mrc.host' $DEFAULT_MRC | \
+			 cut -d ' ' -f 3`
+#		mrcurl=$mrchost":"$mrcport
+		mrcurl=$mrchost  
+		dirport=`grep -e 'dir_service.port' $DEFAULT_DIR | \
+			 cut -d ' ' -f 3`
+		dirhost=`grep -e 'dir_service.host' $DEFAULT_DIR | \
+			 cut -d ' ' -f 3`
+#		dirurl=$dirhost":"$dirport
+		dirurl=$dirhost  
+		if [ ! -e /home/$GUID ]
+		then
+			mkdir -p /home/$GUID
+			chmod 0  /home/$GUID 
+		fi
+		xtfs_stat $dirurl/vol-$GUID  >/dev/null 2>&1 
+		result=$?
+		if [ $result != 0 ] 
+		then
+		    nuid=x$(id -u /CN=$GUID)
+		    if [ $nuid != x0 ] 
+		    then
+		        echo "Creating home volume $mrcurl/vol-$GUID"
+		        xtfs_mkvol -u /CN=$GUID  $mrcurl/vol-$GUID
+		    else
+			echo "User /CN=$GUID unknown, cannot create home volume"
+			exit 1
+		    fi
+		fi
+# nohup to avoid killing xtfs_mount when its father dies. This is a workaround
+# to bug #8338
+# xtfs_mount should detach from the controlling terminal
+# output piped on /dev/null as the home directory is not mounted
+		nohup xtfs_mount -o allow_other,nonempty $dirurl/vol-$GUID /home/$GUID >/dev/null 2>&1
+		exit $?
+	;;
+
+	umount)
+		fusermount -u /home/$GUID 
+		result=$?
+		[ $result == 0 ] && rmdir /home/$GUID
+		exit $result
+	;;
+
+	*)
+		echo "Usage: $0 [mount | umount] GUID"
+		exit 1;
+	;;
+esac
+
+exit $?
+

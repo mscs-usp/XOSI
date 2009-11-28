@@ -1,0 +1,287 @@
+urpmi  --auto-update
+le média « Main » est à jour
+le média « Main Updates » est à jour
+Pour satisfaire les dépendances, les paquetages suivants vont être installés
+   Paquetage                      Version      Révision      Arch   
+(média « Main »)
+  axis                           1.4          2.0.2mdv2008> i586    
+  bcel                           5.2          1.5mdv2008.0  i586    
+  drakx-net-text                 0.26         1.2mdv2008.0  noarch  
+  eclipse-ecj                    3.3.0        0.20.8mdv200> i586    
+  jakarta-commons-beanutils      1.7.0        6.0.2mdv2008> i586    
+  jakarta-commons-cli            1.0          8.0.4mdv2008> i586    
+  jakarta-commons-digester       1.8          1.0.1mdv2008> i586    
+  jakarta-commons-discovery      0.4          2.5mdv2008.0  i586    
+  jakarta-commons-httpclient     3.1          0.1.1mdv2008> i586    
+  jakarta-commons-launcher       1.1          1.5mdv2008.0  i586    
+  jakarta-commons-modeler        2.0          1.4mdv2008.0  i586    
+  jakarta-oro                    2.0.8        2.7mdv2008.0> i586    
+  java-1.7.0-icedtea-devel       1.7.0.0      24.726.1mdv2> i586    
+  java-cup                       11a          10mdv2008.0   i586    
+  kbd                            1.12         8.1mdv2008.0  i586    
+  krb5                           1.6.2        7.1mdv2008.0  i586    
+  libdrakx-net                   0.26         1.2mdv2008.0  noarch  
+  libfreetype6                   2.3.5        2.1mdv2008.0  i586    
+  mandriva-theme-common          1.2.20       6mdv2008.0    noarch  
+  mx4j                           3.0.1        4.7mdv2008.0  i586    
+  openssh                        4.7p1        3.3mdv2008.0  i586    
+  openssh-clients                4.7p1        3.3mdv2008.0  i586    
+  perl-Net-Telnet                3.03         6mdv2008.0    noarch  
+  regexp                         1.4          3.0.2mdv2008> i586    
+  tomcat5                        5.5.25       1.2.3mdv2008> i586    
+  tomcat5-common-lib             5.5.25       1.2.3mdv2008> i586    
+  tomcat5-jasper                 5.5.25       1.2.3mdv2008> i586    
+  tomcat5-server-lib             5.5.25       1.2.3mdv2008> i586    
+(média « Main Updates »)
+  XtreemFS-server                0.10.1       6mdv2008.0    i586    
+  dixi-main-jardeps              1.0.28       1mdv2008.0    i586    
+  volife                         0.1.8.4      2mdv2008.0    i586    
+  volife-jardeps                 0.1.8.4      2mdv2008.0    i586    
+un espace additionnel de 74Mo sera utilisé.
+Procéder à l'installation des 32 paquetages ? (O/n) o
+
+    ftp://ftp.free.fr/mirrors/ftp.mandriva.com/MandrivaLinux/devel/xtreemos/2008.0/i586/media/main/release/tomcat5-jasper-5.5.25-1.2.3mdv2008.0.i586.rpm
+installation de tomcat5-jasper-5.5.25-1.2.3mdv2008.0.i586.rpm depuis /var/cache/urpmi/rpms
+Préparation ...                  #####
+     1/32: tomcat5-jasper        #####
+
+    ftp://ftp.free.fr/mirrors/ftp.mandriva.com/MandrivaLinux/devel/xtreemos/2008.0/i586/media/main/release/eclipse-ecj-3.3.0-0.20.8mdv2008.0.i586.rpm
+installation de eclipse-ecj-3.3.0-0.20.8mdv2008.0.i586.rpm depuis /var/cache/urpmi/rpms
+Préparation ...                  #####
+     2/32: eclipse-ecj           #####
+
+    ftp://ftp.free.fr/mirrors/ftp.mandriva.com/MandrivaLinux/devel/xtreemos/2008.0/i586/media/main/release/tomcat5-common-lib-5.5.25-1.2.3mdv2008.0.i586.rpm
+installation de tomcat5-common-lib-5.5.25-1.2.3mdv2008.0.i586.rpm depuis /var/cache/urpmi/rpms
+Préparation ...                  #####
+     3/32: tomcat5-common-lib    #####
+
+    ftp://ftp.free.fr/mirrors/ftp.mandriva.com/MandrivaLinux/devel/xtreemos/2008.0/i586/media/main/release/java-cup-11a-10mdv2008.0.i586.rpm
+installation de java-cup-11a-10mdv2008.0.i586.rpm depuis /var/cache/urpmi/rpms
+Préparation ...                  #####
+     4/32: java-cup              #####
+
+    ftp://ftp.free.fr/mirrors/ftp.mandriva.com/MandrivaLinux/devel/xtreemos/2008.0/i586/media/main/release/jakarta-commons-beanutils-1.7.0-6.0.2mdv2008.0.i586.rpm
+installation de jakarta-commons-beanutils-1.7.0-6.0.2mdv2008.0.i586.rpm depuis /var/cache/urpmi/rpms
+Préparation ...                  #####
+     5/32: jakarta-commons-beanutils
+                                 #####
+
+    ftp://ftp.free.fr/mirrors/ftp.mandriva.com/MandrivaLinux/devel/xtreemos/2008.0/i586/media/main/release/regexp-1.4-3.0.2mdv2008.0.i586.rpm
+installation de regexp-1.4-3.0.2mdv2008.0.i586.rpm depuis /var/cache/urpmi/rpms
+Préparation ...                  #####
+     6/32: regexp                #####
+
+    ftp://ftp.free.fr/mirrors/ftp.mandriva.com/MandrivaLinux/devel/xtreemos/2008.0/i586/media/main/release/bcel-5.2-1.5mdv2008.0.i586.rpm
+installation de bcel-5.2-1.5mdv2008.0.i586.rpm depuis /var/cache/urpmi/rpms
+Préparation ...                  #####
+     7/32: bcel                  #####
+
+    ftp://ftp.free.fr/mirrors/ftp.mandriva.com/MandrivaLinux/devel/xtreemos/2008.0/i586/media/main/release/jakarta-commons-httpclient-3.1-0.1.1mdv2008.0.i586.rpm
+installation de jakarta-commons-httpclient-3.1-0.1.1mdv2008.0.i586.rpm depuis /var/cache/urpmi/rpms
+Préparation ...                  #####
+     8/32: jakarta-commons-httpclient
+                                 #####
+
+    ftp://ftp.free.fr/mirrors/ftp.mandriva.com/MandrivaLinux/devel/xtreemos/2008.0/i586/media/main/release/jakarta-commons-discovery-0.4-2.5mdv2008.0.i586.rpm
+installation de jakarta-commons-discovery-0.4-2.5mdv2008.0.i586.rpm depuis /var/cache/urpmi/rpms
+Préparation ...                  #####
+     9/32: jakarta-commons-discovery
+                                 #####
+
+    ftp://ftp.free.fr/mirrors/ftp.mandriva.com/MandrivaLinux/devel/xtreemos/2008.0/i586/media/main/release/axis-1.4-2.0.2mdv2008.0.i586.rpm
+installation de axis-1.4-2.0.2mdv2008.0.i586.rpm depuis /var/cache/urpmi/rpms
+Préparation ...                  #####
+    10/32: axis                  #####
+
+    ftp://ftp.free.fr/mirrors/ftp.mandriva.com/MandrivaLinux/devel/xtreemos/2008.0/i586/media/main/release/openssh-clients-4.7p1-3.3mdv2008.0.i586.rpm
+    ftp://ftp.free.fr/mirrors/ftp.mandriva.com/MandrivaLinux/devel/xtreemos/2008.0/i586/media/main/release/openssh-4.7p1-3.3mdv2008.0.i586.rpm
+installation de openssh-clients-4.7p1-3.3mdv2008.0.i586.rpm openssh-4.7p1-3.3mdv2008.0.i586.rpm depuis /var/cache/urpmi/rpms
+Préparation ...                  #####
+    11/32: openssh               #####
+    12/32: openssh-clients       #####
+
+    ftp://ftp.free.fr/mirrors/ftp.mandriva.com/MandrivaLinux/devel/xtreemos/2008.0/i586/media/main/release/perl-Net-Telnet-3.03-6mdv2008.0.noarch.rpm
+installation de perl-Net-Telnet-3.03-6mdv2008.0.noarch.rpm depuis /var/cache/urpmi/rpms
+Préparation ...                  #####
+    13/32: perl-Net-Telnet       #####
+
+    ftp://ftp.free.fr/mirrors/ftp.mandriva.com/MandrivaLinux/devel/xtreemos/2008.0/i586/media/main/release/libdrakx-net-0.26-1.2mdv2008.0.noarch.rpm
+installation de libdrakx-net-0.26-1.2mdv2008.0.noarch.rpm depuis /var/cache/urpmi/rpms
+Préparation ...                  #####
+    14/32: libdrakx-net          #####
+
+    ftp://ftp.free.fr/mirrors/ftp.mandriva.com/MandrivaLinux/devel/xtreemos/2008.0/i586/media/main/release/mx4j-3.0.1-4.7mdv2008.0.i586.rpm
+installation de mx4j-3.0.1-4.7mdv2008.0.i586.rpm depuis /var/cache/urpmi/rpms
+Préparation ...                  #####
+    15/32: mx4j                  #####
+
+    ftp://ftp.free.fr/mirrors/ftp.mandriva.com/MandrivaLinux/devel/xtreemos/2008.0/i586/media/main/release/jakarta-commons-digester-1.8-1.0.1mdv2008.0.i586.rpm
+installation de jakarta-commons-digester-1.8-1.0.1mdv2008.0.i586.rpm depuis /var/cache/urpmi/rpms
+Préparation ...                  #####
+    16/32: jakarta-commons-digester
+                                 #####
+
+    ftp://ftp.free.fr/mirrors/ftp.mandriva.com/MandrivaLinux/devel/xtreemos/2008.0/i586/media/main/release/jakarta-commons-modeler-2.0-1.4mdv2008.0.i586.rpm
+installation de jakarta-commons-modeler-2.0-1.4mdv2008.0.i586.rpm depuis /var/cache/urpmi/rpms
+Préparation ...                  #####
+    17/32: jakarta-commons-modeler
+                                 #####
+
+    ftp://ftp.free.fr/mirrors/ftp.mandriva.com/MandrivaLinux/devel/xtreemos/2008.0/i586/media/main/release/tomcat5-server-lib-5.5.25-1.2.3mdv2008.0.i586.rpm
+installation de tomcat5-server-lib-5.5.25-1.2.3mdv2008.0.i586.rpm depuis /var/cache/urpmi/rpms
+Préparation ...                  #####
+    18/32: tomcat5-server-lib    #####
+
+    ftp://ftp.free.fr/mirrors/ftp.mandriva.com/MandrivaLinux/devel/xtreemos/2008.0/i586/media/main/release/java-1.7.0-icedtea-devel-1.7.0.0-24.726.1mdv2008.0.i586.rpm
+installation de java-1.7.0-icedtea-devel-1.7.0.0-24.726.1mdv2008.0.i586.rpm depuis /var/cache/urpmi/rpms
+Préparation ...                  #####
+    19/32: java-1.7.0-icedtea-devel
+                                 #####
+
+    ftp://ftp.free.fr/mirrors/ftp.mandriva.com/MandrivaLinux/devel/xtreemos/2008.0/i586/media/main/release/mandriva-theme-common-1.2.20-6mdv2008.0.noarch.rpm
+installation de mandriva-theme-common-1.2.20-6mdv2008.0.noarch.rpm depuis /var/cache/urpmi/rpms
+Préparation ...                  #####
+    20/32: mandriva-theme-common #####
+
+    ftp://ftp.free.fr/mirrors/ftp.mandriva.com/MandrivaLinux/devel/xtreemos/2008.0/i586/media/main/release/jakarta-commons-launcher-1.1-1.5mdv2008.0.i586.rpm
+installation de jakarta-commons-launcher-1.1-1.5mdv2008.0.i586.rpm depuis /var/cache/urpmi/rpms
+Préparation ...                  #####
+    21/32: jakarta-commons-launcher
+                                 #####
+
+    ftp://ftp.free.fr/mirrors/ftp.mandriva.com/MandrivaLinux/devel/xtreemos/2008.0/i586/media/main/release/libfreetype6-2.3.5-2.1mdv2008.0.i586.rpm
+installation de libfreetype6-2.3.5-2.1mdv2008.0.i586.rpm depuis /var/cache/urpmi/rpms
+Préparation ...                  #####
+    22/32: libfreetype6          #####
+
+    ftp://ftp.free.fr/mirrors/ftp.mandriva.com/MandrivaLinux/devel/xtreemos/2008.0/i586/media/main/release/tomcat5-5.5.25-1.2.3mdv2008.0.i586.rpm
+installation de tomcat5-5.5.25-1.2.3mdv2008.0.i586.rpm depuis /var/cache/urpmi/rpms
+Préparation ...                  #####
+    23/32: tomcat5               #####
+erreur: échec du déballage de l'archive  dans fichier /usr/share/tomcat5/webapps: cpio: rename échec - est un répertoire
+
+    ftp://ftp.free.fr/mirrors/ftp.mandriva.com/MandrivaLinux/devel/xtreemos/2008.0/i586/media/main/release/kbd-1.12-8.1mdv2008.0.i586.rpm
+installation de kbd-1.12-8.1mdv2008.0.i586.rpm depuis /var/cache/urpmi/rpms
+Préparation ...                  #####
+    24/32: kbd                   #####
+
+    ftp://ftp.free.fr/mirrors/ftp.mandriva.com/MandrivaLinux/devel/xtreemos/2008.0/i586/media/main/release/krb5-1.6.2-7.1mdv2008.0.i586.rpm
+installation de krb5-1.6.2-7.1mdv2008.0.i586.rpm depuis /var/cache/urpmi/rpms
+Préparation ...                  #####
+    25/32: krb5                  #####
+
+    ftp://ftp.free.fr/mirrors/ftp.mandriva.com/MandrivaLinux/devel/xtreemos/2008.0/i586/media/main/release/jakarta-commons-cli-1.0-8.0.4mdv2008.0.i586.rpm
+installation de jakarta-commons-cli-1.0-8.0.4mdv2008.0.i586.rpm depuis /var/cache/urpmi/rpms
+Préparation ...                  #####
+    26/32: jakarta-commons-cli   #####
+
+    ftp://ftp.free.fr/mirrors/ftp.mandriva.com/MandrivaLinux/devel/xtreemos/2008.0/i586/media/main/release/drakx-net-text-0.26-1.2mdv2008.0.noarch.rpm
+installation de drakx-net-text-0.26-1.2mdv2008.0.noarch.rpm depuis /var/cache/urpmi/rpms
+Préparation ...                  #####
+    27/32: drakx-net-text        #####
+
+    ftp://ftp.free.fr/mirrors/ftp.mandriva.com/MandrivaLinux/devel/xtreemos/2008.0/i586/media/main/release/jakarta-oro-2.0.8-2.7mdv2008.0mdv2008.0.i586.rpm
+installation de jakarta-oro-2.0.8-2.7mdv2008.0mdv2008.0.i586.rpm depuis /var/cache/urpmi/rpms
+Préparation ...                  #####
+    28/32: jakarta-oro           #####
+
+    ftp://ftp.free.fr/mirrors/ftp.mandriva.com/MandrivaLinux/devel/xtreemos/2008.0/i586/media/main/updates/dixi-main-jardeps-1.0.28-1mdv2008.0.i586.rpm
+installation de dixi-main-jardeps-1.0.28-1mdv2008.0.i586.rpm depuis /var/cache/urpmi/rpms
+Préparation ...                  #####
+    29/32: dixi-main-jardeps     #####
+
+    ftp://ftp.free.fr/mirrors/ftp.mandriva.com/MandrivaLinux/devel/xtreemos/2008.0/i586/media/main/updates/XtreemFS-server-0.10.1-6mdv2008.0.i586.rpm
+installation de XtreemFS-server-0.10.1-6mdv2008.0.i586.rpm depuis /var/cache/urpmi/rpms
+Préparation ...                  #####
+    30/32: XtreemFS-server       #####
+
+    ftp://ftp.free.fr/mirrors/ftp.mandriva.com/MandrivaLinux/devel/xtreemos/2008.0/i586/media/main/updates/volife-jardeps-0.1.8.4-2mdv2008.0.i586.rpm
+installation de volife-jardeps-0.1.8.4-2mdv2008.0.i586.rpm depuis /var/cache/urpmi/rpms
+Préparation ...                  #####
+    31/32: volife-jardeps        #####
+
+    ftp://ftp.free.fr/mirrors/ftp.mandriva.com/MandrivaLinux/devel/xtreemos/2008.0/i586/media/main/updates/volife-0.1.8.4-2mdv2008.0.i586.rpm
+installation de volife-0.1.8.4-2mdv2008.0.i586.rpm depuis /var/cache/urpmi/rpms
+L'installation a échoué :
+	tomcat5 est nécessaire pour volife-0.1.8.4-2mdv2008.0.i586
+[root@localhost xos]# urmpi tomcat5
+bash: urmpi: command not found
+[root@localhost xos]# urpmi tomcat5
+
+    ftp://ftp.free.fr/mirrors/ftp.mandriva.com/MandrivaLinux/devel/xtreemos/2008.0/i586/media/main/release/tomcat5-5.5.25-1.2.3mdv2008.0.i586.rpm
+installation de tomcat5-5.5.25-1.2.3mdv2008.0.i586.rpm depuis /var/cache/urpmi/rpms
+Préparation ...                  #####
+      1/1: tomcat5               attention: /etc/logrotate.d/tomcat5 créé en tant que /etc/logrotate.d/tomcat5.rpmnew
+attention: /etc/sysconfig/tomcat5 créé en tant que /etc/sysconfig/tomcat5.rpmnew
+attention: /etc/tomcat5/catalina.policy créé en tant que /etc/tomcat5/catalina.policy.rpmnew
+attention: /etc/tomcat5/catalina.properties créé en tant que /etc/tomcat5/catalina.properties.rpmnew
+attention: /etc/tomcat5/context.xml créé en tant que /etc/tomcat5/context.xml.rpmnew
+attention: /etc/tomcat5/logging.properties créé en tant que /etc/tomcat5/logging.properties.rpmnew
+attention: /etc/tomcat5/server-minimal.xml créé en tant que /etc/tomcat5/server-minimal.xml.rpmnew
+attention: /etc/tomcat5/server.xml créé en tant que /etc/tomcat5/server.xml.rpmnew
+attention: /etc/tomcat5/tomcat-users.xml créé en tant que /etc/tomcat5/tomcat-users.xml.rpmnew
+attention: /etc/tomcat5/tomcat5.conf créé en tant que /etc/tomcat5/tomcat5.conf.rpmnew
+attention: /etc/tomcat5/uriworkermap.properties créé en tant que /etc/tomcat5/uriworkermap.properties.rpmnew
+attention: /etc/tomcat5/web.xml créé en tant que /etc/tomcat5/web.xml.rpmnew
+attention: /etc/tomcat5/workers.properties créé en tant que /etc/tomcat5/workers.properties.rpmnew
+attention: /etc/tomcat5/workers.properties.minimal créé en tant que /etc/tomcat5/workers.properties.minimal.rpmnew
+#####
+erreur: échec du déballage de l'archive  dans fichier /usr/share/tomcat5/webapps: cpio: rename échec - est un répertoire
+[root@localhost xos]# urpmi tomcat5
+
+    ftp://ftp.free.fr/mirrors/ftp.mandriva.com/MandrivaLinux/devel/xtreemos/2008.0/i586/media/main/release/tomcat5-5.5.25-1.2.3mdv2008.0.i586.rpm
+installation de tomcat5-5.5.25-1.2.3mdv2008.0.i586.rpm depuis /var/cache/urpmi/rpms
+Préparation ...                  #####
+      1/1: tomcat5               attention: /etc/logrotate.d/tomcat5 créé en tant que /etc/logrotate.d/tomcat5.rpmnew
+attention: /etc/sysconfig/tomcat5 créé en tant que /etc/sysconfig/tomcat5.rpmnew
+attention: /etc/tomcat5/catalina.policy créé en tant que /etc/tomcat5/catalina.policy.rpmnew
+attention: /etc/tomcat5/catalina.properties créé en tant que /etc/tomcat5/catalina.properties.rpmnew
+attention: /etc/tomcat5/context.xml créé en tant que /etc/tomcat5/context.xml.rpmnew
+attention: /etc/tomcat5/logging.properties créé en tant que /etc/tomcat5/logging.properties.rpmnew
+attention: /etc/tomcat5/server-minimal.xml créé en tant que /etc/tomcat5/server-minimal.xml.rpmnew
+attention: /etc/tomcat5/server.xml créé en tant que /etc/tomcat5/server.xml.rpmnew
+attention: /etc/tomcat5/tomcat-users.xml créé en tant que /etc/tomcat5/tomcat-users.xml.rpmnew
+attention: /etc/tomcat5/tomcat5.conf créé en tant que /etc/tomcat5/tomcat5.conf.rpmnew
+attention: /etc/tomcat5/uriworkermap.properties créé en tant que /etc/tomcat5/uriworkermap.properties.rpmnew
+attention: /etc/tomcat5/web.xml créé en tant que /etc/tomcat5/web.xml.rpmnew
+attention: /etc/tomcat5/workers.properties créé en tant que /etc/tomcat5/workers.properties.rpmnew
+attention: /etc/tomcat5/workers.properties.minimal créé en tant que /etc/tomcat5/workers.properties.minimal.rpmnew
+#####
+erreur: échec du déballage de l'archive  dans fichier /usr/share/tomcat5/webapps: cpio: rename échec - est un répertoire
+[root@localhost xos]# urpmi  --auto-update
+le média « Main » est à jour
+le média « Main Updates » est à jour
+Pour satisfaire les dépendances, les paquetages suivants vont être installés
+   Paquetage                      Version      Révision      Arch   
+(média « Main »)
+  tomcat5                        5.5.25       1.2.3mdv2008> i586    
+(média « Main Updates »)
+  volife                         0.1.8.4      2mdv2008.0    i586    
+un espace additionnel de 855Ko sera utilisé.
+Procéder à l'installation des 2 paquetages ? (O/n) o
+
+    ftp://ftp.free.fr/mirrors/ftp.mandriva.com/MandrivaLinux/devel/xtreemos/2008.0/i586/media/main/release/tomcat5-5.5.25-1.2.3mdv2008.0.i586.rpm
+installation de volife-0.1.8.4-2mdv2008.0.i586.rpm tomcat5-5.5.25-1.2.3mdv2008.0.i586.rpm depuis /var/cache/urpmi/rpms
+Préparation ...                  #####
+      1/2: tomcat5               attention: /etc/logrotate.d/tomcat5 créé en tant que /etc/logrotate.d/tomcat5.rpmnew
+attention: /etc/sysconfig/tomcat5 créé en tant que /etc/sysconfig/tomcat5.rpmnew
+attention: /etc/tomcat5/catalina.policy créé en tant que /etc/tomcat5/catalina.policy.rpmnew
+attention: /etc/tomcat5/catalina.properties créé en tant que /etc/tomcat5/catalina.properties.rpmnew
+attention: /etc/tomcat5/context.xml créé en tant que /etc/tomcat5/context.xml.rpmnew
+attention: /etc/tomcat5/logging.properties créé en tant que /etc/tomcat5/logging.properties.rpmnew
+attention: /etc/tomcat5/server-minimal.xml créé en tant que /etc/tomcat5/server-minimal.xml.rpmnew
+attention: /etc/tomcat5/server.xml créé en tant que /etc/tomcat5/server.xml.rpmnew
+attention: /etc/tomcat5/tomcat-users.xml créé en tant que /etc/tomcat5/tomcat-users.xml.rpmnew
+attention: /etc/tomcat5/tomcat5.conf créé en tant que /etc/tomcat5/tomcat5.conf.rpmnew
+attention: /etc/tomcat5/uriworkermap.properties créé en tant que /etc/tomcat5/uriworkermap.properties.rpmnew
+attention: /etc/tomcat5/web.xml créé en tant que /etc/tomcat5/web.xml.rpmnew
+attention: /etc/tomcat5/workers.properties créé en tant que /etc/tomcat5/workers.properties.rpmnew
+attention: /etc/tomcat5/workers.properties.minimal créé en tant que /etc/tomcat5/workers.properties.minimal.rpmnew
+#####
+erreur: échec du déballage de l'archive  dans fichier /usr/share/tomcat5/webapps: cpio: rename échec - est un répertoire
+      2/2: volife                #####
+[root@localhost xos]# urpmi  --auto-update
+le média « Main » est à jour
+le média « Main Updates » est à jour
+Les paquetages sont à jour
+[root@localhost xos]# 

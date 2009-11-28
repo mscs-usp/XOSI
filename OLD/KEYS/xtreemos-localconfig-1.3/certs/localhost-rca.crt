@@ -1,0 +1,74 @@
+Certificate:
+    Data:
+        Version: 3 (0x2)
+        Serial Number: 2 (0x2)
+        Signature Algorithm: sha1WithRSAEncryption
+        Issuer: CN=XtreemOS CA, O=XtreemOS Project, OU=XtreemOS Project Root Certification Authority
+        Validity
+            Not Before: Feb  6 16:15:29 2009 GMT
+            Not After : Feb  6 16:15:29 2010 GMT
+        Subject: O=RCA for xtreemos-localconfig, OU=rca, CN=localhost/rca
+        Subject Public Key Info:
+            Public Key Algorithm: rsaEncryption
+            RSA Public Key: (1024 bit)
+                Modulus (1024 bit):
+                    00:96:b1:e7:55:28:15:13:b5:20:95:6e:95:90:fb:
+                    c9:21:74:e7:f3:e3:c4:e9:a5:6d:c6:2f:c6:ec:a0:
+                    e6:04:98:ea:84:43:3f:77:76:f7:5c:d2:3d:b4:22:
+                    09:f6:7a:af:14:fc:eb:b6:b5:ca:16:5f:9b:91:b1:
+                    00:43:1d:c7:e2:2a:8f:99:8c:38:ad:ad:b3:df:3d:
+                    2b:eb:16:b8:c0:51:98:94:fc:64:a9:da:89:7e:7e:
+                    05:76:f3:a2:36:ee:41:1c:ae:d8:51:84:af:71:c6:
+                    ff:ce:fe:0c:15:a7:3c:4d:74:0b:8b:bf:68:27:ce:
+                    31:a0:a4:35:f1:86:1c:ac:31
+                Exponent: 65537 (0x10001)
+        X509v3 extensions:
+            Netscape Comment: 
+                XtreemOS Certificate
+            X509v3 Subject Key Identifier: 
+                6F:30:C0:D2:D5:1A:6F:48:67:D1:B5:35:2C:C6:D8:9E:BF:09:1B:95
+            X509v3 Authority Key Identifier: 
+                keyid:0E:A4:0B:7B:61:31:91:37:FE:BB:E5:C3:EC:0A:01:10:BB:4C:DF:9B
+
+            X509v3 Basic Constraints: 
+                CA:TRUE
+            X509v3 Subject Alternative Name: 
+                DNS:localhost
+            X509v3 Key Usage: 
+                Digital Signature, Key Encipherment, Certificate Sign
+    Signature Algorithm: sha1WithRSAEncryption
+        92:bd:79:83:33:6b:fd:76:43:74:2d:46:7c:07:a7:b8:5f:71:
+        40:0f:51:a4:3a:8a:04:88:a1:d0:22:36:d6:8b:50:45:1c:f2:
+        1b:f7:3a:48:b4:a9:cc:8f:fd:ad:19:53:c6:12:a3:eb:22:4e:
+        8a:89:95:94:d3:95:3a:de:3f:aa:94:aa:04:1d:f3:7e:88:7a:
+        5a:d1:54:17:b6:52:fd:f9:5c:11:ae:7a:fd:4f:80:a3:fd:d6:
+        49:0c:6d:c2:78:45:a8:58:0d:f1:80:51:f9:90:e7:b9:f2:34:
+        ad:88:d7:07:d2:e0:22:ec:73:93:7b:40:23:ba:0e:5d:ec:46:
+        39:8c:9a:5e:07:ca:03:77:fc:5d:bc:b2:d1:5b:59:9a:5b:df:
+        e1:e5:cf:a7:fe:00:2c:58:0b:b2:6e:37:1f:29:b5:3a:e5:05:
+        03:e7:9d:02:06:29:7a:e8:bc:8f:5f:f3:89:57:2f:b4:69:23:
+        7a:27:54:a8:eb:a4:55:9d:c5:3e:f8:32:cb:f0:a6:c3:62:96:
+        36:ff:e8:5f:ca:e1:86:51:ff:4e:cd:0d:77:b3:01:8f:b3:d1:
+        68:f2:71:bf:c4:06:96:6d:7e:f9:fd:d6:a6:ad:d1:75:d1:4c:
+        0c:78:a2:bc:ce:71:fd:ea:4c:3b:82:b7:0f:49:4f:25:98:1e:
+        f6:04:51:f4
+-----BEGIN CERTIFICATE-----
+MIIDRzCCAi+gAwIBAgIBAjANBgkqhkiG9w0BAQUFADBpMRQwEgYDVQQDEwtYdHJl
+ZW1PUyBDQTEZMBcGA1UEChMQWHRyZWVtT1MgUHJvamVjdDE2MDQGA1UECxMtWHRy
+ZWVtT1MgUHJvamVjdCBSb290IENlcnRpZmljYXRpb24gQXV0aG9yaXR5MB4XDTA5
+MDIwNjE2MTUyOVoXDTEwMDIwNjE2MTUyOVowTTElMCMGA1UEChMcUkNBIGZvciB4
+dHJlZW1vcy1sb2NhbGNvbmZpZzEMMAoGA1UECxMDcmNhMRYwFAYDVQQDEw1sb2Nh
+bGhvc3QvcmNhMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCWsedVKBUTtSCV
+bpWQ+8khdOfz48TppW3GL8bsoOYEmOqEQz93dvdc0j20Ign2eq8U/Ou2tcoWX5uR
+sQBDHcfiKo+ZjDitrbPfPSvrFrjAUZiU/GSp2ol+fgV286I27kEcrthRhK9xxv/O
+/gwVpzxNdAuLv2gnzjGgpDXxhhysMQIDAQABo4GZMIGWMCMGCWCGSAGG+EIBDQQW
+FhRYdHJlZW1PUyBDZXJ0aWZpY2F0ZTAdBgNVHQ4EFgQUbzDA0tUab0hn0bU1LMbY
+nr8JG5UwHwYDVR0jBBgwFoAUDqQLe2ExkTf+u+XD7AoBELtM35swDAYDVR0TBAUw
+AwEB/zAUBgNVHREEDTALgglsb2NhbGhvc3QwCwYDVR0PBAQDAgKkMA0GCSqGSIb3
+DQEBBQUAA4IBAQCSvXmDM2v9dkN0LUZ8B6e4X3FAD1GkOooEiKHQIjbWi1BFHPIb
+9zpItKnMj/2tGVPGEqPrIk6KiZWU05U63j+qlKoEHfN+iHpa0VQXtlL9+VwRrnr9
+T4Cj/dZJDG3CeEWoWA3xgFH5kOe58jStiNcH0uAi7HOTe0Ajug5d7EY5jJpeB8oD
+d/xdvLLRW1maW9/h5c+n/gAsWAuybjcfKbU65QUD550CBil66LyPX/OJVy+0aSN6
+J1So66RVncU++DLL8KbDYpY2/+hfyuGGUf9OzQ13swGPs9Fo8nG/xAaWbX75/dam
+rdF10UwMeKK8znH96kw7grcPSU8lmB72BFH0
+-----END CERTIFICATE-----

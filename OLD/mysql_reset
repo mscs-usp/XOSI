@@ -1,0 +1,73 @@
+/*1. Kill the mysqld that may be running (not with -9):
+
+kill `cat /var/lib/mysql/hostname.pid`
+
+2. Restart MySQL in safe mode:
+
+/usr/bin/mysqld_safe --skip-grant-tables&
+
+
+
+3. Connect to MySQL:
+
+/usr/bin/mysql
+
+4. Use the mysql database:
+
+use mysql;
+
+5. Run the update command putting your new password where the ....'s 
+are. Yes this is all one command:
+
+update user set password = password('.......') where user = 'root' and host='localhost';
+
+6. Flush the privileges so everything will take:
+
+flush privileges;
+
+7. Then quit mysql:
+
+quit
+
+8. Stop mysql from command line with:
+
+/etc/init.d/mysqld-max stop
+
+9. Restart mysql from command line with:
+
+/etc/init.d/mysqld-max start 
+/etc/init.d/mysqld-max start 
+<=====
+
+
+Best regards and have a nice week-end,
+Cristi
+Dustin Krysak wrote:
+
+> IS there a way to reset a lost mysql root password?
+>
+>
+>
+>
+>
+
+
+Thread
+ reset lost root password	Dustin Krysak	25 Nov
+   Re: reset lost root password	SGreen	26 Nov
+   Re: reset lost root password	inferno	26 Nov
+   encrypt data	Luiz Rafael Culik Guimaraes	26 Nov
+     Re: encrypt data	Gleb Paharenko	26 Nov
+       Re: encrypt data	Jake Peavy	27 Nov
+         Re: encrypt data	SGreen	27 Nov
+
+© 1995-2008 MySQL AB, 2008-2009 Sun Microsystems, Inc.
+
+    * Online Shop
+    * Privacy Policy
+    * Legal
+    * Contact Us
+    * No Software Patents!
+
+
+Page generated in 0.116 sec. using MySQL 5.1.14-beta-log

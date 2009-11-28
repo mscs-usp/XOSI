@@ -1,0 +1,6 @@
+mv /etc/xos/xosautoconfig /etc/xos/xosautoconfig
+ln -s /root/XOS/INSTALL/XOSAUTOCONFIG/CORE/xosautoconfig /etc/xos/xosautoconfig
+xosautoconfig --setmedia
+finishConfig 
+cp /etc/resolv.conf /etc/resolv.conf.orig
+cp /root/XOS/INSTALL/CONF/resolv.conf.claui2s0 /etc/resolv.conf

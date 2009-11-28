@@ -1,0 +1,17 @@
+mv /etc/xos/xosautoconfig /etc/xos/xosautoconfig-old
+ln -s /home/sk/XOS/INSTALL/XOSAUTOCONFIG/CORE.localhost/xosautoconfig /etc/xos/xosautoconfig
+ln -s /home/sk/XOS /root/XOS
+cd /etc/xos/xosautoconfig
+HOST=`hostname`
+IP=`/sbin/ifconfig | grep inet | awk '{sub(":"," "); print $3; exit}'`
+echo $HOST $IP
+sed "s/__HOST__/$HOST/g;s/__IP__/$IP/g"  /home/sk/XOS/INSTALL/XOSAUTOCONFIG/MODELES/CORE/globalDefs >/etc/xos/xosautoconfig/globalDefs
+sed "s/__HOST__/$HOST/g;s/__IP__/$IP/g"  /home/sk/XOS/INSTALL/XOSAUTOCONFIG/MODELES/CORE/localDefs >/etc/xos/xosautoconfig/localDefs
+sed "s/__HOST__/$HOST/g;s/__IP__/$IP/g"  /home/sk/XOS/INSTALL/XOSAUTOCONFIG/MODELES/CORE/nodeTypes >/etc/xos/xosautoconfig/nodeTypes
+cd /etc/xos/xosautoconfig
+xosautoconfig
+finishConfig 
+cp /etc/resolv.conf /etc/resolv.conf.orig
+#cp /root/XOS/INSTALL/CONF/resolv.conf.claui2s0 /etc/resolv.conf
+firefox http://localhost:8080/volifecycle
+

@@ -1,0 +1,26 @@
+ /usr/share/xvoms/bin/xvoms_prepare_database.sh
+
+echo start CDA server
+
+ /sbin/service cdaserver start
+
+echo use CDA Client
+
+ get-xos-cert localhost:6730 vo1 vouser.key vouser.crt test
+
+
+echo checking....
+
+view-xos-cert vouser.crt
+
+echo getting VO
+
+cat vouser.crt
+
+view-xos-cert vouser.crt | awk '/GlobalPrimaryVOName/,/GlobalSecondaryVONames/ {gsub(/^ */,""); i++; if (i==2) { print $0}}' > myVO
+
+
+cat myVO
+
+
+

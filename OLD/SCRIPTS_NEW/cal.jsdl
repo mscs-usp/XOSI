@@ -1,0 +1,15 @@
+<JobDefinition xmlns="http://schemas.ggf.org/jsdl/2005/11/jsdl">
+  <JobDescription>
+        <JobIdentification>
+	  <Description>Execution of cal</Description>
+	  <JobProject>XtreemOS_Test</JobProject>
+	</JobIdentification>
+	<Application>
+	  <POSIXApplication xmlns="http://schemas.ggf.org/jsdl/2005/11/jsdl-posix">
+	    <Executable>/usr/bin/cal</Executable>
+	    <Output>/tmp/out_cal.txt</Output>
+	    <Error>/tmp/err_cal.txt</Error>
+	  </POSIXApplication>
+	</Application>
+  </JobDescription>
+</JobDefinition>

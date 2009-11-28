@@ -1,0 +1,13 @@
+IP=172.16.10.220
+
+sudo service xosd start
+rca_apply
+rca_list_pending
+rca_confirm $IP:60000
+rca_request
+ sudo chmod 777 /etc/xos/truststore/certs/incoming/
+ dixi_test -RCA avo $VO $IP:60000
+
+
+
+sudo cp /etc/xos/truststore/certs/incoming/attrcert${VO}ext.crt /etc/xos/truststore/certs/

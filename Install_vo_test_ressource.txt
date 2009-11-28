@@ -1,0 +1,90 @@
+# create Yvon-Admin with xtreenos passwd. create vo test
+# sk joins test
+# get user key and cert
+
+
+# comme sk
+cd
+scp -r sk@xos0:/home/sk/.xos .
+
+cp /home/sk/Desktop/user.crt  /home/sk/.xos/truststore/certs/user.crt
+cp /home/sk/Desktop/user.key  /home/sk/.xos/truststore/private/user.key
+cp /home/sk/Desktop/user.key  /home/sk/.xos/user.key
+
+cp /home/sk/.xos/truststore/certs/user.crt /home/sk/Desktop/user.crt  
+
+cp  /home/sk/.xos/user.key /home/sk/Desktop/user.key 
+
+# comme root
+mkdir -p /root/.xos/truststore/certs/
+mkdir -p /root/.xos/truststore/private/
+cp /home/sk/Desktop/user.crt  /root/.xos/truststore/certs/user.crt
+cp /home/sk/Desktop/user.key  /root/.xos/truststore/private/user.key
+
+openssl verify -CApath /etc/xos/truststore/certs/ /root/.xos/truststore/certs/user.crt
+#/root/.xos/truststore/certs/user.crt: OK
+openssl verify -CApath /etc/xos/truststore/certs/ /home/sk/.xos/truststore/certs/user.crt
+#/home/sk/.xos/truststore/certs/user.crt: OK
+
+service xos-amsd restart
+
+
+xos-policy-admin-chk -pem /root/.xos/truststore/certs/user.crt
+dn = [/CN=584fddf7-69ae-47cc-b864-78f76e836aac], vo = [ffc8e45b-914d-41b7-aba0-a04fece111cf], role = [null]
+PAM:fail in mapping connect !
+         * a)Please check whether AMS daemon is running correctly *
+         * b)Please check whether mapping rules are correct.      *
+         *     If not, try:                                       *
+         *       xos-policy-admin-am  -vo <vo> --force            *
+         *       xos-policy-admin-gm  -vo <vo> --force            *
+         * c)Please check whether setting rule is correct.        *
+         *     If not, try:                                       *
+         *       xos-policy-admin-set -uidmax <num> -uidmin <num> *
+         *                            -gidmax <num> -gidmin <num> *
+Oops: Permission denied
+
+VO=ec46d3e4-507b-4c58-a65c-3e71a9187917
+
+
+xos-policy-admin-am -vo $VO  --force
+xos-policy-admin-gm -vo $VO  --force
+
+xos-policy-admin-chk -pem /root/.xos/truststore/certs/user.crt
+
+# en sk
+
+cat > /home/sk/.ssh/config-xos.modele <<EOF
+Host __HOST__
+  XosProxyFile /home/sk/.xos/truststore/certs/user.crt
+  XosVoName   test
+EOF
+
+HOST=`hostname`
+
+sed "s/__HOST__/$HOST/g" /home/sk/.ssh/config-xos.modele  > /home/sk/.ssh/config-xos
+cat /home/sk/.ssh/config-xos
+
+#must remove w from group (due to umask?)
+chmod g-w /home/sk/.ssh/config-xos
+
+ssh-xos $HOST
+ls
+
+# en sk
+
+cat > /home/sk/.ssh/config-xos.modele <<EOF
+Host __HOST__
+  XosProxyFile /home/sk/.xos/truststore/certs/user.crt
+  XosVoName   test
+EOF
+
+HOST=`hostname`
+
+sed "s/__HOST__/$HOST/g" /home/sk/.ssh/config-xos.modele  > /home/sk/.ssh/config-xos
+cat /home/sk/.ssh/config-xos
+
+#must remove w from group (due to umask?)
+chmod g-w /home/sk/.ssh/config-xos
+
+ssh-xos $HOST
+

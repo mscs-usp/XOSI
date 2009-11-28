@@ -1,0 +1,446 @@
+
+
+
+
+[root@localhost KEYS_2.0]# [root@localhost KEYS_2.0]# mysql -u root -p
+mysql -u root -p
+Enter password: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 80
+Server version: 5.0.81-Max Mandriva Linux - MySQL Max Edition (GPL)
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> set password for root@localhost=password('')
+set password for root@localhost=password('')
+    -> ;
+;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> Bye
+Bye
+    -> exit
+exit
+    -> 
+Bye
+[root@localhost KEYS_2.0]# /usr/share/xvoms/bin/xvoms_prepare_database.sh
+/usr/share/xvoms/bin/xvoms_prepare_database.sh
+[root@localhost KEYS_2.0]#  - Create xvoms database
+Enter password for MySQL root user:
+Please enter a non-null root password.
+[root@localhost KEYS_2.0]# /etc/init.d/mysqld-max restart
+/etc/init.d/mysqld-max restart
+Shutting down MySQL: ....[65G[[1;32m  OK  [0;39m]
+Starting MySQL: .[65G[[1;32m  OK  [0;39m]
+[root@localhost KEYS_2.0]# urpmi phpmyadmin
+urpmi phpmyadmin
+Afin de satisfaire les dépendances de « apache[== 2.2.9-12mdv2009.0] », un des paquetages suivants est nécessaire :
+ 1- apache-mpm-prefork-2.2.9-12mdv2009.0.i586 : Implements a non-threaded, pre-forking web server (stable) (à installer)
+ 2- apache-mpm-peruser-2.2.9-12mdv2009.0.i586 : Implements a hybrid multi-process, multi-threaded web server (experimental) (à installer)
+ 3- apache-mpm-itk-2.2.9-12mdv2009.0.i586 : Implements a non-threaded, pre-forking web server (experimental) (à installer)
+Que choisissez-vous ? (1-3) o
+o
+[root@localhost KEYS_2.0]# urpmi phpmyadmin
+urpmi phpmyadmin
+Afin de satisfaire les dépendances de « apache[== 2.2.9-12mdv2009.0] », un des paquetages suivants est nécessaire :
+ 1- apache-mpm-prefork-2.2.9-12mdv2009.0.i586 : Implements a non-threaded, pre-forking web server (stable) (à installer)
+ 2- apache-mpm-peruser-2.2.9-12mdv2009.0.i586 : Implements a hybrid multi-process, multi-threaded web server (experimental) (à installer)
+ 3- apache-mpm-itk-2.2.9-12mdv2009.0.i586 : Implements a non-threaded, pre-forking web server (experimental) (à installer)
+Que choisissez-vous ? (1-3) 1
+1
+Pour satisfaire les dépendances, les paquetages suivants vont être installés
+   Paquetage                      Version      Révision      Arch   
+(média « Main »)
+  apache-base                    2.2.9        12mdv2009.0   i586    
+  apache-conf                    2.2.9        2mdv2009.0    i586    
+  apache-modules                 2.2.9        12mdv2009.0   i586    
+  apache-mpm-prefork             2.2.9        12mdv2009.0   i586    
+  ccp                            0.4.1        1mdv2009.0    noarch  
+  libmcrypt                      2.5.8        5mdv2009.0    i586    
+  libmcrypt4                     2.5.8        5mdv2009.0    i586    
+  php-ini                        5.2.6        2mdv2009.0    i586    
+  php-suhosin                    0.9.27       1mdv2009.0    i586    
+(média « Main Updates »)
+  apache-mod_php                 5.2.6        3.1mdv2009.0  i586    
+  libmbfl1                       1.0.2        3.1mdv2009.0  i586    
+  libphp5_common5                5.2.6        18.5mdv2009.0 i586    
+  php-ctype                      5.2.6        18.5mdv2009.0 i586    
+  php-dom                        5.2.6        18.5mdv2009.0 i586    
+  php-filter                     5.2.6        18.5mdv2009.0 i586    
+  php-ftp                        5.2.6        18.5mdv2009.0 i586    
+  php-gettext                    5.2.6        18.5mdv2009.0 i586    
+  php-hash                       5.2.6        18.5mdv2009.0 i586    
+  php-json                       5.2.6        18.5mdv2009.0 i586    
+  php-mbstring                   5.2.6        18.5mdv2009.0 i586    
+  php-mcrypt                     5.2.6        18.5mdv2009.0 i586    
+  php-mysql                      5.2.6        18.5mdv2009.0 i586    
+  php-openssl                    5.2.6        18.5mdv2009.0 i586    
+  php-posix                      5.2.6        18.5mdv2009.0 i586    
+  php-session                    5.2.6        18.5mdv2009.0 i586    
+  php-sysvsem                    5.2.6        18.5mdv2009.0 i586    
+  php-sysvshm                    5.2.6        18.5mdv2009.0 i586    
+  php-tokenizer                  5.2.6        18.5mdv2009.0 i586    
+  php-xmlreader                  5.2.6        18.5mdv2009.0 i586    
+  php-xmlwriter                  5.2.6        18.5mdv2009.0 i586    
+  php-zlib                       5.2.6        18.5mdv2009.0 i586    
+(média « Contrib Updates »)
+  phpmyadmin                     3.0.1.1      2mdv2009.0    noarch  
+un espace additionnel de 18Mo sera utilisé.
+5.3Mo de paquets seront récupérés.
+Procéder à l'installation des 32 paquetages ? (O/n) o
+o
+
+    ftp://ftp.free.fr/mirrors/ftp.mandriva.com/MandrivaLinux/official/2009.0/i586/media/main/release/ccp-0.4.1-1mdv2009.0.noarch.rpm
+    ftp://ftp.free.fr/mirrors/ftp.mandriva.com/MandrivaLinux/official/2009.0/i586/media/main/release/apache-conf-2.2.9-2mdv2009.0.i586.rpm
+    ftp://ftp.free.fr/mirrors/ftp.mandriva.com/MandrivaLinux/official/2009.0/i586/media/main/release/php-ini-5.2.6-2mdv2009.0.i586.rpm
+    ftp://ftp.free.fr/mirrors/ftp.mandriva.com/MandrivaLinux/official/2009.0/i586/media/main/release/libmcrypt-2.5.8-5mdv2009.0.i586.rpm
+    ftp://ftp.free.fr/mirrors/ftp.mandriva.com/MandrivaLinux/official/2009.0/i586/media/main/release/php-suhosin-0.9.27-1mdv2009.0.i586.rpm
+    ftp://ftp.free.fr/mirrors/ftp.mandriva.com/MandrivaLinux/official/2009.0/i586/media/main/release/libmcrypt4-2.5.8-5mdv2009.0.i586.rpm
+    ftp://ftp.free.fr/mirrors/ftp.mandriva.com/MandrivaLinux/official/2009.0/i586/media/main/release/apache-base-2.2.9-12mdv2009.0.i586.rpm
+    ftp://ftp.free.fr/mirrors/ftp.mandriva.com/MandrivaLinux/official/2009.0/i586/media/main/release/apache-modules-2.2.9-12mdv2009.0.i586.rpm
+    ftp://ftp.free.fr/mirrors/ftp.mandriva.com/MandrivaLinux/official/2009.0/i586/media/main/release/apache-mpm-prefork-2.2.9-12mdv2009.0.i586.rpm
+installation de ccp-0.4.1-1mdv2009.0.noarch.rpm php-ini-5.2.6-2mdv2009.0.i586.rpm apache-conf-2.2.9-2mdv2009.0.i586.rpm libmcrypt-2.5.8-5mdv2009.0.i586.rpm php-suhosin-0.9.27-1mdv2009.0.i586.rpm libmcrypt4-2.5.8-5mdv2009.0.i586.rpm apache-base-2.2.9-12mdv2009.0.i586.rpm apache-mpm-prefork-2.2.9-12mdv2009.0.i586.rpm apache-modules-2.2.9-12mdv2009.0.i586.rpm depuis /var/cache/urpmi/rpms
+Préparation ...                  #####
+     1/32: libmcrypt             #####
+     2/32: apache-conf           #####
+     3/32: ccp                   #####
+     4/32: php-ini               #####
+     5/32: libmcrypt4            #####
+     6/32: php-suhosin           #####
+     7/32: apache-base           #####
+     8/32: apache-modules        #####
+     9/32: apache-mpm-prefork    #####
+----------------------------------------------------------------------
+Plus d'information sur le paquetage apache-base-2.2.9-12mdv2009.0.i586
+The most significant changes with this release compared to apache up to
+Mandriva Linux 2006.0, 2007.0, 2007.1, 2008.0 and 2008.1
+
+ o mod_ssl has support for distcache, apr_memcache and SNI per default.
+ o The SSL certificates and directories has been moved to the new /etc/pki
+   directory structure.
+ o The SSL default vhost config file has been moved from
+   /etc/httpd/modules.d/41_mod_ssl.default-vhost.conf to
+   /etc/httpd/conf/vhosts.d/01_default_ssl_vhost.conf
+ o The new htcacheclean subpackage will monitor and clean the mod_proxy
+   (mod_disk_cache) directories at given intervals in a daemonized fashion.
+   You can tune this in the /etc/sysconfig/htcacheclean configuration file.
+ o There are three new experimental MPM's, the ITK, peruser and event MPM's.
+   Use these with caution because of their experimental status. The packages
+   are named:
+   - apache-mpm-event
+   - apache-mpm-itk
+   - apache-mpm-peruser
+
+Please read the following files for more in-depth information about the changes
+in apache 2.2; upgrading.txt and new_features_2_2.txt
+
+The best practise is to read the apache manual before sending in bugreports,
+please install apache-doc like so:
+
+urpmi apache-doc
+
+and then read the somewhat localized apache manual online at:
+
+http://localhost/manual/
+
+Thanks in advance.
+
+Regards // Oden Eriksson
+----------------------------------------------------------------------
+----------------------------------------------------------------------
+Plus d'information sur le paquetage apache-conf-2.2.9-2mdv2009.0.i586
+The most significant changes with this release compared to apache up to
+Mandriva Linux 2006.0.
+
+ o The commonhttpd.conf and httpd2.conf configuration (10.0/10.1) files has 
+   been merged into the single /etc/httpd/conf/httpd.conf file. Make sure you 
+   review your old configuration files and make nessesary changes to the single
+   httpd.conf configuration file or elsewhere where suited. The old config files
+   are provided so it will become easier to determine the possible changes the
+   user (you?) might have done. Use something like this to utilize this:
+   
+   # urpmi diffutils
+   
+   # diff -u /usr/share/doc/apache-conf-*/old_config/httpd2.conf-10.0 \
+   /etc/httpd/conf/httpd2.conf.rpmsave > /etc/httpd/conf/httpd2.conf.diff
+
+   # diff -u /usr/share/doc/apache-conf-*/old_config/commonhttpd.conf-10.0 \
+   /etc/httpd/conf/commonhttpd.conf.rpmsave > /etc/httpd/conf/commonhttpd.conf.diff
+
+   # diff -u /usr/share/doc/apache-conf-*/old_config/httpd.conf-2006.0 \
+   /etc/httpd/conf/httpd.conf.rpmsave > /etc/httpd/conf/httpd.conf.diff
+
+A word of advice regarding one obvious security issue. Since mod_access has
+been renamed to mod_authz_host every directory instance referring to mod_access
+will be invalid. If you have content secured like that please review your
+configuration. mod_access.c has changed to mod_authz_host.c. The new initscript
+should be able to trap this and prevent the server from starting.
+
+Please read the following files for more in-depth information about the changes
+in apache 2.2; upgrading.txt and new_features_2_2.txt
+
+
+The best practise is to read the apache manual before sending in bugreports,
+please install apache-doc like so:
+
+   # urpmi apache-doc
+
+and then read the somewhat localized online apache manual at:
+
+http://localhost/manual/
+
+Thanks in advance.
+
+Regards // Oden Eriksson
+----------------------------------------------------------------------
+
+    ftp://ftp.free.fr/mirrors/ftp.mandriva.com/MandrivaLinux/official/2009.0/i586/media/main/updates/php-session-5.2.6-18.5mdv2009.0.i586.rpm
+    ftp://ftp.free.fr/mirrors/ftp.mandriva.com/MandrivaLinux/official/2009.0/i586/media/main/updates/php-posix-5.2.6-18.5mdv2009.0.i586.rpm
+    ftp://ftp.free.fr/mirrors/ftp.mandriva.com/MandrivaLinux/official/2009.0/i586/media/main/updates/php-xmlwriter-5.2.6-18.5mdv2009.0.i586.rpm
+    ftp://ftp.free.fr/mirrors/ftp.mandriva.com/MandrivaLinux/official/2009.0/i586/media/main/updates/libphp5_common5-5.2.6-18.5mdv2009.0.i586.rpm
+    ftp://ftp.free.fr/mirrors/ftp.mandriva.com/MandrivaLinux/official/2009.0/i586/media/main/updates/libmbfl1-1.0.2-3.1mdv2009.0.i586.rpm
+    ftp://ftp.free.fr/mirrors/ftp.mandriva.com/MandrivaLinux/official/2009.0/i586/media/main/updates/php-xmlreader-5.2.6-18.5mdv2009.0.i586.rpm
+    ftp://ftp.free.fr/mirrors/ftp.mandriva.com/MandrivaLinux/official/2009.0/i586/media/main/updates/php-zlib-5.2.6-18.5mdv2009.0.i586.rpm
+    ftp://ftp.free.fr/mirrors/ftp.mandriva.com/MandrivaLinux/official/2009.0/i586/media/main/updates/php-dom-5.2.6-18.5mdv2009.0.i586.rpm
+installation de php-session-5.2.6-18.5mdv2009.0.i586.rpm php-posix-5.2.6-18.5mdv2009.0.i586.rpm php-xmlwriter-5.2.6-18.5mdv2009.0.i586.rpm libphp5_common5-5.2.6-18.5mdv2009.0.i586.rpm php-zlib-5.2.6-18.5mdv2009.0.i586.rpm php-xmlreader-5.2.6-18.5mdv2009.0.i586.rpm libmbfl1-1.0.2-3.1mdv2009.0.i586.rpm php-dom-5.2.6-18.5mdv2009.0.i586.rpm depuis /var/cache/urpmi/rpms
+Préparation ...                  #####
+    10/32: libphp5_common5       #####
+    11/32: php-dom               #####
+    12/32: php-session           #####
+    13/32: php-posix             #####
+    14/32: php-xmlwriter         #####
+    15/32: php-zlib              #####
+    16/32: php-xmlreader         #####
+    17/32: libmbfl1              #####
+
+    ftp://ftp.free.fr/mirrors/ftp.mandriva.com/MandrivaLinux/official/2009.0/i586/media/main/updates/php-openssl-5.2.6-18.5mdv2009.0.i586.rpm
+    ftp://ftp.free.fr/mirrors/ftp.mandriva.com/MandrivaLinux/official/2009.0/i586/media/main/updates/php-sysvshm-5.2.6-18.5mdv2009.0.i586.rpm
+    ftp://ftp.free.fr/mirrors/ftp.mandriva.com/MandrivaLinux/official/2009.0/i586/media/main/updates/php-gettext-5.2.6-18.5mdv2009.0.i586.rpm
+    ftp://ftp.free.fr/mirrors/ftp.mandriva.com/MandrivaLinux/official/2009.0/i586/media/main/updates/php-hash-5.2.6-18.5mdv2009.0.i586.rpm
+    ftp://ftp.free.fr/mirrors/ftp.mandriva.com/MandrivaLinux/official/2009.0/i586/media/main/updates/php-ctype-5.2.6-18.5mdv2009.0.i586.rpm
+    ftp://ftp.free.fr/mirrors/ftp.mandriva.com/MandrivaLinux/official/2009.0/i586/media/main/updates/php-sysvsem-5.2.6-18.5mdv2009.0.i586.rpm
+    ftp://ftp.free.fr/mirrors/ftp.mandriva.com/MandrivaLinux/official/2009.0/i586/media/main/updates/php-filter-5.2.6-18.5mdv2009.0.i586.rpm
+    ftp://ftp.free.fr/mirrors/ftp.mandriva.com/MandrivaLinux/official/2009.0/i586/media/main/updates/php-json-5.2.6-18.5mdv2009.0.i586.rpm
+installation de php-openssl-5.2.6-18.5mdv2009.0.i586.rpm php-sysvshm-5.2.6-18.5mdv2009.0.i586.rpm php-gettext-5.2.6-18.5mdv2009.0.i586.rpm php-hash-5.2.6-18.5mdv2009.0.i586.rpm php-ctype-5.2.6-18.5mdv2009.0.i586.rpm php-sysvsem-5.2.6-18.5mdv2009.0.i586.rpm php-filter-5.2.6-18.5mdv2009.0.i586.rpm php-json-5.2.6-18.5mdv2009.0.i586.rpm depuis /var/cache/urpmi/rpms
+Préparation ...                  #####
+    18/32: php-json              #####
+    19/32: php-openssl           #####
+    20/32: php-sysvshm           #####
+    21/32: php-gettext           #####
+    22/32: php-hash              #####
+    23/32: php-ctype             #####
+    24/32: php-sysvsem           #####
+    25/32: php-filter            #####
+
+    ftp://ftp.free.fr/mirrors/ftp.mandriva.com/MandrivaLinux/official/2009.0/i586/media/main/updates/php-mcrypt-5.2.6-18.5mdv2009.0.i586.rpm
+    ftp://ftp.free.fr/mirrors/ftp.mandriva.com/MandrivaLinux/official/2009.0/i586/media/main/updates/php-tokenizer-5.2.6-18.5mdv2009.0.i586.rpm
+    ftp://ftp.free.fr/mirrors/ftp.mandriva.com/MandrivaLinux/official/2009.0/i586/media/main/updates/php-mbstring-5.2.6-18.5mdv2009.0.i586.rpm
+    ftp://ftp.free.fr/mirrors/ftp.mandriva.com/MandrivaLinux/official/2009.0/i586/media/main/updates/php-ftp-5.2.6-18.5mdv2009.0.i586.rpm
+    ftp://ftp.free.fr/mirrors/ftp.mandriva.com/MandrivaLinux/official/2009.0/i586/media/main/updates/apache-mod_php-5.2.6-3.1mdv2009.0.i586.rpm
+    ftp://ftp.free.fr/mirrors/ftp.mandriva.com/MandrivaLinux/official/2009.0/i586/media/main/updates/php-mysql-5.2.6-18.5mdv2009.0.i586.rpm
+    ftp://ftp.free.fr/mirrors/ftp.mandriva.com/MandrivaLinux/official/2009.0/i586/media/contrib/updates/phpmyadmin-3.0.1.1-2mdv2009.0.noarch.rpm
+installation de php-mcrypt-5.2.6-18.5mdv2009.0.i586.rpm php-tokenizer-5.2.6-18.5mdv2009.0.i586.rpm phpmyadmin-3.0.1.1-2mdv2009.0.noarch.rpm php-ftp-5.2.6-18.5mdv2009.0.i586.rpm php-mbstring-5.2.6-18.5mdv2009.0.i586.rpm php-mysql-5.2.6-18.5mdv2009.0.i586.rpm apache-mod_php-5.2.6-3.1mdv2009.0.i586.rpm depuis /var/cache/urpmi/rpms
+Préparation ...                  #####
+    26/32: php-mysql             #####
+    27/32: php-mbstring          #####
+    28/32: php-ftp               #####
+    29/32: php-tokenizer         #####
+    30/32: apache-mod_php        #####
+    31/32: php-mcrypt            #####
+    32/32: phpmyadmin            #####
+----------------------------------------------------------------------
+Plus d'information sur le paquetage phpmyadmin-3.0.1.1-2mdv2009.0.noarch
+The config file name has changed name from config.inc.php to 
+config.default.php. From 2.8.0 the file moved into libraries/
+
+Now the file is put in /etc/phpmyadmin/config.default.php and softlinked
+to /var/www/phpmyadmin/libraries/config.default.php
+----------------------------------------------------------------------
+[root@localhost KEYS_2.0]# apachectl start
+apachectl start
+httpd: Could not reliably determine the server's fully qualified domain name, using 127.0.0.1 for ServerName
+[root@localhost KEYS_2.0]# apachectl restart
+apachectl restart
+httpd: Could not reliably determine the server's fully qualified domain name, using 127.0.0.1 for ServerName
+[root@localhost KEYS_2.0]# apachectl restart
+apachectl restart
+httpd: Could not reliably determine the server's fully qualified domain name, using 127.0.0.1 for ServerName
+[root@localhost KEYS_2.0]# urpmi php5-mysql 
+urpmi php5-mysql 
+Pas de paquetage nommé php5-mysql
+[root@localhost KEYS_2.0]# urpmi php-mysql 
+urpmi php-mysql 
+Le paquetage php-mysql-5.2.6-18.5mdv2009.0.i586 est déjà installé
+[root@localhost KEYS_2.0]# apachectl restart
+apachectl restart
+httpd: Syntax error on line 299 of /etc/httpd/conf/httpd.conf: Cannot load /etc/httpd/lib/apache/libphp5.so into server: /etc/httpd/lib/apache/libphp5.so: cannot open shared object file: No such file or directory
+[root@localhost KEYS_2.0]# apachectl restart
+apachectl restart
+httpd: Syntax error on line 299 of /etc/httpd/conf/httpd.conf: Cannot load /etc/httpd/lib/libphp5_common.so into server: /etc/httpd/lib/libphp5_common.so: cannot open shared object file: No such file or directory
+[root@localhost KEYS_2.0]# apachectl restart
+apachectl restart
+httpd: Syntax error on line 299 of /etc/httpd/conf/httpd.conf: Cannot load /etc/httpd/lib/libphp5_common.so.5 into server: /etc/httpd/lib/libphp5_common.so.5: undefined symbol: php_register_internal_extensions
+[root@localhost KEYS_2.0]# apachectl restart
+apachectl restart
+httpd: Could not reliably determine the server's fully qualified domain name, using 127.0.0.1 for ServerName
+[root@localhost KEYS_2.0]# urpmi php5
+urpmi php5
+Pas de paquetage nommé php5
+Les paquetages suivants contiennent php5 : libphp5_common5, php5-test
+Vous pouvez utiliser « -a » pour les sélectionner tous
+[root@localhost KEYS_2.0]# urpmi php5-test
+urpmi php5-test
+Afin de satisfaire les dépendances de « devel(libgcc_s) », un des paquetages suivants est nécessaire :
+ 1- gcc-4.3.2-3mnb2.i586 : GNU Compiler Collection (à installer)
+ 2- gcc3.3-3.3.6-4mdv2009.0.i586 : GNU Compiler Collection (à installer)
+Que choisissez-vous ? (1-2)   C-c C-c^C[root@localhost KEYS_2.0]# get-xos-cert localhost:6730 vo1 user.key user.crt test
+get-xos-cert localhost:6730 vo1 user.key user.crt test
+Exception in thread "main" java.lang.NoClassDefFoundError: gnu/getopt/Getopt
+	at eu.xtreemos.security.cda.client.CdaClient.main(CdaClient.java:549)
+Caused by: java.lang.ClassNotFoundException: gnu.getopt.Getopt
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:217)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:205)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:323)
+	at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:294)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:268)
+	at java.lang.ClassLoader.loadClassInternal(ClassLoader.java:336)
+	... 1 more
+[root@localhost KEYS_2.0]# get-xos-cert localhost:6730 vo1 
+get-xos-cert localhost:6730 vo1 
+Enter your username: sk
+sk
+Enter password: 
+
+Passphrase to protect private key (at least 8 characters long): xtreemos
+
+Type passphrase again to confirm: xtreemos
+
+java.net.ConnectException: Connection refused
+[root@localhost KEYS_2.0]# /sbin/service cdaserver restart
+/sbin/service cdaserver restart
+Arrêt de  : [65G[[1;31mÉCHEC [0;39m]
+[65G[[1;32m  OK  [0;39m]
+
+
+[root@localhost KEYS_2.0]# [root@localhost KEYS_2.0]# get-xos-cert localhost:6730 vo1 
+get-xos-cert localhost:6730 vo1 
+Enter your username: sk
+sk
+Enter password: 
+
+Passphrase to protect private key (at least 8 characters long): xtreemos
+
+Type passphrase again to confirm: xtreemos
+
+java.net.ConnectException: Connection refused
+[root@localhost KEYS_2.0]# service xos-amsd restart
+service xos-amsd restart
+Arrêt de xos_amsd : [65G[[1;32m  OK  [0;39m]
+Lancement de xos_amsd : [65G[[1;32m  OK  [0;39m]
+[root@localhost KEYS_2.0]# get-xos-cert localhost:6730 vo1 
+get-xos-cert localhost:6730 vo1 
+Enter your username: sk
+sk
+Enter password: 
+
+Passphrase to protect private key (at least 8 characters long): xtreemos
+
+Type passphrase again to confirm: xtreemos
+
+java.net.ConnectException: Connection refused
+[root@localhost KEYS_2.0]# xtfs_mkvol -p RAID0,256,1 http://localhost/myVolume
+xtfs_mkvol -p RAID0,256,1 http://localhost/myVolume
+[root@localhost KEYS_2.0]# mkdir ~/xtreemfs
+mkdir ~/xtreemfs
+[root@localhost KEYS_2.0]# xtfs_mount -o volume_url=http://localhost/myVolume ~/xtreemfs
+xtfs_mount -o volume_url=http://localhost/myVolume ~/xtreemfs
+must specify dir_host/volume name and mount point
+[root@localhost KEYS_2.0]# xtfs_mount -o volume_url=http://localhost/myVolume ~/xtreemfs
+xtfs_mount -o volume_url=http://localhost/myVolume ~/xtreemfs
+must specify dir_host/volume name and mount point
+[root@localhost KEYS_2.0]# xtfs_mount -o volume_url=http://localhost/myVolume ~/xtreemfs
+xtfs_mount -o volume_url=http://localhost/myVolume ~/xtreemfs
+must specify dir_host/volume name and mount point
+[root@localhost KEYS_2.0]# xtfs
+xtfs
+bash: xtfs: command not found
+[root@localhost KEYS_2.0]# xtfs_lsvol
+xtfs_lsvol
+
+xtfs_lsvol: list volumes on a specified MRC
+
+Usage:
+  xtfs_lsvol [options] [oncrpc[s]://]<mrc host>[:port][/<volume name>]
+
+  --cert/--pem-certificate-file-path=PEM certificate file path
+  --pass/--pem-private-key-passphrase=PEM private key passphrase
+  --pkcs12-file-path=PKCS#12 file path
+  --pkcs12-passphrase=PKCS#12 passphrase
+  --pkey/--pem-private-key-file-path=PEM private key file path
+  -d/--debug=0
+  -h/--help
+  -l
+  -t/--timeout-ms=n
+
+[root@localhost KEYS_2.0]# xtfs_ls_vol http://localhost/myVolume 
+xtfs_ls_vol http://localhost/myVolume 
+bash: xtfs_ls_vol: command not found
+[root@localhost KEYS_2.0]# xtfs_lsvol http://localhost/myVolume 
+xtfs_lsvol http://localhost/myVolume 
+myVolume  ->  2861aa89-7977-488a-9828-37e967d7c606
+[root@localhost KEYS_2.0]# xtfs_mount http://localhost/myVolume ~/xtreemfs
+xtfs_mount http://localhost/myVolume ~/xtreemfs
+[root@localhost KEYS_2.0]# df
+df
+Sys. de fich.         Tail. Occ. Disp. %Occ. Monté sur
+/dev/sda1             2,4G  1,2G  1,1G  53% /
+/dev/sr0              571M  571M     0 100% /media/cdrom
+[root@localhost KEYS_2.0]# xtfs_mount http://localhost/myVolume ~/xtreemfs
+xtfs_mount http://localhost/myVolume ~/xtreemfs
+[root@localhost KEYS_2.0]# xtfs_lsvol http://localhost/myVolume 
+xtfs_lsvol http://localhost/myVolume 
+myVolume  ->  2861aa89-7977-488a-9828-37e967d7c606
+[root@localhost KEYS_2.0]# xtfs_stat http://localhost/myVolume ~/xtreemfs
+xtfs_stat http://localhost/myVolume ~/xtreemfs
+myVolume/
+---------
+  type           = directory
+  nlink          = 1
+  size           = 0
+  atime          = 2009-05-30T05:32:22.000Z
+  mtime          = 2009-05-30T05:32:22.000Z
+  ctime          = 2009-05-30T05:32:22.000Z
+  owner user id  = root
+  owner group id = root
+  file_id        = 2861aa89-7977-488a-9828-37e967d7c606:1
+  truncate epoch = 2293799
+[root@localhost KEYS_2.0]# xtfs_stat http://localhost/myVolume ~/xtreemfsget-xos-cert localhost:6730 vo1
+xtfs_stat http://localhost/myVolume ~/xtreemfsget-xos-cert localhost:6730 vo1
+myVolume/
+---------
+  type           = directory
+  nlink          = 1
+  size           = 0
+  atime          = 2009-05-30T05:32:22.000Z
+  mtime          = 2009-05-30T05:32:22.000Z
+  ctime          = 2009-05-30T05:32:22.000Z
+  owner user id  = root
+  owner group id = root
+  file_id        = 2861aa89-7977-488a-9828-37e967d7c606:1
+  truncate epoch = 2293799
+[root@localhost KEYS_2.0]# sk
+sk
+bash: sk: command not found
+[root@localhost KEYS_2.0]# get-xos-cert localhost:6730 vo1
+get-xos-cert localhost:6730 vo1
+Enter your username: sk
+sk
+Enter password: 
+
+Passphrase to protect private key (at least 8 characters long): xtreemos
+
+Type passphrase again to confirm: xtreemos
+
+java.net.ConnectException: Connection refused
+[root@localhost KEYS_2.0]# 

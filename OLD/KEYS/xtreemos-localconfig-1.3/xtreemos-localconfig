@@ -1,0 +1,139 @@
+#!/usr/bin/perl -w
+
+use strict;
+use File::Copy::Recursive qw(fcopy fmove);
+
+my $version = '1.2';
+
+my $localconfig_dir = '/usr/share/xtreemos-localconfig';
+
+my $dixiconfig = '/etc/xos/config';
+my $rssconfig = '/etc/xos/config/Rss';
+my $bambooconfig = '/etc/xos/config/Bamboo';
+
+my $truststore = '/etc/xos/truststore';
+my $pri = "$truststore/private";
+my $crt = "$truststore/certs";
+
+my $cdaserverconfig = '/etc/xos/config/cdaserver/';
+
+my %files_list = (
+    # dixi / aem
+    'JobDirectory.conf' => "$dixiconfig/JobDirectory.conf",
+    'JobMng.conf' => "$dixiconfig/JobMng.conf",
+    'RCAClientConfig.conf' => "$dixiconfig/RCAClientConfig.conf",
+    'RCAServerConfig.conf' => "$dixiconfig/RCAServerConfig.conf",
+    'ResMng.conf' => "$dixiconfig/ResMng.conf",
+    'ResourceMonitorConfig.conf' => "$dixiconfig/ResourceMonitorConfig.conf", 
+    'VOPSConfig.conf' => "$dixiconfig/VOPSConfig.conf", 
+    'XOSdConfig.conf' => "$dixiconfig/XOSdConfig.conf",
+
+    # rss / bamboo
+    'config.cfg' => "$rssconfig/config.cfg",
+    'stdconf.cfg' => "$bambooconfig/stdconf.cfg",
+
+    # cda
+    'certs/xtreemos.key' => "$pri/xtreemos.key",
+    'certs/xtreemos.crt' => "$crt/xtreemos.crt",
+
+    'certs/localhost-cda.key' => "$pri/cda.key",
+    'certs/localhost-cda.crt' => "$crt/cda.crt",
+
+    'certs/localhost-rca.key' => "$pri/rcaserver.key",
+    'certs/localhost-rca.crt' => "$crt/rcaserver.crt",
+
+    'certs/localhost-vops.key' => "$pri/vops.key",
+    'certs/localhost-vops.crt' => "$crt/vops.crt",
+
+    'certs/cdaserver.properties' => "$cdaserverconfig/cdaserver.properties",
+
+    # volife
+    'certs/MRC.properties' => "/usr/share/tomcat5/webapps/volifecycle/WEB-INF/classes/MRC.properties",
+    'certs/volife.properties' => "/etc/xos/config/volife/volife.properties",
+
+    #skel
+    'cal.jsdl' => "/etc/skel/cal.jsdl",
+);
+
+my @postinstall_commands = (
+    # cda
+    "/usr/bin/c_rehash $crt",
+);
+
+my @postuninstall_commands = (
+);
+
+
+# end of config part
+
+sub install_file($$)
+{
+    my ($location, $localconffile) = @_;
+
+    if (-f $location) {
+	rename($location, $location . '.oldconfig');
+    }
+    print "Copying $localconffile to $location\n";
+    fcopy($localconfig_dir . '/' . $localconffile, $location)
+       	or warn "Error copying $localconffile"; 
+    my @t = stat $localconfig_dir . '/' . $localconffile;
+    chown $t[4], $t[5], $location;
+}
+
+sub uninstall_file($$)
+{
+    my ($location, $localconffile) = @_;
+
+    fmove($location, $localconfig_dir . '/' . $localconffile)
+	or warn "Error saving $location";
+
+    if (-f $location . 'oldconfig') {
+	rename($location . '.oldconfig', $location);
+    }
+}
+
+sub usage()
+{
+    print "usage: $0 [install | uninstall | version]\n";
+    exit 0;
+}
+    
+
+if (@ARGV != 1) {
+    usage();
+}
+
+my $set_file;
+my $post_cmds;
+
+if ($ARGV[0] eq "version") {
+    print "$version\n";
+    exit 0;
+}
+
+if ($ARGV[0] eq "install") {
+    $set_file = \&install_file;
+    $post_cmds = \@postinstall_commands;
+    print "Installing localconfig version $version\n";
+}
+
+if ($ARGV[0] eq "uninstall") {
+    $set_file = \&uninstall_file;
+    $post_cmds = \@postuninstall_commands;
+    print "Uninstalling localconfig version $version\n";
+}
+
+if (! $set_file) {
+    usage();
+}
+
+for (keys %files_list) {
+    &$set_file($files_list{$_}, $_);
+}
+
+#post commands
+for my $cmd (@$post_cmds) {
+    print "+ $cmd\n";
+    system($cmd);
+}
+

@@ -1,0 +1,19 @@
+;;;; Emacs Bookmark Format Version 1 ;;;;
+;;; This format is meant to be slightly human-readable;
+;;; nevertheless, you probably don't want to edit it.
+;;; -*- End Of Bookmark File Format Version Stamp -*-
+(("rca_apply"
+  ((filename . "/usr/bin/rca_apply")
+   (front-context-string . "	CPJNIS=\"$CPJNIS")
+   (rear-context-string . "in\n\n	rca_apply)\n")
+   (position . 756)))
+ ("xosautoconfig"
+  ((filename . "/usr/sbin/xosautoconfig")
+   (front-context-string . "list_pending\n			")
+   (rear-context-string . "eepxosd\n				rca_")
+   (position . 81500)))
+ ("README_autoconfig"
+  ((filename . "/usr/share/doc/xosautoconfig/README")
+   (front-context-string . "This a coonfig t")
+   (rear-context-string)
+   (position . 1))))

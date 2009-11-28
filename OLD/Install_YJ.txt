@@ -1,0 +1,539 @@
+   Gmail  	  Samuel KORTAS <samuel.kortas@gmail.com>
+xtreemos procedure install
+Samuel KORTAS <samuel.kortas@gmail.com> 	19 mars 2009 17:57
+Réndre àsamuel.kortas@gmail.com
+À gmail <samuel.kortas@gmail.com>
+Hi Enric,
+
+> You can find the bug report here:
+> http://gforge.inria.fr/tracker/index.php?func=detail&aid=7015&group_id=411&atid=6185
+
+I checked your bug in the tracker.
+First remark: RCA service is run as DIXI service. So, there is no rcauser in the system.
+You should check for error messages in xosd logs at /var/log/xosd/nohup and /var/log/xosd/xosd.log.
+Maybe you'll get some more infos.
+
+I am attaching the full trace of a successfull installation of a core node (with all services
+running). Maybe you can compare it with what you are trying to do. Note that this trace corresponds
+to the previous CD. I might be able to provide an installation trace for the current CD by next
+monday as I need to configure a core node for the Barcelona meeting.
+
+Best regards,
+-- 
+Yvon
+
+
+
+
+[root@paraxos5 ~]# mkdir /root/.ssh
+yjegou@paradeux:~$ scp /home/yjegou/.ssh/authorized_keys2 root@paraxos5:/root/.ssh/
+
+[yjegou@paraxos5 ~]$ mkdir .ssh
+[yjegou@paraxos5 ~]$ chmod g-w .ssh
+yjegou@paradeux:~$ scp /home/yjegou/.ssh/authorized_keys2 paraxos5:.ssh/
+
+[root@paraxos5 ~]# cat /etc/ntp.conf
+...
+server ntp1.irisa.fr
+...
+[root@paraxos5 ~]# cat /etc/ntp/step-tickers
+ntp1.irisa.fr
+[root@paraxos1 ~]# service ntpd restart
+[root@paraxos5 ~]# cat /etc/wgetrc
+...
+ftp_proxy=http://paradonf.irisa.fr:3128
+http_proxy=http://paradonf.irisa.fr:3128
+...
+[root@paraxos5 ~]# cat /etc/hosts
+127.0.0.1                   localhost
+131.254.201.16                  paraxos1.irisa.fr paraxos1
+131.254.201.17                  paraxos2.irisa.fr paraxos2
+131.254.201.18                  paraxos3.irisa.fr paraxos3
+131.254.201.19          paraxos4.irisa.fr paraxos4
+131.254.201.20          paraxos5.irisa.fr paraxos5
+131.254.201.25          paraxos25.irisa.fr paraxos25
+
+[root@paraxos5 ~]# urpmi.addmedia --wget xtreemos ftp://xtreemos:F_z3M]7qz@ftp.ext.mandriva.com/xtreemos/packages/i586/2008.0/RPMS
+[root@paraxos5 ~]# urpmi --wget --auto-update
+
+
+yjegou@paradeux:~$ scp /home/yjegou/Save/XtreemOS/XosCA/VO-Yvon-CA/public/VO-Yvon-CA-cert.pem  root@paraxos5:/etc/xos/truststore/certs/xtreemos.crt
+yjegou@paradeux:~$ scp /home/yjegou/Save/XtreemOS/XosCA/paraxos5.irisa.fr-cda-cert.pem root@paraxos5:/etc/xos/truststore/certs/cda.crt
+yjegou@paradeux:~$ scp /home/yjegou/Save/XtreemOS/XosCA/paraxos5.irisa.fr-cda-key.pem root@paraxos5:/etc/xos/truststore/private/cda.key
+[root@paraxos5 ~]# chown cdauser.cdauser /etc/xos/truststore/certs/cda.crt
+[root@paraxos5 ~]# chown cdauser.cdauser /etc/xos/truststore/private/cda.key
+[root@paraxos5 ~]# chmod a+r /etc/xos/truststore/private/cda.key
+yjegou@paradeux:~$ scp /home/yjegou/Save/XtreemOS/XosCA/paraxos5.irisa.fr-rca-yvon-cert.pem  root@paraxos5:/etc/xos/truststore/certs/rcaserver.crt
+yjegou@paradeux:~$ scp /home/yjegou/Save/XtreemOS/XosCA/paraxos5.irisa.fr-rca-yvon-key.pem  root@paraxos5:/etc/xos/truststore/private/rcaserver.key
+yjegou@paradeux:~$ scp /home/yjegou/Save/XtreemOS/XosCA/paraxos5.irisa.fr-vops-cert.pem    root@paraxos5:/etc/xos/truststore/certs/vops.crt
+yjegou@paradeux:~$ scp /home/yjegou/Save/XtreemOS/XosCA/paraxos5.irisa.fr-vops-key.pem   root@paraxos5:/etc/xos/truststore/private/vops.key
+
+[root@paraxos5 ~]# chmod a+r /etc/xos/truststore/certs/* # in case umod does not create file with read for others
+[root@paraxos5 ~]# c_rehash /etc/xos/truststore/certs/
+
+[root@paraxos5 ~]# cat /etc/xos/nss_pam/pam_xos.conf
+...
+OpenAutoMount                  yes
+...
+VOCACertDir         /etc/xos/truststore/certs #beware: no / at the end
+VOCACertFile         xtreemos.crt
+...
+
+# check /etc/xos/config/cdaserver/cdaserver.properties
+
+# BUG: missing dir /etc/xos/config/volife
+
+[root@paraxos5 ~]# mkdir -p /etc/xos/config/volife
+[root@paraxos5 ~]# cat /etc/xos/config/volife/volife.properties
+cdaserver.keyFilename=/etc/xos/truststore/private/cda.key
+cdaserver.keyPassphrase=
+cdaserver.certFilename=/etc/xos/truststore/certs/cda.crt
+
+#BUG-> should initialize XVOMS database (xvoms_prepare_database.sh)
+[root@paraxos5 ~]# /usr/share/xvoms/bin/xvoms_prepare_database.sh
+ - Create xvoms database
+ - Mysqld configuration (accept network connexion)
+Shutting down MySQL: ...                                        [  OK  ]
+Starting MySQL:                                                 [  OK  ]
+
+
+[root@paraxos5 ~]# cat /usr/share/tomcat5/webapps/volifecycle/WEB-INF/classes/MRC.properties
+# a configuration file for VOLifecycle web application or XVOMS service to locate MRC server
+mrc.host=paraxos5.irisa.fr
+mrc.port=32636
+
+[root@paraxos5 ~]# service tomcat5 restart
+
+[root@paraxos5 ~]# cat /etc/xos/xtreemfs/mrcconfig.properties
+...
+dir_service.host = paraxos5.irisa.fr
+...
+[root@paraxos5 ~]# cat /etc/xos/xtreemfs/osdconfig.properties
+...
+dir_service.host = paraxos5.irisa.fr
+...
+object_dir = /xfs/objs/
+...
+[root@paraxos5 ~]# cat /etc/xos/xtreemfs/default_dir
+dir_service.host = paraxos5.irisa.fr
+...
+
+
+[root@paraxos5 ~]#  chown -R xtreemfs:xtreemfs /xfs/
+[root@paraxos5 ~]# service xtreemfs-osd stop
+stoping XtreemFS Object Storage Device (OSD)...                 [  OK  ]
+[root@paraxos5 ~]# service xtreemfs-mrc stop
+stoping XtreemFS Metadata and Replica Catalog (MRC)...          [  OK  ]
+[root@paraxos5 ~]# service xtreemfs-dir stop
+stoping XtreemFS Directory Service (DIR)...                     [  OK  ]
+[root@paraxos5 ~]# service xtreemfs-dir start
+starting XtreemFS Directory Service (DIR)...                    [  OK  ]
+[root@paraxos5 ~]# service xtreemfs-mrc start
+starting XtreemFS Metadata and Replica Catalog (MRC)...         [  OK  ]
+[root@paraxos5 ~]# service xtreemfs-osd start
+starting Object Storage Device (OSD)...                         [  OK  ]
+
+#to get around a bug in volifecycle
+[root@paraxos5 ~]# mkdir /usr/share/tomcat5/certs
+[root@paraxos5 ~]# chown tomcat.tomcat /usr/share/tomcat5/certs
+
+
+# create Yvon-Admin with xtreenos passwd. Create VO-Yvon.
+# create user yvon who joins VO-Yvon
+# get user key and cert
+
+
+[root@paraxos5 ~]# mkdir -p /root/.xos/truststore/certs/
+[root@paraxos5 ~]# mkdir -p /root/.xos/truststore/private/
+
+[yjegou@paraxos5 ~]$ mkdir -p /home/yjegou/.xos/truststore/certs/
+[yjegou@paraxos5 ~]$ mkdir -p /home/yjegou/.xos/truststore/private/
+
+
+
+yjegou@paradeux:~$ scp /home/yjegou/Desktop/user.crt  paraxos5:/home/yjegou/.xos/truststore/certs/user.crt
+user.crt                                      100% 1286     1.3KB/s   00:00   
+yjegou@paradeux:~$ scp /home/yjegou/Desktop/user.key  paraxos5:/home/yjegou/.xos/truststore/private/user.key
+user.key                                      100%  964     0.9KB/s   00:00   
+yjegou@paradeux:~$ scp /home/yjegou/Desktop/user.crt  root@paraxos5:/root/.xos/truststore/certs/user.crt
+user.crt                                      100% 1286     1.3KB/s   00:00   
+yjegou@paradeux:~$ scp /home/yjegou/Desktop/user.key  root@paraxos5:/root/.xos/truststore/private/user.key
+user.key                                      100%  964     0.9KB/s   00:00   
+
+[root@paraxos5 ~]# openssl verify -CApath /etc/xos/truststore/certs/ /root/.xos/truststore/certs/user.crt
+/root/.xos/truststore/certs/user.crt: OK
+[yjegou@paraxos5 ~]$ openssl verify -CApath /etc/xos/truststore/certs/ /home/yjegou/.xos/truststore/certs/user.crt
+/home/yjegou/.xos/truststore/certs/user.crt: OK
+
+#maybe not necessary
+[root@paraxos5 ~]# service xos-amsd restart
+Stopping xos_amsd:                                              [  OK  ]
+Starting xos_amsd:                                              [  OK  ]
+
+
+[root@paraxos5 ~]# xos-policy-admin-chk -pem /root/.xos/truststore/certs/user.crt
+dn = [/CN=584fddf7-69ae-47cc-b864-78f76e836aac], vo = [ffc8e45b-914d-41b7-aba0-a04fece111cf], role = [null]
+PAM:fail in mapping connect !
+         * a)Please check whether AMS daemon is running correctly *
+         * b)Please check whether mapping rules are correct.      *
+         *     If not, try:                                       *
+         *       xos-policy-admin-am  -vo <vo> --force            *
+         *       xos-policy-admin-gm  -vo <vo> --force            *
+         * c)Please check whether setting rule is correct.        *
+         *     If not, try:                                       *
+         *       xos-policy-admin-set -uidmax <num> -uidmin <num> *
+         *                            -gidmax <num> -gidmin <num> *
+Oops: Permission denied
+
+
+[root@paraxos5 ~]# xos-policy-admin-am -vo ffc8e45b-914d-41b7-aba0-a04fece111cf  --force
+[root@paraxos5 ~]# xos-policy-admin-gm -vo ffc8e45b-914d-41b7-aba0-a04fece111cf  --force
+
+[root@paraxos5 ~]# xos-policy-admin-chk -pem /root/.xos/truststore/certs/user.crt
+dn = [/CN=584fddf7-69ae-47cc-b864-78f76e836aac], vo = [ffc8e45b-914d-41b7-aba0-a04fece111cf], role = [null]
+Sucess in PAM checking !
+
+#Note: xos-policy-admin-chk uses the /etc/pam.d/pam_app_conv configuration file
+
+
+[yjegou@paraxos5 ~]$ cat > /home/yjegou/.ssh/config-xos
+Host paraxos*
+  XosProxyFile /home/yjegou/.xos/truststore/certs/user.crt
+  XosVoName    VO-Yvon
+
+#due to a bug in ssh-xos: need to copy in config
+[yjegou@paraxos5 ~]$ cp /home/yjegou/.ssh/config-xos /home/yjegou/.ssh/config
+
+#must remove w from group (due to umask?)
+[yjegou@paraxos5 ~]$ chmod g-w .ssh/config-xos
+[yjegou@paraxos5 ~]$ chmod g-w .ssh/config
+
+[yjegou@paraxos5 ~]$ ssh-xos paraxos5.irisa.fr
+Last login: Tue Dec  2 16:39:02 2008 from paraxos5.irisa.fr
+-bash-3.2$ whoami
+/CN=584fddf7-69ae-47cc-b864-78f76e836aac
+-bash-3.2$ pwd
+/home/584fddf7-69ae-47cc-b864-78f76e836aac
+-bash-3.2$ cat > MyFirstFile
+abc
+-bash-3.2$ ls -al
+total 17
+drwxrwxrwx  1 root                                     root              0 2008-12-02 16:39 ./
+drwxr-xr-x 13 root                                     root           4096 2008-12-02 16:25 ../
+-rwxrwxrwx  1 /CN=584fddf7-69ae-47cc-b864-78f76e836aac root             19 2008-12-02 16:37 .bash_history*
+-rwxrwxrwx  1 /CN=584fddf7-69ae-47cc-b864-78f76e836aac xosuser_g60297    4 2008-12-02 16:39 MyFirstFile*
+drwxrwxrwx  1 /CN=584fddf7-69ae-47cc-b864-78f76e836aac root              0 2008-12-02 16:36 tmp/
+-bash-3.2$ exit
+logout
+Connection to paraxos5.irisa.fr closed.
+
+
+[root@paraxos5 ~]# service xosd stop
+Stopping xosd:                                                  [  OK  ]
+
+[root@paraxos5 ~]# cat /etc/xos/config/XOSdConfig.conf
+#Properties File for the client application
+#Mon Dec 01 18:25:33 CET 2008
+rootaddress.host=131.254.201.20
+certificateLocation=/etc/xos/truststore/certs/resource.crt
+xosdRootDir=.
+networkInterface=
+externalAddress=131.254.201.20
+trustStoreSSL=/etc/xos/truststore/certs/
+trustStore=/etc/xos/truststore/certs/
+xosdport=60000
+xmlport=55000
+rootaddress.externalAddress=131.254.201.20
+rootaddress.port=60000
+services.size=15
+privateKeyLocation=/etc/xos/truststore/private/resource.key
+useSSL=false
+
+services.13=eu.xtreemos.xosd.srdsmng.service.SRDSMngHandler
+services.12=eu.xtreemos.xosd.jobmng.service.JobMngHandler
+services.11=eu.xtreemos.xosd.security.vops.service.VOPSHandler
+services.10=eu.xtreemos.xosd.security.rca.client.service.RCAClientHandler
+services.7=eu.xtreemos.xosd.execMng.service.ExecMngHandler
+services.5=eu.xtreemos.xosd.resmng.service.ResMngHandler
+services.4=eu.xtreemos.xosd.jobDirectory.service.JobDirectoryHandler
+services.3=eu.xtreemos.xosd.resourcemonitor.service.ResourceMonitorHandler
+services.2=eu.xtreemos.xosd.xmlextractor.service.XMLExtractorHandler
+services.1=eu.xtreemos.xosd.security.rca.server.service.RCAServerHandler
+services.0=eu.xtreemos.xosd.daemon.DaemonGlobal
+
+[root@paraxos5 ~]# service xosd start
+Starting xosd:                                                  [  OK  ]
+[root@paraxos5 ~]# service xosd stop
+Stopping xosd:                                                  [  OK  ]
+
+[root@paraxos5 ~]# cat /root/.xos/XATIConfig.conf
+#Properties File for the client application
+#Tue Dec 02 16:40:45 CET 2008
+useSSL=false
+xosdaddress.externalAddress=131.254.201.20
+xosdaddress.host=131.254.201.20
+privateKeyLocation=/etc/xos/truststore/private/resource.key
+userKeyFile=/root/.xos/truststore/private/user.key
+networkInterface=
+trustStoreSSL=/etc/xos/truststore/certs/
+address.host=131.254.201.20
+userCertificateFile=/root/.xos/truststore/certs/user.crt
+xosdaddress.port=60000
+address.port=10000
+certificateLocation=/etc/xos/truststore/certs/resource.crt
+
+#NOTE: file .xos/XATICAConfig.conf does not exist any more
+
+[root@paraxos5 ~]# xconsole_dixi
+XtreemOS Console
+
+$ exit
+Bye
+^C
+
+[yjegou@paraxos5 ~]$ cat /home/yjegou/.xos/XATIConfig.conf
+#Properties File for the client application
+#Wed Nov 12 15:01:17 CET 2008
+useSSL=false
+xosdaddress.externalAddress=131.254.201.20
+xosdaddress.host=131.254.201.20
+privateKeyLocation=/etc/xos/truststore/private/reskey.pem
+userKeyFile=/home/yjegou/.xos/truststore/private/user.key
+networkInterface=
+trustStoreSSL=/etc/xos/truststore/certs/
+address.host=131.254.201.20
+userCertificateFile=/home/yjegou/.xos/truststore/certs/user.crt
+xosdaddress.port=60000
+address.port=10000
+certificateLocation=/etc/xos/truststore/certs/rescert.pem
+
+[root@paraxos5 ~]# xps -a
+Could not open Config File: open: No such file or directory
+Expected File: /root/.xos/XATICAConfig.conf
+Using and writing default values for configError certificate File : /etc/xos/truststore/certs/xati_dummy.pem
+[root@paraxos5 ~]# cat /root/.xos/XATICAConfig.conf
+xosdaddress.host=paraxos5.irisa.fr
+xosdaddress.port=55000
+address.host=paraxos5.irisa.fr
+address.port=10001
+certificateLocation=/etc/xos/truststore/certs/resource.crt
+privateKeyLocation=/etc/xos/truststore/private/resource.key
+trustStoreSSL=/etc/xos/truststore/certs/
+useSSL=false
+cdaaddress.host=paraxos5.irisa.fr
+cdaaddress.port=60000
+
+[yjegou@paraxos5 ~]$ xps -a
+Could not open Config File: open: No such file or directory
+Expected File: /home/yjegou/.xos/XATICAConfig.conf
+Using and writing default values for configError certificate File : /etc/xos/truststore/certs/xati_dummy.pem
+[yjegou@paraxos5 ~]$ cat /home/yjegou/.xos/XATICAConfig.conf
+xosdaddress.host=paraxos5.irisa.fr
+xosdaddress.port=55000
+address.host=paraxos5.irisa.fr
+address.port=10001
+certificateLocation=/etc/xos/truststore/certs/resource.crt
+privateKeyLocation=/etc/xos/truststore/private/resource.key
+trustStoreSSL=/etc/xos/truststore/certs/
+useSSL=false
+cdaaddress.host=paraxos5.irisa.fr
+cdaaddress.port=60000
+
+[root@paraxos5 ~]# cat /etc/xos/config/RCAServerConfig.conf
+#Properties File for the client application
+#Tue Dec 02 16:46:28 CET 2008
+certDNCountry=FR
+attributeType=V3
+keyPassword=
+certificateFileName=/etc/xos/truststore/certs/rcaserver.crt
+certDNOrganisation=INRIA
+cdaPassword=
+daysCertValidity=30
+privateKey=/etc/xos/truststore/private/rcaserver.key
+rcaDBFile=/etc/xos/RCADB.bin
+certDNOrganisationUnit=XtreemOS
+certDNLocation=Rennes
+
+[root@paraxos5 ~]# cat /etc/xos/config/RCAClientConfig.conf
+#Properties File for the client application
+#Mon Dec 01 18:25:34 CET 2008
+resPrivateKeyFileName=/etc/xos/truststore/private/resource.key
+resAttributeCertExtFileName=/etc/xos/truststore/certs/attrextcert.crt
+resAttributeCertFileName=/etc/xos/truststore/certs/attrcert.crt
+cdaCertificateFileName=/etc/xos/truststore/certs/rcaserver.crt
+resVOAttributeCertIncoming=/etc/xos/truststore/certs/incoming/
+resIdentityCertFileName=/etc/xos/truststore/certs/resource.crt
+
+#create an initial  ResMng.conf
+#not sure it is necessary
+[root@paraxos5 ~]# cat /etc/xos/config/ResMng.conf
+#Properties File for the client application
+#Tue Dec 02 16:46:28 CET 2008
+VOPSPubCert=/etc/xos/truststore/certs/vops.crt
+testVOPS=false 
+useADS=false
+
+[root@paraxos5 ~]# service xosd start
+Starting xosd:                                                  [  OK  ]
+
+[root@paraxos5 ~]# rca_apply
+Returned from service call: successMethod
+[root@paraxos5 ~]# rca_list_pending
+Returned from service call: successMethod
+Listing pending resources:
+ResouceID = [IP=131.254.201.20:60000]: [hostIP={Address = [://paraxos5.irisa.fr/131.254.201.20:60000(/131.254.201.20)]}, hostUniqueID={131.254.201.20}, operatingSystemName={Linux}, processorArchitecture={x86}, CPUCount={8.0}, RAMSize={3.44981504E9}]
+[root@paraxos5 ~]# rca_list_registered
+Returned from service call: successMethod
+Listing registered resources:
+  List empty.
+[root@paraxos5 ~]# rca_confirm 131.254.201.20:60000
+Returned from service call: successMethod
+[root@paraxos5 ~]# rca_list_pending
+Returned from service call: successMethod
+Listing pending resources:
+  List empty.
+[root@paraxos5 ~]# rca_list_registered
+Returned from service call: successMethod
+Listing registered resources:
+ResouceID = [IP=131.254.201.20:60000]: [hostIP={Address = [://paraxos5.irisa.fr/131.254.201.20:60000(/131.254.201.20)]}, hostUniqueID={131.254.201.20}, operatingSystemName={Linux}, processorArchitecture={x86}, CPUCount={8.0}, RAMSize={3.44981504E9}]
+
+[root@paraxos5 ~]# rca_request
+Returned from service call: successMethod
+Requesting a new certificate...
+Identity certificate:
+  DN: C=FR,L=Rennes,OU=XtreemOS,O=INRIA,CN=Address = [://paraxos5.irisa.fr/131.254.201.20:60000(/131.254.201.20)]
+  serial number: 1228233464092
+  issuer DN: O=INRIA,OU=RCA VO Yvon,CN=paraxos5.irisa.fr
+  validity start: Tue Dec 02 16:52:44 CET 2008
+  validity end: Thu Jan 01 17:02:44 CET 2009
+Attributes of attribute certificate:
+ (attributes in extensions)
+  MemorySize = 3.44981504E9
+  Service =
+    eu.xtreemos.system.communication.redirector.ServiceCallRedirector
+    eu.xtreemos.xosd.daemon.Daemon
+    eu.xtreemos.xosd.security.rca.server.RCAServer
+    eu.xtreemos.xosd.xmlextractor.XMLExtractor
+    eu.xtreemos.xosd.resourcemonitor.ResourceMonitor
+    eu.xtreemos.xosd.jobDirectory.JobDirectory
+    eu.xtreemos.xosd.resmng.ResMng
+    eu.xtreemos.xosd.execMng.ExecMng
+    eu.xtreemos.xosd.security.rca.client.RCAClient
+    eu.xtreemos.xosd.security.vops.VOPS
+    eu.xtreemos.xosd.jobmng.JobMng
+    eu.xtreemos.xosd.srdsmng.SRDSMng
+
+  CPUCount = 8
+  CPUSpeed = 1.673527296E9
+
+
+
+[root@paraxos5 ~]# ls -al /etc/xos/truststore/certs/incoming/
+total 8
+drwxr-xr-x 2 root root 4096 2008-11-26 15:42 ./
+drwxr-xr-x 3 root root 4096 2008-12-02 16:57 ../
+[root@paraxos5 ~]# chmod 777 /etc/xos/truststore/certs/incoming
+
+[root@paraxos5 ~]# dixi_test -RCA avo ffc8e45b-914d-41b7-aba0-a04fece111cf 131.254.201.20:60000
+Returned from service call: successMethod
+Adding the resource 131.254.201.20:60000 to the VO.
+Added resource 131.254.201.20:60000 to VO ffc8e45b-914d-41b7-aba0-a04fece111cf.
+
+[root@paraxos5 ~]# ls -al /etc/xos/truststore/certs/incoming/
+total 12
+drwxrwxrwx 2 root root 4096 2008-12-02 17:00 ./
+drwxr-xr-x 3 root root 4096 2008-12-02 16:57 ../
+-rw-r--r-- 1 root root 1931 2008-12-02 17:00 attrcertffc8e45b-914d-41b7-aba0-a04fece111cfext.crt
+
+[root@paraxos5 ~]# cp /etc/xos/truststore/certs/incoming/attrcertffc8e45b-914d-41b7-aba0-a04fece111cfext.crt /etc/xos/truststore/certs/
+
+
+[root@paraxos5 ~]# service gmond stop
+Shutting down GANGLIA gmond:                                    [  OK  ]
+[root@paraxos5 ~]# service gmond start
+Starting GANGLIA gmond:                                         [  OK  ]
+
+[root@paraxos5 ~]# cat /etc/xos/config/Rss/config.cfg
+local_port = 1905
+network_interface = eth0
+disk_device = sda4
+bootstrap_address = 131.254.201.20
+bootstrap_port = 1905
+bootstrap_time = 1000
+
+socket_timeout = 60000
+
+...
+
+[root@paraxos5 ~]# cat /etc/xos/config/Bamboo/stdconf.cfg
+
+...
+         <initargs>
+             node_id 131.254.201.20:3630
+         </initargs>
+...
+                  gateway                           131.254.201.20:3630
+ ...
+
+
+[root@paraxos5 ~]# cat /etc/xos/config/ResMng.conf
+#Properties File for the client application
+#Tue Dec 02 16:46:28 CET 2008
+VOPSPubCert=/etc/xos/truststore/certs/vops.crt
+testVOPS=true
+useADS=true
+
+[yjegou@paraxos5 ~]$ cat  psx.jsdl
+<?xml version="1.0" encoding="UTF-8"?>
+<JobDefinition xmlns:jsdl="http://schemas.ggf.org/jsdl/2005/11/jsdl">
+   <JobDescription>
+       <JobIdentification>
+             <Description>Blank</Description>
+             <JobProject>Blank</JobProject>
+         </JobIdentification>
+         <Application>
+             <POSIXApplication
+                  xmlns:ns1="http://schemas.ggf.org/jsdl/2005/11/jsdl-posix">
+                 <Executable>/bin/ps</Executable>
+                 <Argument>-aef</Argument>
+                   <Output>/home/584fddf7-69ae-47cc-b864-78f76e836aac/ps.out</Output>
+             </POSIXApplication>
+         </Application>
+         <Resources>
+                 <TotalResourceCount>
+                         <Exact> 1 </Exact>
+                 </TotalResourceCount>
+         </Resources>
+     </JobDescription>
+</JobDefinition>
+
+[yjegou@paraxos5 ~]$ ssh-xos paraxos5.irisa.fr
+Last login: Tue Dec  2 16:39:08 2008 from paraxos5.irisa.fr
+-bash-3.2$ pwd
+/home/584fddf7-69ae-47cc-b864-78f76e836aac
+-bash-3.2$ ls
+MyFirstFile*  tmp/
+-bash-3.2$ exit
+logout
+Connection to paraxos5.irisa.fr closed.
+[yjegou@paraxos5 ~]$ xconsole_dixi
+XtreemOS Console
+
+$ xrs -jsdl /home/yjegou/psx.jsdl
+Listing resources matching JSDL query:
+  Address = [://paraxos5.irisa.fr/131.254.201.20:60000(/131.254.201.20)]
+$ xsub -f /home/yjegou/psx.jsdl
+Job submitted succesfully: f2c8c186-5f85-4861-852c-8aa41937a8b8
+$ exit
+Bye
+[yjegou@paraxos5 ~]$ ssh-xos paraxos5.irisa.fr
+Last login: Tue Dec  2 17:16:21 2008 from paraxos5.irisa.fr
+-bash-3.2$ ls
+MyFirstFile*  ps.out*  tmp/
+-bash-3.2$ exit
+logout
+Connection to paraxos5.irisa.fr closed.
+
+
+
+

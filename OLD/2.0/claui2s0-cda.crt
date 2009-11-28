@@ -1,0 +1,77 @@
+Certificate:
+    Data:
+        Version: 3 (0x2)
+        Serial Number: 1 (0x1)
+        Signature Algorithm: sha1WithRSAEncryption
+        Issuer: CN=XtreemOS CA, O=XtreemOS Project, OU=XtreemOS Project Root Certification Authority
+        Validity
+            Not Before: Nov 12 11:55:27 2009 GMT
+            Not After : Nov 12 11:55:27 2010 GMT
+        Subject: O=EDF, OU=cda, CN=claui2s0/cda
+        Subject Public Key Info:
+            Public Key Algorithm: rsaEncryption
+            RSA Public Key: (1024 bit)
+                Modulus (1024 bit):
+                    00:b7:dc:0e:2e:59:08:50:49:fa:3f:45:4b:06:a7:
+                    79:9f:c1:93:5d:3f:73:ea:92:65:9a:f8:74:c6:68:
+                    20:ed:93:a3:57:06:48:96:f3:6c:57:74:24:91:be:
+                    36:64:ba:2b:da:5e:db:ae:29:5c:42:48:a6:fc:76:
+                    b6:b1:0d:da:34:ea:6a:96:94:4f:ab:a3:29:1d:c8:
+                    15:03:e5:7f:ee:dd:18:3b:e0:b4:ac:48:ea:3e:f4:
+                    10:1e:36:ba:83:5f:c7:68:0d:62:ab:41:3d:99:7f:
+                    50:42:81:61:96:d4:3e:10:77:81:f2:a9:37:c9:c3:
+                    fd:3d:ce:cc:01:fa:d9:a7:47
+                Exponent: 65537 (0x10001)
+        X509v3 extensions:
+            Netscape Comment: 
+                XtreemOS Certificate
+            X509v3 Subject Key Identifier: 
+                EE:40:21:44:70:12:EC:93:20:74:A8:82:98:93:6F:A0:81:B6:65:EA
+            X509v3 Authority Key Identifier: 
+                DirName:/CN=XtreemOS CA/O=XtreemOS Project/OU=XtreemOS Project Root Certification Authority
+                serial:FD:6B:64:72:93:7B:FE:67
+
+            X509v3 Basic Constraints: 
+                CA:TRUE
+            X509v3 Subject Alternative Name: 
+                DNS:claui2s0
+            X509v3 Key Usage: 
+                Digital Signature, Key Encipherment, Certificate Sign
+    Signature Algorithm: sha1WithRSAEncryption
+        cd:0e:fc:03:e6:d8:d2:57:77:9e:e3:00:c3:01:e3:21:ae:d2:
+        97:7b:2e:2b:b4:12:1c:58:d2:82:f4:64:ab:1b:84:c8:bd:78:
+        1f:08:5f:97:cb:f2:47:ff:b8:de:00:1f:7a:62:e9:23:fc:7c:
+        ac:bf:2f:4f:df:35:6b:b7:de:71:8c:98:8b:e2:b0:5c:4b:b3:
+        e9:7b:8a:96:83:21:ad:24:dd:ba:19:e0:97:f2:31:e0:5d:f1:
+        ff:4e:a1:e2:cd:70:79:1a:fc:25:67:82:d0:60:ed:fe:e4:24:
+        43:3f:bb:a7:0b:b5:e3:ab:b9:4a:51:28:28:84:a5:a2:39:6e:
+        e6:6f:4a:83:08:15:8c:fa:8b:31:e4:0b:82:89:57:fa:e4:0d:
+        f9:3e:2f:ff:d5:27:03:36:4a:fa:06:31:67:2d:7e:1c:25:a2:
+        ab:ee:fa:53:a3:66:ae:6d:31:39:0a:c9:da:6f:6a:e9:49:ff:
+        41:40:e9:e6:65:50:02:9b:d2:8c:03:89:8d:ef:16:8c:bf:db:
+        55:e7:d2:7b:09:86:09:4e:b0:c0:a4:0a:e8:41:30:57:b4:f2:
+        12:50:e0:94:6f:93:8d:3c:0c:81:84:b0:45:a6:42:2d:e0:c9:
+        57:57:84:2a:9f:6b:db:de:a7:f5:ed:f3:44:b4:ce:15:e7:8a:
+        76:ed:b6:76
+-----BEGIN CERTIFICATE-----
+MIIDkTCCAnmgAwIBAgIBATANBgkqhkiG9w0BAQUFADBpMRQwEgYDVQQDEwtYdHJl
+ZW1PUyBDQTEZMBcGA1UEChMQWHRyZWVtT1MgUHJvamVjdDE2MDQGA1UECxMtWHRy
+ZWVtT1MgUHJvamVjdCBSb290IENlcnRpZmljYXRpb24gQXV0aG9yaXR5MB4XDTA5
+MTExMjExNTUyN1oXDTEwMTExMjExNTUyN1owMzEMMAoGA1UEChMDRURGMQwwCgYD
+VQQLEwNjZGExFTATBgNVBAMTDGNsYXVpMnMwL2NkYTCBnzANBgkqhkiG9w0BAQEF
+AAOBjQAwgYkCgYEAt9wOLlkIUEn6P0VLBqd5n8GTXT9z6pJlmvh0xmgg7ZOjVwZI
+lvNsV3Qkkb42ZLor2l7brilcQkim/Ha2sQ3aNOpqlpRPq6MpHcgVA+V/7t0YO+C0
+rEjqPvQQHja6g1/HaA1iq0E9mX9QQoFhltQ+EHeB8qk3ycP9Pc7MAfrZp0cCAwEA
+AaOB/TCB+jAjBglghkgBhvhCAQ0EFhYUWHRyZWVtT1MgQ2VydGlmaWNhdGUwHQYD
+VR0OBBYEFO5AIURwEuyTIHSogpiTb6CBtmXqMIGDBgNVHSMEfDB6oW2kazBpMRQw
+EgYDVQQDEwtYdHJlZW1PUyBDQTEZMBcGA1UEChMQWHRyZWVtT1MgUHJvamVjdDE2
+MDQGA1UECxMtWHRyZWVtT1MgUHJvamVjdCBSb290IENlcnRpZmljYXRpb24gQXV0
+aG9yaXR5ggkA/WtkcpN7/mcwDAYDVR0TBAUwAwEB/zATBgNVHREEDDAKgghjbGF1
+aTJzMDALBgNVHQ8EBAMCAqQwDQYJKoZIhvcNAQEFBQADggEBAM0O/APm2NJXd57j
+AMMB4yGu0pd7Liu0EhxY0oL0ZKsbhMi9eB8IX5fL8kf/uN4AH3pi6SP8fKy/L0/f
+NWu33nGMmIvisFxLs+l7ipaDIa0k3boZ4JfyMeBd8f9OoeLNcHka/CVngtBg7f7k
+JEM/u6cLteOruUpRKCiEpaI5buZvSoMIFYz6izHkC4KJV/rkDfk+L//VJwM2SvoG
+MWctfhwloqvu+lOjZq5tMTkKydpvaulJ/0FA6eZlUAKb0owDiY3vFoy/21Xn0nsJ
+hglOsMCkCuhBMFe08hJQ4JRvk408DIGEsEWmQi3gyVdXhCqfa9vep/Xt80S0zhXn
+inbttnY=
+-----END CERTIFICATE-----

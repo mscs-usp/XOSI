@@ -1,0 +1,16 @@
+#Properties File for the client application
+#Fri Jul 24 14:45:25 CEST 2009
+loadPrivateKey=false
+useSSL=false
+xosdaddress.externalAddress=131.254.201.24
+xosdaddress.host=131.254.201.24
+privateKeyLocation=/etc/xos/truststore/private/resource.key
+userKeyFile=/root/.xos/truststore/private/user.key
+schemasLocation=/usr/share/dixi/XMLExtractor/Schemas/
+networkInterface=
+trustStoreSSL=/etc/xos/truststore/certs/
+address.host=131.254.201.24
+userCertificateFile=/root/.xos/truststore/certs/user.crt
+xosdaddress.port=60000
+address.port=10000
+certificateLocation=/etc/xos/truststore/certs/resource.crt

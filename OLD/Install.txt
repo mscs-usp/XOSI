@@ -1,0 +1,405 @@
+
+#----------------------------------------------
+# connecting with subversion
+#----------------------------------------------
+
+cd /root
+#svn co https://clasz013.cla.edfgdf.fr/svn/osis/trunk/NOTES
+svn co http://subversion/assembla/xos
+
+#----------------------------------------------
+# setting package connection
+#----------------------------------------------
+
+urpmi.removemedia -a
+urpmi.addmedia --distrib ftp://ftp.free.fr/mirrors/ftp.mandriva.com/MandrivaLinu
+x/official/2009.1/i586/
+urpmi.addmedia xtreemos ftp://ftp.free.fr/mirrors/ftp.mandriva.com/MandrivaLinux
+/devel/xtreemos/2009.1/i586/media/xtreemos/release/
+
+urpmi emacs
+urpmi gcc-gfortran
+
+nohup drakxosconfig &
+
+#----------------------------------------------
+# configuration du noeud 0
+#----------------------------------------------
+
+
+urpmi task-xtreemos-coreservices
+
+
+# CREATE CRT
+
+urpmi rootca
+
+
+init-rootca /opt/xtreemosca
+create-rootca-creds /opt/xtreemosca/
+mkdir /etc/xos/truststore/public
+mkdir /etc/xos/truststore/private
+cp /opt/xtreemosca/private/xtreemos.key /etc/xos/truststore/private
+cp /opt/xtreemosca/public/xtreemos.crt /etc/xos/truststore/public
+
+cp /etc/xos/truststore/public/xtreemos.crt /etc/xos/truststore/certs/xtreemos.crt
+c_rehash /etc/xos/truststore/certs/
+
+view-xos-cert /etc/xos/truststore/certs/xtreemos.crt
+
+urpmi create-csr
+
+cd /root/xos/INSTALL/KEYS_2.0
+create-csr localhost "xos" cda
+process-csr /opt/xtreemosca localhost-cda.csr 
+y
+y
+cp localhost-cda.crt /etc/xos/truststore/certs/cda.crt
+y
+cp localhost-cda.key /etc/xos/truststore/private/cda.key
+y
+c_rehash /etc/xos/truststore/certs/
+
+view-xos-cert /etc/xos/truststore/certs/cda.crt
+
+create-csr localhost "xos" vops
+process-csr /opt/xtreemosca localhost-vops.csr 
+y
+y
+cp localhost-vops.crt /etc/xos/truststore/certs/vops.crt
+y
+cp localhost-vops.key /etc/xos/truststore/private/vops.key
+y
+c_rehash /etc/xos/truststore/certs/
+
+view-xos-cert /etc/xos/truststore/certs/vops.crt
+
+
+
+/etc/init.d/mysqld-max start
+
+mysql -u root -p
+set password for root@localhost=password('');
+
+
+
+cp ../volife.properties /etc/xos/config/volife/volife.properties 
+
+# create VO
+
+/usr/share/xvoms/bin/xvoms_prepare_database.sh
+xtreemos
+
+
+/etc/init.d/mysqld-max restart
+
+
+# start CDA server
+/sbin/service cdaserver restart
+
+
+/sbin/service cdaserver restart
+service tomcat5 restart
+
+
+
+
+
+
+
+
+
+
+firefox http://localhost:8080/volifecycle/
+VOAdmin/password
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# INITIATE ENVIRONMENT
+
+urpmi rootca
+o
+urpmi xtreemos-localconfig
+
+view-xos-cert /etc/xos/truststore/certs/xtreemos.crt
+view-xos-cert /etc/xos/truststore/certs/cda.crt
+
+
+
+# CHECKING AND FIXING
+cat /etc/xos/nss_pam/pam_xos.conf | grep AutoMount
+# should be        OpenAutoMount                  yes
+
+cat /etc/xos/nss_pam/pam_xos.conf | grep VOCA
+#should be
+#...
+#VOCACertDir         /etc/xos/truststore/certs #beware: no / at the end
+#VOCACertFile         xtreemos.crt
+#...
+
+# if needed
+#  cp /root/xos/INSTALL/CONF/pam_xos.conf /etc/xos/nss_pam/pam_xos.conf 
+y
+
+grep cdaserver /etc/xos/config/cdaserver/cdaserver.properties
+grep xtreemos /etc/xos/config/cdaserver/cdaserver.properties
+
+# if needed 
+# cp CONF/cdaserver.properties /etc/xos/config/cdaserver/cdaserver.properties
+
+
+grep dir  /etc/xos/xtreemfs/osdconfig.properties
+# should be
+dir_service.host = localhost
+dir_service.port = 32638
+# directory containing XtreemFS file content
+object_dir = /xfs/objs/
+# change the UUID Mapping in the directory service.
+# if needed 
+# cp /root/xos/INSTALL/CONF/osdconfig.properties  /etc/xos/xtreemfs/osdconfig.properties
+
+# STARTING XTREEMFS
+
+grep dir_service /etc/xos/xtreemfs/default_dir
+mkdir /xfs
+chown -R xtreemfs:xtreemfs /xfs/
+service xtreemfs-osd stop
+service xtreemfs-mrc stop
+service xtreemfs-dir stop
+service xtreemfs-dir start
+service xtreemfs-mrc start
+service xtreemfs-osd start
+
+xtfs_mkvol -p RAID0,256,1 http://localhost/myVolume
+mkdir ~/xtreemfs
+xtfs_mount -o volume_url=http://localhost/myVolume ~/xtreemfs
+
+
+
+# GETTING A VO USER WITH DIRECTORY IN XTREEMFS NOT
+
+
+# BUG: missing dir /etc/xos/config/volife
+mkdir -p /etc/xos/config/volife
+grep cdaserver /etc/xos/config/volife/volife.properties
+# if needed
+# diff  volife.properties /etc/xos/config/volife/volife.properties 
+
+grep mrc /usr/share/tomcat5/webapps/volifecycle/WEB-INF/classes/MRC.properties
+
+
+
+cp ../volife.properties /etc/xos/config/volife/volife.properties 
+
+# create VO
+/usr/share/xvoms/bin/xvoms_prepare_database.sh
+xtreemos
+# start CDA server
+/sbin/service cdaserver restart
+
+cd   /root/xos/INSTALL/SCRIPTS_NEW
+
+get-xos-cert localhost:6730 vo1 user.key user.crt test
+mv user.key private/
+y
+cp user.crt public/
+y
+mv user.crt certs/
+y
+cp private/user.key /etc/xos/truststore/private
+y
+cp public/user.crt /etc/xos/truststore/public
+y
+
+
+# creation d'un volume associe
+view-xos-cert public/user.crt | grep CN | grep Subject | awk '{gsub(/^ *Subject: CN=/,""); print}'
+export VOCN=`view-xos-cert public/user.crt | grep CN | grep Subject | awk '{gsub(/^ *Subject: CN=/,""); print}'`
+echo $VOCN
+xtfs_mkvol -p RAID0,128,1 http://localhost/user-$VOCN
+modprobe fuse
+ 
+xtfs_lsvol http://localhost:32636/
+
+# bug de non permission
+chmod 777 /home/$VOCN
+
+
+# volifecycle does not exists!
+
+service tomcat5 restart
+ps -edf | grep firefox
+firefox http://localhost:8080/volifecycle/
+VOAdmin/password
+
+
+
+
+
+cd /root/xos/INSTALL/SCRIPTS_NEW
+
+
+
+
+# FIRST LOGGING TO VO....
+
+
+# create Yvon-Admin with xtreenos passwd. Create VO-Yvon.
+# create user yvon who joins VO-Yvon
+# get user key and cert
+mkdir -p /root/.xos/truststore/certs/
+mkdir -p /root/.xos/truststore/private/
+cp public/user.crt  /root/.xos/truststore/certs/user.crt
+y
+cp private/user.key  /root/.xos/truststore/private/user.key
+y
+
+view-xos-cert certs/user.crt
+
+
+openssl verify -CApath /etc/xos/truststore/certs/ /root/.xos/truststore/certs/user.crt
+
+
+view-xos-cert certs/user.crt | awk '/GlobalPrimaryVOName/,/GlobalSecondaryVONames/ {gsub(/^ */,""); i++; if (i==2) { print $0}}' > myVO
+cat myVO
+VO=`cat myVO`
+
+
+
+service xos-amsd restart
+xos-policy-admin-am -vo $VO  --force
+xos-policy-admin-gm -vo $VO  --force
+xos-policy-admin-chk -pem /root/.xos/truststore/certs/user.crt
+
+
+chmod 555 /root/.bashrc
+pam_app_conv -pem /root/.xos/truststore/certs/user.crt
+
+
+
+
+
+
+
+
+
+ssh localhost
+# pour creer .ssh
+
+mkdir /root/.ssh
+chmod 500 /root/.ssh
+
+cat > /root/.ssh/config-xos 
+Host xos*
+  XosProxyFile /root/.xos/truststore/certs/user.crt
+  XosVoName    vo1
+
+
+cp /root/xos/INSTALL/CONF/ssh_config-xos /etc/ssh/ssh_config-xos
+y
+mkdir /root/.ssh/config
+
+chmod g-w /root/.ssh/config-xos
+chmod g-w /root/.ssh/config
+
+
+ssh-xos xos1
+
+
+
+
+# XOSD INSTALLATION AND TEST (JOB MANAGEMENT DAEMON)
+
+service xosd restart
+rca_apply
+# on regarde les machines en attente d'etre acceptées
+rca_list_pending
+# on accepte
+rca_confirm 10.0.2.15:60000
+rca_request
+
+
+mkdir /etc/xos/truststore/certs/incoming
+chmod 777 /etc/xos/truststore/certs/incoming
+
+dixi_test -RCA avo vo1 10.0.2.15:60000
+cp /etc/xos/truststore/certs/incoming/attrcertvo1ext.crt /etc/xos/truststore/certs/
+
+grep dir_service /etc/xos/xtreemfs/mrcconfig.properties
+grep dir_service /etc/xos/xtreemfs/osdconfig.properties
+grep object_dir /etc/xos/xtreemfs/osdconfig.properties
+# should be object_dir = /xfs/objs/
+# cp osdconfig.properties /etc/xos/xtreemfs/osdconfig.properties
+y
+# if needed
+# cp osdconfig.properties /etc/xos/xtreemfs/osdconfig.properties
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+installing Saga
+
+urpme gcc-c++
+urpmi gcc-gfortran
+urpmi boost-
+urpmi boost-devel
+urpmi boost-static-devel
+urpmi libsqlite3_0
+urpmi libsqlite3-devel
+urpmi libsqlite3-stat
+urpmi python-devel
+
+
+urpmi saga
+urpmi libsaga-devel
+
+
+cd /root/xos/INSTALL/SOFTS
+tar xvfj saga-cpp-1.2.1.src.tar.bz2
+cd saga-cpp-1.2.1.src
+
+./configure
+make
+make check
+make install
+
+
+# volife installation
+urpmi volife-backend
+urpmi volife-frontend
+
+
+# dixi
+urpmi dixi-main
+urpmi dixi-services
+urpmi dixi-xati

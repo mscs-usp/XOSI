@@ -1,0 +1,16 @@
+mkdir ~/.xos
+mkdir ~/.xos/truststore
+mkdir ~/.xos/truststore/certs
+mkdir ~/.xos/truststore/private
+cp vouser.crt ~/.xos/truststore/certs/user.crt
+cp vouser.key ~/.xos/truststore/private/user.key
+
+chmod 755 /etc/skel/cal.jsdl
+
+echo dans la console taper
+echo xrs -a
+
+echo xsub -f /etc/skel/cal.jsdl
+
+xconsole_dixi
+

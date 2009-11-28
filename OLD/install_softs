@@ -1,0 +1,42 @@
+urpmi.removemedia -a
+
+urpmi.addmedia --distrib ftp://ftp.free.fr/mirrors/ftp.mandriva.com/MandrivaLinux/official/2008.1/i586
+
+urpmi emacs
+urpmi gcc-gfortran
+urpmi python
+urpmi make
+urpmi XtreemFS-client
+urpmi XtreemFS-server
+urpmi ssh
+
+cd
+ln -s /root/xos/INSTALL/CONF/emacs /root/.emacs
+ln -s /root/xos/INSTALL/CONF/emacs-places /root/.emacs-places
+mv .bashrc .bashrc.old
+ln -s /root/xos/INSTALL/CONF/bashrc /root/.bashrc
+cp -f /root/xos/INSTALL/CONF/wgetrc /etc/wgetrc
+echo Change xxxxxxxx dans wgetrc!!!!!!!
+cp /root/xos/INSTALL/CONF/hosts.virtualbox /etc/hosts
+cp /root/xos/INSTALL/CONF/hosts.testbed /etc/hosts
+
+
+cd /tmp
+tar xvfj /root/xos/SOFTS/elink*
+cd elinks-0.11.6
+./configure
+make 
+make install
+
+mkdir .elinks
+ln -s /root/xos/INSTALL/CONF/elinks.conf /root/.elinks/
+ln -s /root/xos/INSTALL/CONF/elinks.bookmarks /root/.elinks/bookmarks
+
+
+
+
+
+
+
+
+export DISPLAY=192.168.111.77:0

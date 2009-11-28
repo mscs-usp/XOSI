@@ -1,0 +1,7 @@
+urpmi.addmedia --wget xtreemos http://xtreemos:F_z3M]7qz@ftp.ext.mandriva.com/xtreemos/packages/i586/2008.0/RPMS
+urpmi.addmedia --wget plf-free ftp://ftp.free.fr/pub/Distributions_Linux/plf/mandriva/2009.0/free/release/binary/i586
+urpmi.addmedia --wget jussieu_main ftp://distrib-coffee.ipsl.jussieu.fr/pub/linux/MandrivaLinux/official/2009.1/i586/media/main/release
+
+echo urpmi --wget --auto-update
+
+

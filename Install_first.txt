@@ -1,0 +1,7 @@
+mkdir -p /cdrom/2009
+mount /dev/cdrom /cdrom/2009/
+tail -1 /etc/mtab >> /etc/fstab
+urpmi.addmedia 2009 /cdrom/2009/i586/media/main/
+urpmi git-core
+urpmi emacs
+history

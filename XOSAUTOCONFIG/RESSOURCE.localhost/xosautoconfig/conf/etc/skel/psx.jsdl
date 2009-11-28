@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<JobDefinition xmlns:jsdl="http://schemas.ggf.org/jsdl/2005/11/jsdl">
+   <JobDescription>
+       <JobIdentification>
+             <Description>Blank</Description>
+             <JobProject>Blank</JobProject>
+         </JobIdentification>
+         <Application>
+             <POSIXApplication
+                  xmlns:ns1="http://schemas.ggf.org/jsdl/2005/11/jsdl-posix">
+                 <Executable>/bin/ps</Executable>
+                 <Argument>-aef</Argument>
+                 <Output>psx.out</Output>
+                 <Error>psx.err</Error>
+             </POSIXApplication>
+         </Application>
+         <Resources>
+                 <TotalResourceCount>
+                         <Exact>1</Exact>
+                 </TotalResourceCount>
+         </Resources>
+     </JobDescription>
+</JobDefinition>

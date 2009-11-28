@@ -1,0 +1,12 @@
+echo setting up services for VO=`cat myVO`
+
+VO=`cat myVO`
+
+/sbin/service xos-amsd restart
+xos-policy-admin-am -vo $VO --force
+xos-policy-admin-gm -vo $VO --force
+
+echo testing local policy
+
+pam_app_conv -pem vouser.crt
+

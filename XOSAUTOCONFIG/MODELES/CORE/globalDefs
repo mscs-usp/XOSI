@@ -1,0 +1,21 @@
+#global definitions
+
+#PROXY=http://proxypac.edf.fr:3128
+PROXY=noProxy
+
+NTP=__HOST__
+
+GLOBALVOPSIP=__IP__
+SCALARISBOOTIP=__IP__
+OWBOOTSTRAPIP=__IP__
+RSSBOOTSTRAPIP=__IP__
+DIXIROOTHOST=__HOST__
+DIXIROOTIP=__IP__
+DIRHOSTIP=__IP__
+MRCHOSTIP=__IP__
+OSDHOSTIP=__IP__
+USESSL=false
+
+
+
+  

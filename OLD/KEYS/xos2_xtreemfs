@@ -1,0 +1,11 @@
+echo start XtreemFS services
+
+/sbin/service xtreemfs-dir restart
+/sbin/service xtreemfs-mrc restart
+/sbin/service xtreemfs-osd restart
+
+
+xtfs_mkvol -p RAID0,256,1 http://localhost/myVolume
+mkdir ~/xtreemfs
+xtfs_mount -o nonempty volume_url=http://localhost/myVolume ~/xtreemfs
+

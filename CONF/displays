@@ -1,0 +1,7 @@
+# a edf
+export DISPLAY=130.98.91.65:0
+# maison direct
+export DISPLAY=192.168.111.77:0
+# maison edf
+export DISPLAY=192.196.52.254:0
+

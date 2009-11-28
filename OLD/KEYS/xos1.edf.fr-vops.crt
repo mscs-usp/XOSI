@@ -1,0 +1,77 @@
+Certificate:
+    Data:
+        Version: 3 (0x2)
+        Serial Number: 11 (0xb)
+        Signature Algorithm: sha1WithRSAEncryption
+        Issuer: CN=XtreemOS CA, O=XtreemOS Project, OU=XtreemOS Project Root Certification Authority
+        Validity
+            Not Before: Mar 23 15:46:16 2009 GMT
+            Not After : Mar 23 15:46:16 2010 GMT
+        Subject: O=EDF, OU=vops, CN=xos1.edf.fr/vops
+        Subject Public Key Info:
+            Public Key Algorithm: rsaEncryption
+            RSA Public Key: (1024 bit)
+                Modulus (1024 bit):
+                    00:be:47:e4:78:72:d9:7f:2e:4b:6b:1a:8e:45:53:
+                    ab:46:71:ca:51:b4:f2:c8:9c:59:ec:3a:f8:9b:51:
+                    75:43:40:92:1c:39:1f:fc:66:b9:d0:4b:96:66:d8:
+                    cf:94:62:5e:77:81:98:19:b9:df:8a:1d:d3:ed:71:
+                    89:24:4c:58:e3:d0:4f:30:b9:c3:5e:01:fb:dc:2f:
+                    25:00:e9:97:66:7a:62:35:cc:43:f9:05:c9:65:3e:
+                    ae:6a:41:8a:f0:c6:f1:24:11:03:4e:fc:e8:38:ed:
+                    e1:09:e7:bc:85:84:07:a2:0f:a2:ec:66:5d:3f:af:
+                    78:0e:f0:7b:e2:1d:11:a1:c3
+                Exponent: 65537 (0x10001)
+        X509v3 extensions:
+            Netscape Comment: 
+                XtreemOS Certificate
+            X509v3 Subject Key Identifier: 
+                B9:E1:45:23:10:90:D8:3D:8A:84:D3:80:B5:85:AD:0F:D4:EE:59:45
+            X509v3 Authority Key Identifier: 
+                DirName:/CN=XtreemOS CA/O=XtreemOS Project/OU=XtreemOS Project Root Certification Authority
+                serial:BF:7E:38:FF:8D:F6:B7:1E
+
+            X509v3 Basic Constraints: 
+                CA:FALSE
+            X509v3 Subject Alternative Name: 
+                DNS:xos1.edf.fr
+            X509v3 Key Usage: 
+                Digital Signature, Key Encipherment
+    Signature Algorithm: sha1WithRSAEncryption
+        85:f8:dc:10:dc:5d:01:e9:d7:29:41:64:45:62:46:df:0c:9a:
+        63:00:a9:42:5d:77:d3:17:27:7a:3f:bf:c6:68:18:21:0f:b4:
+        26:9f:9e:63:54:e6:ff:a0:7f:eb:66:50:a4:e7:b3:4b:88:8d:
+        b8:c9:23:d1:67:27:ef:ef:aa:49:43:48:56:1e:a7:52:c6:cc:
+        11:d9:56:de:a5:4a:80:ea:9c:9d:10:8e:55:7b:3c:81:3e:c4:
+        5f:cc:ce:c0:65:ee:3f:24:0c:3f:ce:a7:fc:f7:8a:11:ae:a5:
+        43:b9:16:04:d6:77:b8:b2:65:bd:e8:b3:e6:1e:8f:8d:ad:e0:
+        09:74:78:d7:d1:e8:7a:f7:73:1b:4a:76:ab:12:ab:5c:8e:b4:
+        16:7e:ba:5e:63:cd:ef:b6:86:c9:54:38:49:24:d3:44:bf:d4:
+        a6:44:92:20:25:e5:c4:53:02:4e:c8:71:c0:23:bf:fa:8b:23:
+        c9:3e:dc:d2:66:89:ba:c2:39:0e:fc:77:9d:3f:0e:34:e0:49:
+        27:ed:2f:ad:14:43:33:62:31:85:7d:cb:44:3a:31:ad:57:cd:
+        22:6b:1f:8a:2d:1f:e6:68:f1:e8:20:08:08:0c:92:d0:e3:46:
+        2d:ca:1b:c6:6a:3f:52:3e:08:1a:62:93:bb:ff:6e:b8:68:d4:
+        3c:1f:f4:88
+-----BEGIN CERTIFICATE-----
+MIIDljCCAn6gAwIBAgIBCzANBgkqhkiG9w0BAQUFADBpMRQwEgYDVQQDEwtYdHJl
+ZW1PUyBDQTEZMBcGA1UEChMQWHRyZWVtT1MgUHJvamVjdDE2MDQGA1UECxMtWHRy
+ZWVtT1MgUHJvamVjdCBSb290IENlcnRpZmljYXRpb24gQXV0aG9yaXR5MB4XDTA5
+MDMyMzE1NDYxNloXDTEwMDMyMzE1NDYxNlowODEMMAoGA1UEChMDRURGMQ0wCwYD
+VQQLEwR2b3BzMRkwFwYDVQQDExB4b3MxLmVkZi5mci92b3BzMIGfMA0GCSqGSIb3
+DQEBAQUAA4GNADCBiQKBgQC+R+R4ctl/LktrGo5FU6tGccpRtPLInFnsOvibUXVD
+QJIcOR/8ZrnQS5Zm2M+UYl53gZgZud+KHdPtcYkkTFjj0E8wucNeAfvcLyUA6Zdm
+emI1zEP5BcllPq5qQYrwxvEkEQNO/Og47eEJ57yFhAeiD6LsZl0/r3gO8HviHRGh
+wwIDAQABo4H9MIH6MCMGCWCGSAGG+EIBDQQWFhRYdHJlZW1PUyBDZXJ0aWZpY2F0
+ZTAdBgNVHQ4EFgQUueFFIxCQ2D2KhNOAtYWtD9TuWUUwgYMGA1UdIwR8MHqhbaRr
+MGkxFDASBgNVBAMTC1h0cmVlbU9TIENBMRkwFwYDVQQKExBYdHJlZW1PUyBQcm9q
+ZWN0MTYwNAYDVQQLEy1YdHJlZW1PUyBQcm9qZWN0IFJvb3QgQ2VydGlmaWNhdGlv
+biBBdXRob3JpdHmCCQC/fjj/jfa3HjAJBgNVHRMEAjAAMBYGA1UdEQQPMA2CC3hv
+czEuZWRmLmZyMAsGA1UdDwQEAwIFoDANBgkqhkiG9w0BAQUFAAOCAQEAhfjcENxd
+AenXKUFkRWJG3wyaYwCpQl130xcnej+/xmgYIQ+0Jp+eY1Tm/6B/62ZQpOezS4iN
+uMkj0Wcn7++qSUNIVh6nUsbMEdlW3qVKgOqcnRCOVXs8gT7EX8zOwGXuPyQMP86n
+/PeKEa6lQ7kWBNZ3uLJlveiz5h6Pja3gCXR419HoevdzG0p2qxKrXI60Fn66XmPN
+77aGyVQ4SSTTRL/UpkSSICXlxFMCTshxwCO/+osjyT7c0maJusI5Dvx3nT8ONOBJ
+J+0vrRRDM2IxhX3LRDoxrVfNImsfii0f5mjx6CAICAyS0ONGLcobxmo/Uj4IGmKT
+u/9uuGjUPB/0iA==
+-----END CERTIFICATE-----

@@ -1,0 +1,33 @@
+cat /etc/hosts; echo ++++++++ xos0 et xos1 definis \? ++++++
+
+CORE=`grep xos0 /etc/hosts | awk '{print $1}'`
+
+echo "CORE Node --> $CORE"
+
+scp root@xos0:/etc/xos/truststore/certs/*crt /etc/xos/truststore/certs/
+chmod a+r /etc/xos/truststore/certs/* # in case umod does not create file with read for others
+c_rehash /etc/xos/truststore/certs/
+
+
+
+mv /etc/xos/xosautoconfig /etc/xos/xosautoconfig-old
+ln -s /home/sk/XOS/INSTALL/XOSAUTOCONFIG/RESSOURCE.localhost/xosautoconfig /etc/xos/xosautoconfig
+ln -s /home/sk/XOS /root/XOS
+cd /etc/xos/xosautoconfig
+HOST=`hostname`
+IP=`/sbin/ifconfig | grep inet | awk '{sub(":"," "); print $3; exit}'`
+echo $HOST $IP
+sed "s/__HOST__/$HOST/g;s/__CORE__/$CORE/g;s/__IP__/$IP/g"  /home/sk/XOS/INSTALL/XOSAUTOCONFIG/MODELES/RESSOURCES/globalDefs >/etc/xos/xosautoconfig/globalDefs
+sed "s/__HOST__/$HOST/g;s/__CORE__/$CORE/g;s/__IP__/$IP/g"  /home/sk/XOS/INSTALL/XOSAUTOCONFIG/MODELES/RESSOURCES/localDefs >/etc/xos/xosautoconfig/localDefs
+sed "s/__HOST__/$HOST/g;s/__CORE__/$CORE/g;s/__IP__/$IP/g"  /home/sk/XOS/INSTALL/XOSAUTOCONFIG/MODELES/RESSOURCES/nodeTypes >/etc/xos/xosautoconfig/nodeTypes
+cd /etc/xos/xosautoconfig
+xosautoconfig
+confirmResource
+rca_list_pending
+rca_apply
+finishConfig 
+cp /etc/resolv.conf /etc/resolv.conf.orig
+#cp /root/XOS/INSTALL/CONF/resolv.conf.claui2s0 /etc/resolv.conf
+firefox http://localhost:8080/volifecycle
+
+

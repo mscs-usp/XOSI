@@ -1,0 +1,8 @@
+NETWORKING=yes
+GATEWAY=131.254.201.1
+FORWARD_IPV4=false
+HOSTNAME=paraxos9.irisa.fr
+HOSTNAME=paraxos9.irisa.fr
+HOSTNAME=paraxos9.irisa.fr
+HOSTNAME=paraxos9.irisa.fr
+HOSTNAME=paraxos9.irisa.fr

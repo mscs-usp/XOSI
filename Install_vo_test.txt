@@ -1,0 +1,396 @@
+# create Yvon-Admin with xtreenos passwd. create vo test
+# sk joins test
+# get user key and cert
+
+
+# comme sk
+mkdir -p /home/sk/.xos/truststore/certs/
+mkdir -p /home/sk/.xos/truststore/private/
+
+cp /home/sk/Desktop/user.crt  /home/sk/.xos/truststore/certs/user.crt
+cp /home/sk/Desktop/user.key  /home/sk/.xos/truststore/private/user.key
+cp /home/sk/Desktop/user.key  /home/sk/.xos/user.key
+# comme root
+mkdir -p /root/.xos/truststore/certs/
+mkdir -p /root/.xos/truststore/private/
+cp /home/sk/Desktop/user.crt  /root/.xos/truststore/certs/user.crt
+cp /home/sk/Desktop/user.key  /root/.xos/truststore/private/user.key
+
+openssl verify -CApath /etc/xos/truststore/certs/ /root/.xos/truststore/certs/user.crt
+#/root/.xos/truststore/certs/user.crt: OK
+openssl verify -CApath /etc/xos/truststore/certs/ /home/sk/.xos/truststore/certs/user.crt
+#/home/sk/.xos/truststore/certs/user.crt: OK
+
+service xos-amsd restart
+
+
+xos-policy-admin-chk -pem /root/.xos/truststore/certs/user.crt
+dn = [/CN=584fddf7-69ae-47cc-b864-78f76e836aac], vo = [ffc8e45b-914d-41b7-aba0-a04fece111cf], role = [null]
+PAM:fail in mapping connect !
+         * a)Please check whether AMS daemon is running correctly *
+         * b)Please check whether mapping rules are correct.      *
+         *     If not, try:                                       *
+         *       xos-policy-admin-am  -vo <vo> --force            *
+         *       xos-policy-admin-gm  -vo <vo> --force            *
+         * c)Please check whether setting rule is correct.        *
+         *     If not, try:                                       *
+         *       xos-policy-admin-set -uidmax <num> -uidmin <num> *
+         *                            -gidmax <num> -gidmin <num> *
+Oops: Permission denied
+
+VO=ec46d3e4-507b-4c58-a65c-3e71a9187917
+
+
+xos-policy-admin-am -vo $VO  --force
+xos-policy-admin-gm -vo $VO  --force
+
+xos-policy-admin-chk -pem /root/.xos/truststore/certs/user.crt
+
+# en sk
+
+cat > /home/sk/.ssh/config-xos.modele <<EOF
+Host __HOST__
+  XosProxyFile /home/sk/.xos/truststore/certs/user.crt
+  XosVoName   test
+EOF
+
+HOST=`hostname`
+
+sed "s/__HOST__/$HOST/g" /home/sk/.ssh/config-xos.modele  > /home/sk/.ssh/config-xos
+cat /home/sk/.ssh/config-xos
+
+#must remove w from group (due to umask?)
+chmod g-w /home/sk/.ssh/config-xos
+
+ssh-xos $HOST
+Last login: Tue Dec  2 16:39:02 2008 from paraxos5.irisa.fr
+whoami
+#/CN=584fddf7-69ae-47cc-b864-78f76e836aac
+pwd
+#/home/584fddf7-69ae-47cc-b864-78f76e836aac
+cat > MyFirstFile < EOF
+abc
+EOF
+
+ls -al
+
+total 17
+drwxrwxrwx  1 root                                     root              0 2008-12-02 16:39 ./
+drwxr-xr-x 13 root                                     root           4096 2008-12-02 16:25 ../
+-rwxrwxrwx  1 /CN=584fddf7-69ae-47cc-b864-78f76e836aac root             19 2008-12-02 16:37 .bash_history*
+-rwxrwxrwx  1 /CN=584fddf7-69ae-47cc-b864-78f76e836aac xosuser_g60297    4 2008-12-02 16:39 MyFirstFile*
+drwxrwxrwx  1 /CN=584fddf7-69ae-47cc-b864-78f76e836aac root              0 2008-12-02 16:36 tmp/
+-bash-3.2$ exit
+logout
+Connection to paraxos5.irisa.fr closed.
+
+
+[root@paraxos5 ~]# service xosd stop
+Stopping xosd:                                                  [  OK  ]
+
+[root@paraxos5 ~]# cat /etc/xos/config/XOSdConfig.conf
+#Properties File for the client application
+#Mon Dec 01 18:25:33 CET 2008
+rootaddress.host=131.254.201.20
+certificateLocation=/etc/xos/truststore/certs/resource.crt
+xosdRootDir=.
+networkInterface=
+externalAddress=131.254.201.20
+trustStoreSSL=/etc/xos/truststore/certs/
+trustStore=/etc/xos/truststore/certs/
+xosdport=60000
+xmlport=55000
+rootaddress.externalAddress=131.254.201.20
+rootaddress.port=60000
+services.size=15
+privateKeyLocation=/etc/xos/truststore/private/resource.key
+useSSL=false
+
+services.13=eu.xtreemos.xosd.srdsmng.service.SRDSMngHandler
+services.12=eu.xtreemos.xosd.jobmng.service.JobMngHandler
+services.11=eu.xtreemos.xosd.security.vops.service.VOPSHandler
+services.10=eu.xtreemos.xosd.security.rca.client.service.RCAClientHandler
+services.7=eu.xtreemos.xosd.execMng.service.ExecMngHandler
+services.5=eu.xtreemos.xosd.resmng.service.ResMngHandler
+services.4=eu.xtreemos.xosd.jobDirectory.service.JobDirectoryHandler
+services.3=eu.xtreemos.xosd.resourcemonitor.service.ResourceMonitorHandler
+services.2=eu.xtreemos.xosd.xmlextractor.service.XMLExtractorHandler
+services.1=eu.xtreemos.xosd.security.rca.server.service.RCAServerHandler
+services.0=eu.xtreemos.xosd.daemon.DaemonGlobal
+
+[root@paraxos5 ~]# service xosd start
+Starting xosd:                                                  [  OK  ]
+[root@paraxos5 ~]# service xosd stop
+Stopping xosd:                                                  [  OK  ]
+
+[root@paraxos5 ~]# cat /root/.xos/XATIConfig.conf
+#Properties File for the client application
+#Tue Dec 02 16:40:45 CET 2008
+useSSL=false
+xosdaddress.externalAddress=131.254.201.20
+xosdaddress.host=131.254.201.20
+privateKeyLocation=/etc/xos/truststore/private/resource.key
+userKeyFile=/root/.xos/truststore/private/user.key
+networkInterface=
+trustStoreSSL=/etc/xos/truststore/certs/
+address.host=131.254.201.20
+userCertificateFile=/root/.xos/truststore/certs/user.crt
+xosdaddress.port=60000
+address.port=10000
+certificateLocation=/etc/xos/truststore/certs/resource.crt
+
+#NOTE: file .xos/XATICAConfig.conf does not exist any more
+
+[root@paraxos5 ~]# xconsole_dixi
+XtreemOS Console
+
+$ exit
+Bye
+^C
+
+[sk@paraxos5 ~]$ cat /home/sk/.xos/XATIConfig.conf
+#Properties File for the client application
+#Wed Nov 12 15:01:17 CET 2008
+useSSL=false
+xosdaddress.externalAddress=131.254.201.20
+xosdaddress.host=131.254.201.20
+privateKeyLocation=/etc/xos/truststore/private/reskey.pem
+userKeyFile=/home/sk/.xos/truststore/private/user.key
+networkInterface=
+trustStoreSSL=/etc/xos/truststore/certs/
+address.host=131.254.201.20
+userCertificateFile=/home/sk/.xos/truststore/certs/user.crt
+xosdaddress.port=60000
+address.port=10000
+certificateLocation=/etc/xos/truststore/certs/rescert.pem
+
+[root@paraxos5 ~]# xps -a
+Could not open Config File: open: No such file or directory
+Expected File: /root/.xos/XATICAConfig.conf
+Using and writing default values for configError certificate File : /etc/xos/truststore/certs/xati_dummy.pem
+[root@paraxos5 ~]# cat /root/.xos/XATICAConfig.conf
+xosdaddress.host=paraxos5.irisa.fr
+xosdaddress.port=55000
+address.host=paraxos5.irisa.fr
+address.port=10001
+certificateLocation=/etc/xos/truststore/certs/resource.crt
+privateKeyLocation=/etc/xos/truststore/private/resource.key
+trustStoreSSL=/etc/xos/truststore/certs/
+useSSL=false
+cdaaddress.host=paraxos5.irisa.fr
+cdaaddress.port=60000
+
+[sk@paraxos5 ~]$ xps -a
+Could not open Config File: open: No such file or directory
+Expected File: /home/sk/.xos/XATICAConfig.conf
+Using and writing default values for configError certificate File : /etc/xos/truststore/certs/xati_dummy.pem
+[sk@paraxos5 ~]$ cat /home/sk/.xos/XATICAConfig.conf
+xosdaddress.host=paraxos5.irisa.fr
+xosdaddress.port=55000
+address.host=paraxos5.irisa.fr
+address.port=10001
+certificateLocation=/etc/xos/truststore/certs/resource.crt
+privateKeyLocation=/etc/xos/truststore/private/resource.key
+trustStoreSSL=/etc/xos/truststore/certs/
+useSSL=false
+cdaaddress.host=paraxos5.irisa.fr
+cdaaddress.port=60000
+
+[root@paraxos5 ~]# cat /etc/xos/config/RCAServerConfig.conf
+#Properties File for the client application
+#Tue Dec 02 16:46:28 CET 2008
+certDNCountry=FR
+attributeType=V3
+keyPassword=
+certificateFileName=/etc/xos/truststore/certs/rcaserver.crt
+certDNOrganisation=INRIA
+cdaPassword=
+daysCertValidity=30
+privateKey=/etc/xos/truststore/private/rcaserver.key
+rcaDBFile=/etc/xos/RCADB.bin
+certDNOrganisationUnit=XtreemOS
+certDNLocation=Rennes
+
+[root@paraxos5 ~]# cat /etc/xos/config/RCAClientConfig.conf
+#Properties File for the client application
+#Mon Dec 01 18:25:34 CET 2008
+resPrivateKeyFileName=/etc/xos/truststore/private/resource.key
+resAttributeCertExtFileName=/etc/xos/truststore/certs/attrextcert.crt
+resAttributeCertFileName=/etc/xos/truststore/certs/attrcert.crt
+cdaCertificateFileName=/etc/xos/truststore/certs/rcaserver.crt
+resVOAttributeCertIncoming=/etc/xos/truststore/certs/incoming/
+resIdentityCertFileName=/etc/xos/truststore/certs/resource.crt
+
+#create an initial  ResMng.conf
+#not sure it is necessary
+[root@paraxos5 ~]# cat /etc/xos/config/ResMng.conf
+#Properties File for the client application
+#Tue Dec 02 16:46:28 CET 2008
+VOPSPubCert=/etc/xos/truststore/certs/vops.crt
+testVOPS=false 
+useADS=false
+
+[root@paraxos5 ~]# service xosd start
+Starting xosd:                                                  [  OK  ]
+
+[root@paraxos5 ~]# rca_apply
+Returned from service call: successMethod
+[root@paraxos5 ~]# rca_list_pending
+Returned from service call: successMethod
+Listing pending resources:
+ResouceID = [IP=131.254.201.20:60000]: [hostIP={Address = [://paraxos5.irisa.fr/131.254.201.20:60000(/131.254.201.20)]}, hostUniqueID={131.254.201.20}, operatingSystemName={Linux}, processorArchitecture={x86}, CPUCount={8.0}, RAMSize={3.44981504E9}]
+[root@paraxos5 ~]# rca_list_registered
+Returned from service call: successMethod
+Listing registered resources:
+  List empty.
+[root@paraxos5 ~]# rca_confirm 131.254.201.20:60000
+Returned from service call: successMethod
+[root@paraxos5 ~]# rca_list_pending
+Returned from service call: successMethod
+Listing pending resources:
+  List empty.
+[root@paraxos5 ~]# rca_list_registered
+Returned from service call: successMethod
+Listing registered resources:
+ResouceID = [IP=131.254.201.20:60000]: [hostIP={Address = [://paraxos5.irisa.fr/131.254.201.20:60000(/131.254.201.20)]}, hostUniqueID={131.254.201.20}, operatingSystemName={Linux}, processorArchitecture={x86}, CPUCount={8.0}, RAMSize={3.44981504E9}]
+
+[root@paraxos5 ~]# rca_request
+Returned from service call: successMethod
+Requesting a new certificate...
+Identity certificate:
+  DN: C=FR,L=Rennes,OU=XtreemOS,O=INRIA,CN=Address = [://paraxos5.irisa.fr/131.254.201.20:60000(/131.254.201.20)]
+  serial number: 1228233464092
+  issuer DN: O=INRIA,OU=RCA VO Yvon,CN=paraxos5.irisa.fr
+  validity start: Tue Dec 02 16:52:44 CET 2008
+  validity end: Thu Jan 01 17:02:44 CET 2009
+Attributes of attribute certificate:
+ (attributes in extensions)
+  MemorySize = 3.44981504E9
+  Service =
+    eu.xtreemos.system.communication.redirector.ServiceCallRedirector
+    eu.xtreemos.xosd.daemon.Daemon
+    eu.xtreemos.xosd.security.rca.server.RCAServer
+    eu.xtreemos.xosd.xmlextractor.XMLExtractor
+    eu.xtreemos.xosd.resourcemonitor.ResourceMonitor
+    eu.xtreemos.xosd.jobDirectory.JobDirectory
+    eu.xtreemos.xosd.resmng.ResMng
+    eu.xtreemos.xosd.execMng.ExecMng
+    eu.xtreemos.xosd.security.rca.client.RCAClient
+    eu.xtreemos.xosd.security.vops.VOPS
+    eu.xtreemos.xosd.jobmng.JobMng
+    eu.xtreemos.xosd.srdsmng.SRDSMng
+
+  CPUCount = 8
+  CPUSpeed = 1.673527296E9
+
+
+
+[root@paraxos5 ~]# ls -al /etc/xos/truststore/certs/incoming/
+total 8
+drwxr-xr-x 2 root root 4096 2008-11-26 15:42 ./
+drwxr-xr-x 3 root root 4096 2008-12-02 16:57 ../
+[root@paraxos5 ~]# chmod 777 /etc/xos/truststore/certs/incoming
+
+[root@paraxos5 ~]# dixi_test -RCA avo ffc8e45b-914d-41b7-aba0-a04fece111cf 131.254.201.20:60000
+Returned from service call: successMethod
+Adding the resource 131.254.201.20:60000 to the VO.
+Added resource 131.254.201.20:60000 to VO ffc8e45b-914d-41b7-aba0-a04fece111cf.
+
+[root@paraxos5 ~]# ls -al /etc/xos/truststore/certs/incoming/
+total 12
+drwxrwxrwx 2 root root 4096 2008-12-02 17:00 ./
+drwxr-xr-x 3 root root 4096 2008-12-02 16:57 ../
+-rw-r--r-- 1 root root 1931 2008-12-02 17:00 attrcertffc8e45b-914d-41b7-aba0-a04fece111cfext.crt
+
+[root@paraxos5 ~]# cp /etc/xos/truststore/certs/incoming/attrcertffc8e45b-914d-41b7-aba0-a04fece111cfext.crt /etc/xos/truststore/certs/
+
+
+[root@paraxos5 ~]# service gmond stop
+Shutting down GANGLIA gmond:                                    [  OK  ]
+[root@paraxos5 ~]# service gmond start
+Starting GANGLIA gmond:                                         [  OK  ]
+
+[root@paraxos5 ~]# cat /etc/xos/config/Rss/config.cfg
+local_port = 1905
+network_interface = eth0
+disk_device = sda4
+bootstrap_address = 131.254.201.20
+bootstrap_port = 1905
+bootstrap_time = 1000
+
+socket_timeout = 60000
+
+...
+
+[root@paraxos5 ~]# cat /etc/xos/config/Bamboo/stdconf.cfg
+
+...
+         <initargs>
+             node_id 131.254.201.20:3630
+         </initargs>
+...
+                  gateway                           131.254.201.20:3630
+ ...
+
+
+[root@paraxos5 ~]# cat /etc/xos/config/ResMng.conf
+#Properties File for the client application
+#Tue Dec 02 16:46:28 CET 2008
+VOPSPubCert=/etc/xos/truststore/certs/vops.crt
+testVOPS=true
+useADS=true
+
+[sk@paraxos5 ~]$ cat  psx.jsdl
+<?xml version="1.0" encoding="UTF-8"?>
+<JobDefinition xmlns:jsdl="http://schemas.ggf.org/jsdl/2005/11/jsdl">
+   <JobDescription>
+       <JobIdentification>
+             <Description>Blank</Description>
+             <JobProject>Blank</JobProject>
+         </JobIdentification>
+         <Application>
+             <POSIXApplication
+                  xmlns:ns1="http://schemas.ggf.org/jsdl/2005/11/jsdl-posix">
+                 <Executable>/bin/ps</Executable>
+                 <Argument>-aef</Argument>
+                   <Output>/home/584fddf7-69ae-47cc-b864-78f76e836aac/ps.out</Output>
+             </POSIXApplication>
+         </Application>
+         <Resources>
+                 <TotalResourceCount>
+                         <Exact> 1 </Exact>
+                 </TotalResourceCount>
+         </Resources>
+     </JobDescription>
+</JobDefinition>
+
+[sk@paraxos5 ~]$ ssh-xos paraxos5.irisa.fr
+Last login: Tue Dec  2 16:39:08 2008 from paraxos5.irisa.fr
+-bash-3.2$ pwd
+/home/584fddf7-69ae-47cc-b864-78f76e836aac
+-bash-3.2$ ls
+MyFirstFile*  tmp/
+-bash-3.2$ exit
+logout
+Connection to paraxos5.irisa.fr closed.
+[sk@paraxos5 ~]$ xconsole_dixi
+XtreemOS Console
+
+$ xrs -jsdl /home/sk/psx.jsdl
+Listing resources matching JSDL query:
+  Address = [://paraxos5.irisa.fr/131.254.201.20:60000(/131.254.201.20)]
+$ xsub -f /home/sk/psx.jsdl
+Job submitted succesfully: f2c8c186-5f85-4861-852c-8aa41937a8b8
+$ exit
+Bye
+[sk@paraxos5 ~]$ ssh-xos paraxos5.irisa.fr
+Last login: Tue Dec  2 17:16:21 2008 from paraxos5.irisa.fr
+-bash-3.2$ ls
+MyFirstFile*  ps.out*  tmp/
+-bash-3.2$ exit
+logout
+Connection to paraxos5.irisa.fr closed.
+
+
+
+

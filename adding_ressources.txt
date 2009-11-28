@@ -1,0 +1,24 @@
+VO=ec46d3e4-507b-4c58-a65c-3e71a9187917
+rca_vo l $VO
+rca_vo a $VO 130.98.91.254:60000
+rca_vo l $VO
+rca_vo a $VO 130.98.91.254:60000
+rca_vo a $VO 130.98.91.175:60000
+xreservation -qf
+
+cd /home/sk/XOS/TESTS/AEM
+xsub -f job_nu.jsdl 
+
+
+#on ressource
+chmod 777 /etc/xos/truststore/certs/incoming
+service gmond restart
+service xosd stop
+service xosd start
+rca_apply
+rca_list_pending
+
+#on core
+rca_vo a $VO 130.98.91.254:60000
+
+#on ressource

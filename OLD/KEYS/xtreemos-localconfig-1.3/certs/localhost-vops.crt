@@ -1,0 +1,74 @@
+Certificate:
+    Data:
+        Version: 3 (0x2)
+        Serial Number: 3 (0x3)
+        Signature Algorithm: sha1WithRSAEncryption
+        Issuer: CN=XtreemOS CA, O=XtreemOS Project, OU=XtreemOS Project Root Certification Authority
+        Validity
+            Not Before: Feb  6 16:16:24 2009 GMT
+            Not After : Feb  6 16:16:24 2010 GMT
+        Subject: O=VOPS for xtreemos-localconfig, OU=vops, CN=localhost/vops
+        Subject Public Key Info:
+            Public Key Algorithm: rsaEncryption
+            RSA Public Key: (1024 bit)
+                Modulus (1024 bit):
+                    00:ea:92:a3:97:f1:b2:0b:7d:cc:4c:e1:86:b4:a2:
+                    a9:42:72:43:8f:23:4f:38:1c:21:de:c1:a0:19:9d:
+                    07:e4:20:0b:62:2c:ee:c5:63:6d:fd:b5:a1:80:01:
+                    c5:ac:b4:67:8f:fa:a0:c5:95:94:6a:70:41:67:46:
+                    88:36:60:79:e4:3b:97:ab:66:e8:75:e0:ea:ad:2a:
+                    6c:9b:4d:36:71:af:39:49:d9:72:75:53:f1:0b:03:
+                    5f:61:72:ca:d8:9a:5d:1b:92:80:6f:c9:43:aa:b6:
+                    2a:db:6f:be:3b:45:89:0c:0e:cb:54:bd:6a:e6:61:
+                    d5:11:37:98:1a:1f:49:d0:45
+                Exponent: 65537 (0x10001)
+        X509v3 extensions:
+            Netscape Comment: 
+                XtreemOS Certificate
+            X509v3 Subject Key Identifier: 
+                41:B4:7F:A3:1D:A5:22:1F:F7:FD:31:AC:1C:D4:04:5A:9D:E0:EB:7C
+            X509v3 Authority Key Identifier: 
+                keyid:0E:A4:0B:7B:61:31:91:37:FE:BB:E5:C3:EC:0A:01:10:BB:4C:DF:9B
+
+            X509v3 Basic Constraints: 
+                CA:FALSE
+            X509v3 Subject Alternative Name: 
+                DNS:localhost
+            X509v3 Key Usage: 
+                Digital Signature, Key Encipherment
+    Signature Algorithm: sha1WithRSAEncryption
+        49:79:43:77:19:ac:e5:1f:e5:e5:15:26:6b:e9:ce:87:9d:f5:
+        5d:e9:9f:7d:3d:6e:7b:4b:68:de:8b:f5:e7:bd:08:f2:d0:1e:
+        61:db:2f:2c:95:34:4d:41:0a:01:fb:31:a6:3b:35:dd:65:e8:
+        08:37:f8:1a:dd:69:b6:ef:0d:f8:fb:6d:43:05:75:90:41:d3:
+        42:0d:42:70:ab:e3:e1:31:01:8c:5b:6f:43:84:8d:39:53:59:
+        f4:ee:d0:d5:3e:c7:63:83:d5:14:b6:be:85:5f:5d:70:4b:54:
+        0e:84:8f:46:81:85:da:8a:e2:86:9c:32:c2:8a:11:fc:45:12:
+        1c:11:7d:d8:35:90:b1:17:3c:d1:04:eb:e4:dc:48:da:3e:9f:
+        bc:c6:f6:b6:fe:53:fa:fd:01:c0:c8:4d:ed:79:15:e9:2e:86:
+        28:98:04:bf:d7:3c:0b:f7:23:94:d4:49:f7:35:3a:cd:bb:92:
+        be:5c:a5:88:68:c4:69:d7:3d:0d:f0:f3:2d:0b:24:90:3d:d4:
+        98:f5:e4:da:24:76:04:1f:be:57:d5:08:28:2f:5d:6b:92:2f:
+        63:bf:af:9d:81:0f:ed:22:ae:c4:e5:4d:40:4b:a9:97:38:f6:
+        2a:83:16:25:64:8e:30:be:10:f8:14:c1:b7:50:65:ab:2c:45:
+        a3:e5:09:32
+-----BEGIN CERTIFICATE-----
+MIIDRzCCAi+gAwIBAgIBAzANBgkqhkiG9w0BAQUFADBpMRQwEgYDVQQDEwtYdHJl
+ZW1PUyBDQTEZMBcGA1UEChMQWHRyZWVtT1MgUHJvamVjdDE2MDQGA1UECxMtWHRy
+ZWVtT1MgUHJvamVjdCBSb290IENlcnRpZmljYXRpb24gQXV0aG9yaXR5MB4XDTA5
+MDIwNjE2MTYyNFoXDTEwMDIwNjE2MTYyNFowUDEmMCQGA1UEChMdVk9QUyBmb3Ig
+eHRyZWVtb3MtbG9jYWxjb25maWcxDTALBgNVBAsTBHZvcHMxFzAVBgNVBAMTDmxv
+Y2FsaG9zdC92b3BzMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDqkqOX8bIL
+fcxM4Ya0oqlCckOPI084HCHewaAZnQfkIAtiLO7FY239taGAAcWstGeP+qDFlZRq
+cEFnRog2YHnkO5erZuh14OqtKmybTTZxrzlJ2XJ1U/ELA19hcsrYml0bkoBvyUOq
+tirbb747RYkMDstUvWrmYdURN5gaH0nQRQIDAQABo4GWMIGTMCMGCWCGSAGG+EIB
+DQQWFhRYdHJlZW1PUyBDZXJ0aWZpY2F0ZTAdBgNVHQ4EFgQUQbR/ox2lIh/3/TGs
+HNQEWp3g63wwHwYDVR0jBBgwFoAUDqQLe2ExkTf+u+XD7AoBELtM35swCQYDVR0T
+BAIwADAUBgNVHREEDTALgglsb2NhbGhvc3QwCwYDVR0PBAQDAgWgMA0GCSqGSIb3
+DQEBBQUAA4IBAQBJeUN3GazlH+XlFSZr6c6HnfVd6Z99PW57S2jei/XnvQjy0B5h
+2y8slTRNQQoB+zGmOzXdZegIN/ga3Wm27w34+21DBXWQQdNCDUJwq+PhMQGMW29D
+hI05U1n07tDVPsdjg9UUtr6FX11wS1QOhI9GgYXaiuKGnDLCihH8RRIcEX3YNZCx
+FzzRBOvk3EjaPp+8xva2/lP6/QHAyE3teRXpLoYomAS/1zwL9yOU1En3NTrNu5K+
+XKWIaMRp1z0N8PMtCySQPdSY9eTaJHYEH75X1QgoL11rki9jv6+dgQ/tIq7E5U1A
+S6mXOPYqgxYlZI4wvhD4FMG3UGWrLEWj5Qky
+-----END CERTIFICATE-----

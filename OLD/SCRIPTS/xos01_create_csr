@@ -1,0 +1,19 @@
+  cd /CD0/updates/
+  ls
+  urpmi create-csr-0.9.4-1mdv2008.0.noarch.rpm 
+   cd
+   create-csr xos1.edf.fr "EDF" cda
+   ls
+   process-csr /opt/xtreemosca xos1.edf.fr-cda.csr 
+   cp xos1.edf.fr-cda.crt /etc/xos/truststore/certs/cda.crt
+   cp xos1.edf.fr-cda.key /etc/xos/truststore/private/cda.key
+   c_rehash /etc/xos/truststore/certs/
+   cp  volife.properties /etc/xos/config/volife/volife.properties 
+# rca server stuff
+
+   create-csr xos1.edf.fr "EDF" rca
+   ls
+   process-csr /opt/xtreemosca xos1.edf.fr-rca.csr 
+   cp xos1.edf.fr-rca.crt /etc/xos/truststore/certs/rcaserver.crt
+   cp xos1.edf.fr-rca.key /etc/xos/truststore/private/rcaserver.key
+   c_rehash /etc/xos/truststore/certs/

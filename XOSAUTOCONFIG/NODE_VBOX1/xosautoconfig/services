@@ -1,0 +1,41 @@
+# Service description
+# Each line contains 0 or mode node types, 0 or more host names 
+#      and one or more service name.
+# A node type can be present on more than one line
+# A host name can be present on more than one line
+# When a node type and a service name are present on the same line, all nodes
+#      of this type run this service
+# When a host name and a service name are present on the same line, this host
+#      runs this service
+# When the string all-nodes is present on a line, all the services of this line
+#      are started on all nodes
+#
+
+# services needed to run dixi:
+#  CronDaemon DaemonGlobal XMLExtractor
+# dixi services for a resource node:
+#  ExecMng RCAClient ResAllocator ResourceMonitor SRDSMng ResMng
+# dixi services of core node:
+#  JobDirectory JobMng RCAServer ResAllocator ReservationManager VOPS
+# general services 
+#  amsd nsspam openssh xtreemos-openssh ntp xtreemfs-client
+# Vo management services
+#  VOLife xvoms cdaserver
+# XtreemFS services
+#  xtreemfs-dir xtreemfs-mrc xtreemfs-osd
+#
+#here is a configuration for a head node with all services (core, resource,...)
+#and a resource node
+
+head-node: JobDirectory JobMng RCAServer ResAllocator ReservationManager ResMng VOPS
+head-node: ExecMng RCAClient ResAllocator ResourceMonitor SRDSMng
+head-node: VOLife xvoms cdaserver
+head-node: xtreemfs-dir xtreemfs-mrc xtreemfs-osd
+head-node: amsd nsspam openssh xtreemos-openssh ntp xtreemfs-client
+
+resource-node: ExecMng RCAClient ResAllocator ResourceMonitor SRDSMng ResMng
+resource-node: amsd nsspam openssh xtreemos-openssh ntp xtreemfs-client
+
+all-nodes: CronDaemon DaemonGlobal XMLExtractor
+
+

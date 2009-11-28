@@ -1,0 +1,9 @@
+
+rename XOSD in XTREEMFS
+
+put the current status of the service
+
+in Xvoms, still the strange character after MRC host and post
+          would it be possible to add a link to volife website?
+
+

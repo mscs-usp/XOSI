@@ -1,0 +1,306 @@
+
+#----------------------------------------------
+# connecting with subversion
+#----------------------------------------------
+
+#installation subversion
+urpmi subversion
+O
+
+
+cd /root
+#svn co https://clasz013.cla.edfgdf.fr/svn/osis/trunk/NOTES
+svn co http://subversion/assembla/xos
+p
+
+kortas
+
+cd
+ln -s /root/xos/INSTALL/CONF/emacs /root/.emacs
+ln -s /root/xos/INSTALL/CONF/emacs-places /root/.emacs-places
+mv .bashrc .bashrc.old
+ln -s /root/xos/INSTALL/CONF/bashrc /root/.bashrc
+cp -f /root/xos/INSTALL/CONF/wgetrc /etc/wgetrc
+echo Change xxxxxxxx dans wgetrc!!!!!!!
+cp /root/xos/INSTALL/CONF/hosts.virtualbox /etc/hosts
+cp /root/xos/INSTALL/CONF/hosts.testbed /etc/hosts
+
+urpmi make
+
+cd /tmp
+tar xvfj /root/xos/SOFTS/elink*
+cd elinks-0.11.6
+./configure
+make 
+make install
+
+mkdir .elinks
+ln -s /root/xos/INSTALL/CONF/elinks.conf /root/.elinks/
+ln -s /root/xos/INSTALL/CONF/elinks.bookmarks /root/.elinks/bookmarks
+
+
+
+
+
+#----------------------------------------------
+# setting package connection
+#----------------------------------------------
+
+urpmi.removemedia -a
+xterm -e elinks
+http://distrib-coffee.ipsl.jussieu.fr/pub/linux/MandrivaLinux/devel/xtreemos/2008.0/i586/
+xterm -e elinks http://distrib-coffee.ipsl.jussieu.fr/pub/linux/MandrivaLinux/devel/xtreemos/2008.0/i586/
+urpmi.addmedia  --distrib http://distrib-coffee.ipsl.jussieu.fr/pub/linux/MandrivaLinux/devel/xtreemos/2008.0/i586/
+urpmq --list-media
+
+urpmi.addmedia --distrib ftp://ftp.free.fr/mirrors/ftp.mandriva.com/MandrivaLinux/devel/xtreemos/2008.0/i586W
+urpmi.addmedia --distrib
+ftp://ftp.free.fr/mirrors/ftp.mandriva.com/MandrivaLinux/official/2008.1/i586
+urpmi  --auto-update
+o
+
+#----------------------------------------------
+# configuration du noeud 0
+#----------------------------------------------
+
+
+
+# CREATE CRT
+
+urpmi rootca
+urpmi xtreemos-localconfig
+
+cd /root/xos/INSTALL/SCRIPTS_NEW
+init-rootca /opt/xtreemosca
+create-rootca-creds /opt/xtreemosca/
+mkdir -p /etc/xos/truststore/public
+mkdir -p /etc/xos/truststore/private
+mkdir -p /etc/xos/truststore/certs
+cp /opt/xtreemosca/private/xtreemos.key /etc/xos/truststore/private
+cp /opt/xtreemosca/public/xtreemos.crt /etc/xos/truststore/public
+
+#create-rootca-creds /etc/xos/truststore/
+cp /etc/xos/truststore/public/xtreemos.crt /etc/xos/truststore/certs/xtreemos.crt
+y
+
+cd /root/xos/INSTALL/SCRIPTS_NEW
+
+cp private/*.key /etc/xos/truststore/private
+y
+cp public/*.crt /etc/xos/truststore/public
+y
+
+
+process-csr /opt/xtreemosca csr/cda.csr
+y
+y
+mv cda.crt certs/
+y
+
+cp certs/*.crt /etc/xos/truststore/certs
+y
+chmod a+r /etc/xos/truststore/certs/* 
+
+c_rehash /etc/xos/truststore/certs/
+view-xos-cert /etc/xos/truststore/certs/xtreemos.crt
+view-xos-cert /etc/xos/truststore/certs/cda.crt
+
+
+
+# checking...
+cat /etc/xos/nss_pam/pam_xos.conf | grep AutoMount
+# should be        OpenAutoMount                  yes
+
+cat /etc/xos/nss_pam/pam_xos.conf | grep VOCA
+#should be
+#...
+#VOCACertDir         /etc/xos/truststore/certs #beware: no / at the end
+#VOCACertFile         xtreemos.crt
+#...
+
+# if needed
+#  cp pam_xos.conf /etc/xos/nss_pam/pam_xos.conf 
+
+
+grep cdaserver /etc/xos/config/cdaserver/cdaserver.properties
+grep xtreemos /etc/xos/config/cdaserver/cdaserver.properties
+
+# if needed 
+# cp cdaserver.properties /etc/xos/config/cdaserver/cdaserver.properties
+
+
+
+# BUG: missing dir /etc/xos/config/volife
+mkdir -p /etc/xos/config/volife
+grep cdaserver /etc/xos/config/volife/volife.properties
+# if needed
+# cp  volife.properties /etc/xos/config/volife/volife.properties 
+
+
+# create VO
+
+/usr/share/xvoms/bin/xvoms_prepare_database.sh
+
+# start CDA server
+
+/sbin/service cdaserver restart
+
+
+
+
+
+grep mrc /usr/share/tomcat5/webapps/volifecycle/WEB-INF/classes/MRC.properties
+
+
+service tomcat5 restart
+
+grep dir_service /etc/xos/xtreemfs/mrcconfig.properties
+grep dir_service /etc/xos/xtreemfs/osdconfig.properties
+grep object_dir /etc/xos/xtreemfs/osdconfig.properties
+# should be object_dir = /xfs/objs/
+# cp osdconfig.properties /etc/xos/xtreemfs/osdconfig.properties
+y
+# if needed
+# cp osdconfig.properties /etc/xos/xtreemfs/osdconfig.properties
+
+grep dir_service /etc/xos/xtreemfs/default_dir
+mkdir /xfs
+chown -R xtreemfs:xtreemfs /xfs/
+service xtreemfs-osd stop
+service xtreemfs-mrc stop
+service xtreemfs-dir stop
+service xtreemfs-dir start
+service xtreemfs-mrc start
+service xtreemfs-osd start
+#to get around a bug in volifecycle
+mkdir /usr/share/tomcat5/certs
+chown tomcat.tomcat /usr/share/tomcat5/certs
+
+
+# create Yvon-Admin with xtreenos passwd. Create VO-Yvon.
+# create user yvon who joins VO-Yvon
+# get user key and cert
+mkdir -p /root/.xos/truststore/certs/
+mkdir -p /root/.xos/truststore/private/
+cp certs/user.crt  /root/.xos/truststore/certs/user.crt
+y
+cp private/user.key  /root/.xos/truststore/private/user.key
+y
+y
+process-csr /opt/xtreemosca csr/user.csr
+view-xos-cert certs/user.crt
+
+openssl verify -CApath /etc/xos/truststore/certs/ /root/.xos/truststore/certs/user.crt
+
+
+view-xos-cert user.crt | awk '/GlobalPrimaryVOName/,/GlobalSecondaryVONames/ {gsub(/^ */,""); i++; if (i==2) { print $0}}' > myVO
+cat myVO
+VO=`cat myVO`
+
+
+
+service xos-amsd restart
+xos-policy-admin-am -vo $VO  --force
+xos-policy-admin-gm -vo $VO  --force
+xos-policy-admin-chk -pem /root/.xos/truststore/certs/user.crt
+
+
+
+
+# create VO
+
+/usr/share/xvoms/bin/xvoms_prepare_database.sh
+
+# start CDA server
+
+/sbin/service cdaserver restart
+
+# use CDA Client
+
+get-xos-cert localhost:6730 vo1 vouser.key vouser.crt test
+
+get-xos-cert xos2:6730 vo1 vouser.key vouser.crt test
+
+
+echo checking....
+
+view-xos-cert vouser.crt
+
+echo getting VO
+
+cat vouser.crt
+
+view-xos-cert vouser.crt | awk '/GlobalPrimaryVOName/,/GlobalSecondaryVONames/ {gsub(/^ */,""); i++; if (i==2) { print $0}}' > myVO
+
+
+cat myVO
+
+
+
+VO=`cat myVO`
+
+/sbin/service xos-amsd restart
+xos-policy-admin-am -vo $VO --force
+xos-policy-admin-gm -vo $VO --force
+
+pam_app_conv -pem user.crt
+
+
+
+
+
+
+
+
+
+cat > /home/sk/.ssh/config-xos
+Host xos*
+  XosProxyFile /home/sk/.xos/truststore/certs/user.crt
+  XosVoName    vo1
+
+
+
+mkdir /home/sk/.ssh/config
+mkdir /root/.ssh/config
+
+#due to a bug in ssh-xos: need to copy in config
+cp /home/sk/.ssh/config-xos /home/sk/.ssh/config
+cp /home/sk/.ssh/config-xos /root/.ssh/config
+cp /home/sk/.ssh/config-xos /root/.ssh/
+
+#must remove w from group (due to umask?)
+
+chmod g-w .ssh/config-xos
+chmod g-w .ssh/config
+chown -R sk.sk /home/sk
+
+chmod g-w /root/.ssh/config-xos
+chmod g-w /root/.ssh/config
+
+ssh-xos xos1
+
+
+installing Saga
+
+urpme gcc-c++
+urpmi gcc-gfortran
+urpmi boost-
+urpmi boost-devel
+urpmi boost-static-devel
+urpmi libsqlite3_0
+urpmi libsqlite3-devel
+urpmi libsqlite3-stat
+urpmi python-devel
+
+
+urpmi saga
+
+
+cd /root/xos/INSTALL/SOFTS
+tar xvfj saga-cpp-1.2.1.src.tar.bz2
+cd saga-cpp-1.2.1.src
+
+./configure
+make
+make check
+make install

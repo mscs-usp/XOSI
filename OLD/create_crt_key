@@ -1,0 +1,5 @@
+   create-csr xos1.edf.fr "EDF" $1
+   process-csr /opt/xtreemosca xos1.edf.fr-$1.csr 
+   cp xos1.edf.fr-$1.crt /etc/xos/truststore/certs/$1.crt
+   cp xos1.edf.fr-$1.key /etc/xos/truststore/private/$1.key
+   c_rehash /etc/xos/truststore/certs/

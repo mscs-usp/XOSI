@@ -1,0 +1,3 @@
+service=eu.xtreemos.xosd.security.vops.service.VOPSHandler
+enabled=true
+numThreads=1
