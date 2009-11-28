@@ -161,10 +161,6 @@
 (setq load-path (cons "/usr/share/emacs21/site-lisp/auctex" load-path))
 (setq load-path (cons "/root" load-path))
 
-(require 'vc-git)
-
-(add-to-list 'vc-handled-backends 'Git)
-
 ;;; Sauvegarde des positions de windows
 
 (fset 'save-pos1  "\C-xrw1" )   (global-set-key (quote [C-S-f1])  (quote save-pos1 ))
@@ -192,11 +188,6 @@
 
 
 
-
-
-(require 'python-mode)
-  (setq load-path (cons "/home/kortas/TEST/EMACS/local-site//share/emacs/site-lisp" load-path))
-(setq load-path (cons "/usr/share/emacs21/site-lisp/auctex" load-path))
 
 
 ;(require 'latex)
