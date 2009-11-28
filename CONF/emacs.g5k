@@ -160,6 +160,9 @@
 
 (setq load-path (cons "/usr/share/emacs21/site-lisp/auctex" load-path))
 (setq load-path (cons "/root" load-path))
+(setq load-path (cons "/root/XOSI/CONF" load-path))
+(setq load-path (cons "/home/orsay/skortas/XOSI/CONF" load-path))
+
 
 ;;; Sauvegarde des positions de windows
 
@@ -187,7 +190,7 @@
 
 
 
-
+(require 'python-mode)
 
 
 ;(require 'latex)
