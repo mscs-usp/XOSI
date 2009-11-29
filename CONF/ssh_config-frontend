@@ -1,0 +1,29 @@
+host gkr
+   hostname access.rennes.grid5000.fr 
+   user skortas
+ForwardX11 yes
+ForwardX11Trusted yes
+ForwardAgent yes
+
+Host xr
+   HostName access.rennes.grid5000.fr  
+   User skortas
+
+Host xos20
+   HostName localhost
+   User root
+
+Host xos21
+   HostName localhost
+   User root
+
+Host xos60
+   HostName localhost
+   User root
+   Port 2223
+
+Host xos61
+   HostName localhost
+   User root
+   Port 2224
+

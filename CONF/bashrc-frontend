@@ -1,0 +1,19 @@
+alias Dedf='export DISPLAY=130.98.91.65:0'
+alias Dfree='export DISPLAY=192.168.111.77:0'
+export DISPLAY=130.98.91.65:0
+export xos0=130.98.91.175
+export xos1=130.98.91.254
+
+alias gkr='ssh -X skortas@access.rennes.grid5000.fr'
+alias c2="ssh -X kortas@claypfr"
+alias cl="ssh -X kortas@claui2t0"
+
+alias gpI="cd /e/XOS/XOSI; git pull ssh://skortas@access.rennes.grid5000.fr/home/orsay/skortas/XOSI/ master"
+alias gpO="cd /e/XOS/XOSO; git pull ssh://skortas@access.rennes.grid5000.fr/home/orsay/skortas/XOSO/ master"
+alias gpT="cd /e/XOS/XOST; git pull ssh://skortas@access.rennes.grid5000.fr/home/orsay/skortas/XOST/ master"
+
+alias gPI="cd /e/XOS/XOSI; git push ssh://skortas@access.rennes.grid5000.fr/home/orsay/skortas/XOSI/ master"
+alias gPO="cd /e/XOS/XOSO; git push ssh://skortas@access.rennes.grid5000.fr/home/orsay/skortas/XOSO/ master"
+alias gPT="cd /e/XOS/XOST; git push ssh://skortas@access.rennes.grid5000.fr/home/orsay/skortas/XOST/ master"
+
+alias tunnel="ssh -X -N -g -L22:paraquad-52:22 -L2222:paraquad-53:22 -L2223:paradent-21:22 -L2224:paradent-22:22 -L8080:paraquad-52:8080 -L8081:paradent-21:8080 skortas@gkr"
