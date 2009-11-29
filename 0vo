@@ -1,0 +1,5 @@
+volife_run.sh -create-user sam "edf123" "sam" "kortas" "EDF " "sk@edf.fr"
+volife_run.sh -list-all-users
+volife_run.sh -approve-user sam
+sudo -u tomcat volife_run.sh -create-vo test2 "test2" sam
+volife_run.sh -list-all-vos
