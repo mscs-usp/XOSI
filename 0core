@@ -8,7 +8,6 @@ Y
  urpmi rootca-config
  create-rootca /opt/xtreemosca
  urpmi create-csr
- urpmi expect
  
    chmod +x make_cert 
    expect -f ./make_cert_expect cda cda
