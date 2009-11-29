@@ -1,9 +1,7 @@
-VO=ec46d3e4-507b-4c58-a65c-3e71a9187917
+VO=daea3b80-8f68-4c50-bd48-154bd632e8b6
 rca_vo l $VO
-rca_vo a $VO 130.98.91.254:60000
+rca_vo a $VO 131.254.202.151:60000
 rca_vo l $VO
-rca_vo a $VO 130.98.91.254:60000
-rca_vo a $VO 130.98.91.175:60000
 xreservation -qf
 
 cd /home/sk/XOS/TESTS/AEM

@@ -2,14 +2,11 @@
 # sk joins test
 # get user key and cert
 
-ln user6.crt userok.crt
-ln user6.key userok.key
-
 # comme root
 mkdir -p /root/.xos/truststore/certs/
 mkdir -p /root/.xos/truststore/private/
-cp userok.crt  /root/.xos/truststore/certs/user.crt
-cp userok.key  /root/.xos/truststore/private/user.key
+cp user.crt  /root/.xos/truststore/certs/user.crt
+cp user.key  /root/.xos/truststore/private/user.key
 
 openssl verify -CApath /etc/xos/truststore/certs/ /root/.xos/truststore/certs/user.crt
 
@@ -30,9 +27,8 @@ PAM:fail in mapping connect !
          *                            -gidmax <num> -gidmin <num> *
 Oops: Permission denied
 
-VO=ee683f51-1c83-4ce4-8110-2a97919e8fa2
+VO=daea3b80-8f68-4c50-bd48-154bd632e8b6
 
-VO=4227517b-e0ce-4e05-86bb-b975ef15cf48
 xos-policy-admin-am -vo $VO  --force
 xos-policy-admin-gm -vo $VO  --force
 
@@ -43,12 +39,13 @@ adduser sk
 passwd sk
 
 # en root sur le ressource
-cp userok.crt  /home/sk/user.crt
-cp userok.key  /home/sk/user.key
+cp user.crt  /home/sk/user.crt
+cp user.key  /home/sk/user.key
 
 chown sk.sk /home/sk/user*
 
 pam_app_conv -pem /root/.xos/truststore/certs/user.crt 
+
 /etc/init.d/sshd restart
 
 
