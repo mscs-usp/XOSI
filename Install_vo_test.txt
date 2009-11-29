@@ -30,14 +30,15 @@ Oops: Permission denied
 
 VO=ee683f51-1c83-4ce4-8110-2a97919e8fa2
 
-
+VO=cda91918-1737-4c9b-ae92-f9616b6be0ed
 xos-policy-admin-am -vo $VO  --force
 xos-policy-admin-gm -vo $VO  --force
 
 xos-policy-admin-chk -pem /root/.xos/truststore/certs/user.crt
 
 
-
+adduser sk
+passwd sk
 
 # en root sur le ressource
 cp user.crt user.key /home/sk/
@@ -48,6 +49,7 @@ pam_app_conv -pem /root/.xos/truststore/certs/user.crt
 
 # en sk sur la ressource
 # comme sk
+chown -R sk.sk /home/sk
 
 su - sk
 
