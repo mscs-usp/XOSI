@@ -1,0 +1,187 @@
+#!/bin/sh
+# written by David Margery for the 2006 Grid'5000 spring school
+# feel free to copy and adapt
+# updated by Cyril Constantin 
+# updated by Susanna Martinelli & Marko Obrovac, 2009, for xos
+# update by David Margery, 2008, to accept parameters
+
+#              #
+#  PARAMETERS  #
+#              #
+
+# set your public key here :
+KEY_FILE=~/.ssh/id_rsa.pub
+
+# a fancy colouring scheme
+# to remove the colouring, simply comment out the variables
+COLOUR_OK="\033[1;32m";
+COLOUR_ERR="\033[1;31m";
+COLOUR_LOG="\033[1;34m";
+COLOUR_RESET="\033[0m";
+
+
+####
+
+#             #
+#  FUNCTIONS  #
+#             #
+
+## colour_echo
+# $1 - text to output
+# $2 - colour to use
+colour_echo() {
+	echo -e "${2}${1}${COLOUR_RESET}";
+	return 0;
+}
+
+## log_echo
+# $1 - text to output
+log_echo() {
+	colour_echo "$1" ${COLOUR_LOG};
+	return 0;
+}
+
+## ok_echo
+# $1 - text to output
+ok_echo() {
+	colour_echo "$1" ${COLOUR_OK};
+	return 0;
+}
+
+## err_echo
+# $1 - text to output
+err_echo() {
+	colour_echo "$1" ${COLOUR_ERR};
+	return 0;
+}
+
+
+#                    #
+#  SCRIPT BEGINNING  #
+#                    #
+
+echo -e "${COLOUR_RESET}Script running on: $(ok_echo $(hostname))" 
+
+# Check that we are in a sane environment
+if [[ -z "$OAR_JOB_ID" ]]; then
+	echo "$(err_echo "!!!") You have to reserve a job!";
+	exit 1;
+fi
+
+#set common ssh and scp options
+#   prevent script waiting for input with BatchMode=yes
+SSH_OPTS=' -o StrictHostKeyChecking=no -o BatchMode=yes '
+
+## Temporary files creation
+
+#$OAR_FILE_NODES file may contain some nodes more than once
+# We will create a file where each node appears one time 
+deploy_tmp_dir=~/tmp-oar.$OAR_JOB_ID;
+mkdir -p ${deploy_tmp_dir};
+cd ${deploy_tmp_dir};
+sort -u $OAR_FILE_NODES > nodes;
+nodes_list=$(cat nodes);
+
+HEADNODE=$(head -1 nodes);
+HEADIP=$(host -t a $HEADNODE|grep address|cut -d' ' -f 4)
+XOSAUTOCONFIG_GLOBALDEFS="sed -i 's|GLOBALVOPSIP *=.*|GLOBALVOPSIP='$HEADIP'|;s|SCALARISBOOTIP *=.*|SCALARISBOOTIP='$HEADIP'|;s|OWBOOTSTRAPIP *=.*|OWBOOTSTRAPIP='$HEADIP'|;s|RSSBOOTSTRAPIP *=.*|RSSBOOTSTRAPIP='$HEADIP'|;s|DIXIROOTHOST *=.*|DIXIROOTHOST='$HEADNODE'|;s|DIXIROOTIP *=.*|DIXIROOTIP='$HEADIP'|;s|DIRHOSTIP *=.*|DIRHOSTIP='$HEADIP'|;s|MRCHOSTIP *=.*|MRCHOSTIP='$HEADIP'|;s|OSDHOSTIP *=.*|OSDHOSTIP='$HEADIP'|;s|USESSL *=.*|USESSL=false|' /etc/xos/xosautoconfig/globalDefs"
+XOSAUTOCONFIG_NODETYPES="sed -i 's|head-node *:.*|head-node: '$HEADNODE'|' /etc/xos/xosautoconfig/nodeTypes"
+
+#Get the eventual parameters
+if [ $# -gt 0 ] ; then
+	ENVIRONMENT="$1"	
+else
+	ENVIRONMENT='xos20-i586-clean'
+fi
+echo -e "Attempt to deploy environment $(ok_echo $ENVIRONMENT)"
+
+#deploy or test environnement (provided all the nodes 
+# are from the same cluster
+echo
+log_echo "+++ +++ +++    LAUNCHING DEPLOYMENT ON NODES    +++ +++ +++"
+
+kadeploy3 -e $ENVIRONMENT -f nodes -u mobrovac -k ${KEY_FILE}
+
+#add your public ssh key to be able to connect to that environment
+#if [ -f "$KEY_FILE" ] ; then
+ #kaaddkeys -k $KEY_FILE -f ~/OAR.$OAR_JOB_ID.nodes
+ 
+#else
+ # echo "Could not add $KEY_FILE to the environment : no such file"
+#fi
+
+
+#do stuff with this deployed environment
+# configuring globalDefs and nodeTypes in ALL NODES
+echo
+log_echo "+++ +++ +++    CONFIGURING GLOBAL DEFS AND NODE TYPE    +++ +++ +++"
+for node in ${nodes_list}; do 
+	echo "Attempting to get information from $(ok_echo "$node")";
+	ssh root@$node $SSH_OPTS $XOSAUTOCONFIG_GLOBALDEFS;
+	echo "[*] /etc/xos/xosautoconfig/globalDefs:";
+	echo -e "$(ssh root@$node $SSH_OPTS cat /etc/xos/xosautoconfig/globalDefs)";
+	if [ "$node" == "$HEADNODE" ] ; then
+		ssh root@$node $SSH_OPTS $XOSAUTOCONFIG_NODETYPES;
+		echo "[*] /etc/xos/xosautoconfig/nodeTypes:";
+		echo -e "$(ssh root@$node $SSH_OPTS cat /etc/xos/xosautoconfig/nodeTypes)";
+	fi
+done
+
+ #launching xosautoconfig on head machine
+#echo 
+#log_echo "++++++++++ LAUNCHING XOSAUTOCOFIG ON HEAD MACHINE ++++++++++"
+#ssh root@$HEADNODE $SSH_OPTS xosautoconfig
+
+#create certificates on root node
+echo 
+log_echo "+++ +++ +++    CREATING CERTS ON ROOT NODE    +++ +++ +++"
+ssh root@$HEADNODE $SSH_OPTS xos-init-certs "$HEADNODE";
+
+#copying certs from head node to all nodes.
+echo 
+log_echo "+++ +++ +++    RETRIEVING AND COPYING CERTS TO ALL NODES    +++ +++ +++"
+echo "[*] Retrieving certificates from ${HEADNODE}... ";
+scp ${SSH_OPTS} -r root@${HEADNODE}:/etc/xos/truststore/{certs,private} .;
+for node in ${nodes_list}; do
+	echo "[*] Copying certificates to ${node}... ";
+	scp $SSH_OPTS -r certs private root@$node:/etc/xos/xosautoconfig/conf/etc/xos/truststore/.;
+done
+
+#launching xosautoconfig on other machines: and relaunching it on head(core node)
+echo 
+log_echo "+++ +++ +++    CONFIGURING ALL THE MACHINES USING XOSAUTOCONFIG    +++ +++ +++"
+for node in ${nodes_list}; do
+	ok_echo "xosautoconfig on ${node}";
+	ssh root@$node $SSH_OPTS xosautoconfig 
+done
+echo;
+ok_echo "confirming resources...";
+ssh ${SSH_OPTS} root@${HEADNODE} /usr/lib/xos/xosautoconfig/confirmResource;
+
+#restarting all running services on all machines
+echo 
+log_echo "+++ +++ +++    RESTARTING XOSD    +++ +++ +++"
+for node in ${nodes_list}; do 
+	ok_echo "xosd on ${node}";
+  ssh root@$node $SSH_OPTS service xosd restart
+done
+
+# clean up the environment
+echo;
+log_echo "+++ +++ +++    CLEANING UP    +++ +++ +++";
+echo -n "Removing temporary files... ";
+cd;
+rm -rf ${deploy_tmp_dir};
+echo "done.";
+
+#if [ $# -gt 1 ] ; then
+# if [ -x "$2" ] ; then
+     #we elect a head node to run the script
+     
+     #we copy the script to the headnode
+#     echo "scp  $SSH_OPTS $2 root@$HEADNODE:"
+#     echo "exec ssh $SSH_OPT root@$HEADNODE ./`basename $2`"
+# else
+#     echo Could not find $2 to run on $HEADNODE
+# fi
+#fi
