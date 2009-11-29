@@ -1,0 +1,6 @@
+echo 'usage kres <nb_noeud> <nb_hours>'
+d=`date +"%Y-%m-%d %k %M"  | awk '{h=$(NF-1); m=$NF; printf("%s %02d:%02d:00\n",$1,h,(m+2))}'` 
+date
+echo $d
+echo oarsub -r "$d " -t deploy -l nodes=$1,walltime=$2
+oarsub -r "$d " -t deploy -l nodes=$1,walltime=$2
