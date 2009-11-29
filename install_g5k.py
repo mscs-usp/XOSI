@@ -1,15 +1,18 @@
 
 import os
 import socket
+import sys
 
 debug = False
 
 # read nodes from OAR env
 
-nodes_file = os.getenv("OAR_FILE_NODES")
+try:
+   nodes_file = sys.argv[1]
+except:
+   nodes_file = os.getenv("OAR_FILE_NODES")
 
-if debug:
-  print nodes_file
+print nodes_file
 
 f = open(nodes_file,"r")
 nodes_all = f.readlines()
@@ -157,4 +160,4 @@ for n in alias:
 
 
 
-W
+
