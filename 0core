@@ -1,13 +1,25 @@
+cd /etc/xos/xosautoconfig/
+xosautoconfig
+cd /root/XOSI
  urpmi task-xtreemos-coreservice
+1
+Y
  urpmi --auto-update
  urpmi rootca-config
  create-rootca /opt/xtreemosca
  urpmi create-csr
  
    chmod +x make_cert 
-   ./make_cert cda cda
-   ./make_cert vops vops
-   ./make_cert mrc mrc
-   ./make_cert dir dir
-   ./make_cert osd osd
-   ./make_cert rca rcaserver
+   expect -f ./make_cert_expect cda cda
+   expect -f ./make_cert_expect vops vops
+   expect -f ./make_cert_expect mrc mrc
+   expect -f ./make_cert_expect dir dir
+   expect -f ./make_cert_expect osd osd
+   expect -f ./make_cert_expect rca rcaserver
+
+
+cd /etc/xos/xosautoconfig/
+xosautoconfig
+finishConfig
+
+rca_list_registered
