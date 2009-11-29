@@ -138,6 +138,7 @@ for n in alias:
      ssh root@__HOST__ 'cat .ssh/id_rsa_sk.pub >> .ssh/authorized_keys'
      ssh root@__HOST__ 'urpmi git-core'
      ssh root@__HOST__ 'urpmi emacs'
+     ssh root@__HOST__ 'urpmi expect'
      ssh root@__HOST__ 'git clone ssh://skortas@paramount/home/orsay/skortas/XOSI'
      ssh root@__HOST__ 'git clone ssh://skortas@paramount/home/orsay/skortas/XOST'
      ssh root@__HOST__ 'ln -s XOSI/CONF/emacs.g5k .emacs'
