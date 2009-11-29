@@ -20,6 +20,8 @@ Y
 
 cd /etc/xos/xosautoconfig/
 xosautoconfig
+rca_list_registered
+
 finishConfig
 
-rca_list_registered
+
