@@ -2,6 +2,8 @@
 # sk joins test
 # get user key and cert
 
+ln user6.crt userok.crt
+ln user6.key userok.key
 
 # comme root
 mkdir -p /root/.xos/truststore/certs/
@@ -30,7 +32,7 @@ Oops: Permission denied
 
 VO=ee683f51-1c83-4ce4-8110-2a97919e8fa2
 
-VO=cda91918-1737-4c9b-ae92-f9616b6be0ed
+VO=4227517b-e0ce-4e05-86bb-b975ef15cf48
 xos-policy-admin-am -vo $VO  --force
 xos-policy-admin-gm -vo $VO  --force
 
@@ -47,6 +49,7 @@ cp userok.key  /home/sk/user.key
 chown sk.sk /home/sk/user*
 
 pam_app_conv -pem /root/.xos/truststore/certs/user.crt 
+/etc/init.d/sshd restart
 
 
 # en sk sur la ressource
