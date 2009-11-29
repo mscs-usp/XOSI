@@ -1,6 +1,5 @@
-
- urpmi task-xtreemos-resource
- urpmi --auto-update
+ cd /etc/xos/xosautoconfig
+ xosautoconfig
 
  scp root@xos0:/etc/xos/truststore/certs/*.crt /etc/xos/truststore/certs/
  chmod a+r /etc/xos/truststore/certs/*.crt 
