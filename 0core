@@ -9,3 +9,5 @@
    ./make_cert vops vops
    ./make_cert mrc mrc
    ./make_cert dir dir
+   ./make_cert osd osd
+   ./make_cert rca rcaserver

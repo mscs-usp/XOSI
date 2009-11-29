@@ -6,8 +6,8 @@
 # comme root
 mkdir -p /root/.xos/truststore/certs/
 mkdir -p /root/.xos/truststore/private/
-cp user.crt  /root/.xos/truststore/certs/user.crt
-cp user.key  /root/.xos/truststore/private/user.key
+cp userok.crt  /root/.xos/truststore/certs/user.crt
+cp userok.key  /root/.xos/truststore/private/user.key
 
 openssl verify -CApath /etc/xos/truststore/certs/ /root/.xos/truststore/certs/user.crt
 
@@ -41,7 +41,9 @@ adduser sk
 passwd sk
 
 # en root sur le ressource
-cp user.crt user.key /home/sk/
+cp userok.crt  /home/sk/user.crt
+cp userok.key  /home/sk/user.key
+
 chown sk.sk /home/sk/user*
 
 pam_app_conv -pem /root/.xos/truststore/certs/user.crt 
@@ -59,6 +61,8 @@ mkdir -p /home/sk/.xos/truststore/private/
 cp /home/sk/user.crt  /home/sk/.xos/truststore/certs/user.crt
 cp /home/sk/user.key  /home/sk/.xos/truststore/private/user.key
 cp /home/sk/user.key  /home/sk/.xos/user.key
+
+pam_app_conv -pem /home/sk/.xos/truststore/certs/user.crt 
 
 cat > /home/sk/.ssh/config-xos.modele <<EOF
 Host __HOST__
