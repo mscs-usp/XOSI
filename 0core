@@ -2,8 +2,6 @@ cd /etc/xos/xosautoconfig/
 xosautoconfig
 cd /root/XOSI
  urpmi task-xtreemos-coreservice
-1
-Y
  urpmi --auto-update
  urpmi rootca-config
  create-rootca /opt/xtreemosca
