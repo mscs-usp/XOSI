@@ -16,3 +16,6 @@
 adduser sk
 passwd sk
 
+scp -r xos0:/home/sk /home/
+chown -R sk.sk /home/sk
+
