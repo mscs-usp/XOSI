@@ -27,7 +27,7 @@ PAM:fail in mapping connect !
          *                            -gidmax <num> -gidmin <num> *
 Oops: Permission denied
 
-VO=daea3b80-8f68-4c50-bd48-154bd632e8b6
+VO=b02d06c7-0773-427e-ba6d-090f755579b6
 
 xos-policy-admin-am -vo $VO  --force
 xos-policy-admin-gm -vo $VO  --force
@@ -46,7 +46,7 @@ chown sk.sk /home/sk/user*
 
 pam_app_conv -pem /root/.xos/truststore/certs/user.crt 
 
-/etc/init.d/sshd restart
+/etc/init.d/sshd-xos restart
 
 
 # en sk sur la ressource
