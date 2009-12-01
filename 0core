@@ -4,18 +4,11 @@ cd /root/XOSI
  urpmi task-xtreemos-coreservice
  urpmi --auto-update
  urpmi rootca-config
- create-rootca /opt/xtreemosca
  urpmi create-csr
- 
-   chmod +x make_cert 
-   expect -f ./make_cert_expect cda cda
-   expect -f ./make_cert_expect vops vops
-   expect -f ./make_cert_expect mrc mrc
-   expect -f ./make_cert_expect dir dir
-   expect -f ./make_cert_expect osd osd
-   expect -f ./make_cert_expect rca rcaserver
 
-cd /etc/xos/xtreemfs
+  xos-init-certs `hostname`
+  
+ cd /etc/xos/xtreemfs
 files=`ls *`
 echo fixing xtreemfs files : $files
 for f in $files; do
