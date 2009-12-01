@@ -44,13 +44,17 @@ for n in nodes_all:
 hosts = "127.0.0.1 localhost"
 
 for n in ip:
-  hosts = hosts + "\n%s %s %s" % ( ip[n], n, alias[n])
+  chunks = n.split(".")
+  shortname = chunks[0]
+  hosts = hosts + "\n%s %s %s" % ( ip[n], n, shortname)
+for n in ip:
+  hosts = hosts + "\n%s %s" % ( ip[n], alias[n])
 
 if debug:
   print hosts
-
   print xos0
   print res
+
 
 def writeFile(filename,s,**rep):
   if debug:
@@ -136,9 +140,9 @@ for n in alias:
      scp ~/.ssh/id_rsa root@__HOST__:.ssh/
      scp ~/.ssh/id_rsa_sk.pub root@__HOST__:.ssh/
      ssh root@__HOST__ 'cat .ssh/id_rsa_sk.pub >> .ssh/authorized_keys'
-     ssh root@__HOST__ 'urpmi git-core'
-     ssh root@__HOST__ 'urpmi emacs'
-     ssh root@__HOST__ 'urpmi expect'
+     ssh root@__HOST__ 'urpmi git-core --auto'
+     ssh root@__HOST__ 'urpmi emacs --auto'
+     ssh root@__HOST__ 'urpmi expect --auto'
      ssh root@__HOST__ 'git clone ssh://skortas@paramount/home/orsay/skortas/XOSI'
      ssh root@__HOST__ 'git clone ssh://skortas@paramount/home/orsay/skortas/XOST'
      ssh root@__HOST__ 'ln -s XOSI/CONF/emacs.g5k .emacs'
