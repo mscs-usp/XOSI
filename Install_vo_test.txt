@@ -3,6 +3,7 @@
 # get user key and cert
 
 # comme root
+
 mkdir -p /root/.xos/truststore/certs/
 mkdir -p /root/.xos/truststore/private/
 cp user.crt  /root/.xos/truststore/certs/user.crt
@@ -44,7 +45,16 @@ cp user.key  /home/sk/user.key
 
 chown sk.sk /home/sk/user*
 
-pam_app_conv -pem /root/.xos/truststore/certs/user.crt 
+su -sk 
+
+mkdir -p /home/sk/.xos/truststore/certs/
+mkdir -p /home/sk/.xos/truststore/private/
+cp user.crt  /home/sk/.xos/truststore/certs/user.crt
+cp user.key  /home/sk/.xos/truststore/private/user.key
+
+openssl verify -CApath /etc/xos/truststore/certs/ /home/sk/.xos/truststore/certs/user.crt
+
+pam_app_conv -pem /home/sk/.xos/truststore/certs/user.crt 
 
 /etc/init.d/sshd-xos restart
 
