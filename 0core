@@ -15,6 +15,15 @@ cd /root/XOSI
    expect -f ./make_cert_expect osd osd
    expect -f ./make_cert_expect rca rcaserver
 
+cd /etc/xos/xtreemfs
+files=`ls *`
+echo fixing xtreemfs files : $files
+for f in $files; do
+   echo ==== processing  $f ====
+   sed "s/host=/host = /;s/port=/port = /" $f  > out
+   mv $f ${f}.orig
+   mv out $f
+done
 
 cd /etc/xos/xosautoconfig/
 xosautoconfig
