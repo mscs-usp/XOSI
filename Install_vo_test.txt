@@ -45,7 +45,7 @@ cp user.key  /home/sk/user.key
 
 chown sk.sk /home/sk/user*
 
-su -sk 
+su -s k 
 
 mkdir -p /home/sk/.xos/truststore/certs/
 mkdir -p /home/sk/.xos/truststore/private/
