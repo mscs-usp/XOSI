@@ -47,8 +47,8 @@ for n in ip:
   chunks = n.split(".")
   shortname = chunks[0]
   hosts = hosts + "\n%s %s %s" % ( ip[n], n, shortname)
-for n in ip:
-  hosts = hosts + "\n%s %s" % ( ip[n], alias[n])
+#for n in ip:
+#  hosts = hosts + "\n%s %s" % ( ip[n], alias[n])
 
 if debug:
   print hosts
@@ -148,7 +148,7 @@ for n in alias:
      ssh root@__HOST__ 'ln -s XOSI/CONF/emacs.g5k .emacs'
      ssh root@__HOST__ 'ln -s XOSI/CONF/bashrc-xos .bashrc-xos'
      ssh root@__HOST__ 'echo "export XOSHOST=__ALIAS__" >> .bashrc'
-     ssh root@__HOST__ 'echo ". .bashrc-xos" >> .bashrc'
+     ssh root@__HOST__ 'echo ". /root/.bashrc-xos" >> .bashrc'
      
      """
   cmd = str.replace(cmd,"__HOST__",n)
