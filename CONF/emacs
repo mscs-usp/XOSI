@@ -420,3 +420,6 @@
 
 (add-to-list 'auto-mode-alist '("\\.F90\\'" . fortran-mode))
 (add-to-list 'auto-mode-alist '("\\.gcf\\'" . makefile-mode))
+
+(global-unset-key "\C-h")
+(global-set-key "\C-h" 'delete-backward-char)
