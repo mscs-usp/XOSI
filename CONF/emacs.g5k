@@ -424,3 +424,8 @@
 
 (global-set-key "" (quote run-line-in-other-window))
 (global-set-key "" (quote undo))
+
+
+;(setq cperl-hairy t)
+(global-unset-key "\C-h")
+(global-set-key "\C-h" 'delete-backward-char)

@@ -19,26 +19,23 @@ cp /root/user.key  /root/.xos/truststore/private/user.key
 
 openssl verify -CApath /etc/xos/truststore/certs/ /root/.xos/truststore/certs/user.crt
 
-service xos-amsd restart
+service xos-amsd stop
+ps -aef | grep ams
+\rm  -rf /etc/xos/nss_pam/mapdatabak
+mkdir  -p /etc/xos/nss_pam/mapdata 
+xos_amsd -init
+killall xos_amsd
+service xos-amsd start
 
 
-xos-policy-admin-chk -pem /root/.xos/truststore/certs/user.crt
-dn = [/CN=584fddf7-69ae-47cc-b864-78f76e836aac], vo = [ffc8e45b-914d-41b7-aba0-a04fece111cf], role = [null]
-PAM:fail in mapping connect !
-         * a)Please check whether AMS daemon is running correctly *
-         * b)Please check whether mapping rules are correct.      *
-         *     If not, try:                                       *
-         *       xos-policy-admin-am  -vo <vo> --force            *
-         *       xos-policy-admin-gm  -vo <vo> --force            *
-         * c)Please check whether setting rule is correct.        *
-         *     If not, try:                                       *
-         *       xos-policy-admin-set -uidmax <num> -uidmin <num> *
-         *                            -gidmax <num> -gidmin <num> *
-Oops: Permission denied
 echo $VO
 
 xos-policy-admin-am -vo $VO  --force
 xos-policy-admin-gm -vo $VO  --force
+
+xos-policy-admin-set -uidmax 60500 -uidmin 60000
+xos-policy-admin-set -gidmax 60500 -gidmin 60000
+
 
 xos-policy-admin-chk -pem /root/.xos/truststore/certs/user.crt
 
