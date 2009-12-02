@@ -19,6 +19,7 @@ cd /root/XOSI
 
 rca_list_registered
 
+cd /etc/xos/xosautoconfig/
 finishConfig
 
 

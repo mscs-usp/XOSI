@@ -1,5 +1,5 @@
-volife_run.sh -create-user sk "edf123" "sk" "kortas" "EDF " "sk@edf.fr"
-volife_run.sh -list-all-users
+sudo -u tomcat volife_run.sh -create-user sk "edf123" "sk" "kortas" "EDF " "sk@edf.fr"
+sudo -u tomcat volife_run.sh -list-all-users
 volife_run.sh -approve-user sk
 sudo -u tomcat volife_run.sh -create-vo test "test" sk
 volife_run.sh -list-all-vos
