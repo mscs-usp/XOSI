@@ -1,0 +1,17 @@
+ cd /etc/xos/xtreemfs
+files=`ls *`
+echo fixing xtreemfs files : $files
+for f in $files; do
+   echo ==== processing  $f ====
+   sed "s/host=/host = /;s/port=/port = /" $f  > out
+   mv $f ${f}.orig
+   mv out $f
+done
+
+
+service xtreemfs-osd stop
+service xtreemfs-mrc stop
+service xtreemfs-dir stop
+service xtreemfs-dir start
+service xtreemfs-mrc start
+service xtreemfs-osd start

@@ -1,25 +1,22 @@
 cd /etc/xos/xosautoconfig/
 xosautoconfig
 cd /root/XOSI
- urpmi task-xtreemos-coreservice
- urpmi --auto-update
- urpmi rootca-config
- urpmi create-csr
+. ./fix_xtreemfs
+
+ urpmi task-xtreemos-coreservice --auto
+ urpmi --auto-update --auto
+ urpmi rootca-config --auto
+ urpmi create-csr --auto
 
   xos-init-certs `hostname`
   
- cd /etc/xos/xtreemfs
-files=`ls *`
-echo fixing xtreemfs files : $files
-for f in $files; do
-   echo ==== processing  $f ====
-   sed "s/host=/host = /;s/port=/port = /" $f  > out
-   mv $f ${f}.orig
-   mv out $f
-done
 
 cd /etc/xos/xosautoconfig/
 xosautoconfig
+
+cd /root/XOSI
+. ./fix_xtreemfs
+
 rca_list_registered
 
 finishConfig
