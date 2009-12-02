@@ -16,6 +16,7 @@ mkdir -p /root/.xos/truststore/certs/
 mkdir -p /root/.xos/truststore/private/
 cp /root/user.crt  /root/.xos/truststore/certs/user.crt
 cp /root/user.key  /root/.xos/truststore/private/user.key
+cp /root/user.key  /root/.xos/user.key
 
 openssl verify -CApath /etc/xos/truststore/certs/ /root/.xos/truststore/certs/user.crt
 
