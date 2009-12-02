@@ -35,6 +35,7 @@ PAM:fail in mapping connect !
          *       xos-policy-admin-set -uidmax <num> -uidmin <num> *
          *                            -gidmax <num> -gidmin <num> *
 Oops: Permission denied
+echo $VO
 
 xos-policy-admin-am -vo $VO  --force
 xos-policy-admin-gm -vo $VO  --force
@@ -45,6 +46,8 @@ xos-policy-admin-chk -pem /root/.xos/truststore/certs/user.crt
 adduser sk
 passwd sk
 
+
+
 # en root sur le ressource
 cp /root/user.crt  /home/sk/user.crt
 cp /root/user.key  /home/sk/user.key
@@ -54,12 +57,13 @@ volife_run.sh -list-all-vos | awk '/test/ { gsub(","," ");gsub("gvid","VO");prin
 
 chown -R sk.sk /home/sk
 
-su -s k 
+su - sk 
 
 mkdir -p /home/sk/.xos/truststore/certs/
 mkdir -p /home/sk/.xos/truststore/private/
 cp user.crt  /home/sk/.xos/truststore/certs/user.crt
 cp user.key  /home/sk/.xos/truststore/private/user.key
+cp user.key  /home/sk/.xos/truststore/user.key
 
 openssl verify -CApath /etc/xos/truststore/certs/ /home/sk/.xos/truststore/certs/user.crt
 
