@@ -26,7 +26,7 @@ cp -f sshd_config-xos /etc/ssh/sshd_config-xos
 
 service xos-amsd stop
 ps -aef | grep ams
-\rm  -rf /etc/xos/nss_pam/mapdatabak
+\rm  -rf /etc/xos/nss_pam/mapdata
 mkdir  -p /etc/xos/nss_pam/mapdata 
 xos_amsd -init
 killall xos_amsd
