@@ -1,0 +1,492 @@
+    1  visudo
+    2  usermod
+    3  usermod -G wheel -a xuser
+    4  urpmq -a udev
+    5  urpmi udev
+    6  cat /etc/fstab
+    7  vim /etc/fstab
+    8  mkinitrd --help
+    9  uname -a
+   10  ll /boot/
+   11  mkinitrd -f --fstab=/etc/fstab --omit-lvm-modules /boot/initrd.g5k.img 2.6.27.24-2xossmp --with=mptsas --with=mptspi --with=sata_nv --with=tg3 --with=sata_sil --with=sata_svw --with=ata_piix --with=e1000 --with=megaraid_sas --with=mptscsih --with=cciss --with=libata --with=sd_mod --with=bnx2 --with=scsi_transport_spi
+   12  ll /boot
+   13  vim /boot/grub/menu.lst
+   14  reboot
+   15  ll /boot/
+   16   cd/bo
+   17   cd /boot/
+   18  mv initrd.g5k.img initrd-g5k.img 
+   19  useradd
+   20  useradd -m -G wheel doorman
+   21  passwd doorman
+   22  ifconfig 
+   23  ping google.com
+   24  wget http://www.google.com
+   25  poweroff
+   26  mount -o bind / /mnt
+   27  cd /mnt/
+   28  ll
+   29  ll /mnt/
+   30  ll /mnt/mnt/
+   31  df -h
+   32  tar
+   33  tar cvfz /root/xos20-g5k.tgz *
+   34  cd ..
+   35  umount /mnt
+   36  ll /root
+   37  ll /root -h
+   38  df -h
+   39  cd
+   40  ll
+   41  scp xos20-g5
+   42  ll
+   43  ls -al
+   44  usermod -G root -a doorman
+   45  cd /etc/profile.d/
+   46  ll
+   47  vim proxy.sh
+   48  export | grep -i proxy
+   49  vim proxy.sh
+   50  urpmq -a ldap
+   51  urpmq -a ldap
+   52  urpmq --help
+   53  urpmq -a ldap
+   54  urpmq -l openldap-clients
+   55  urpmi.removemedia -a
+   56  urpmi.addmedia --distrib --mirrorlis
+   57  urpmi.addmedia --distrib --mirrorlist
+   58  urpmi.addmedia --wget --distrib --mirrorlist
+   59  vim /etc/wgetrc 
+   60  urpmi.addmedia --wget --distrib --mirrorlist
+   61  urpmq -l openldap-clients
+   62  urpmi --autoupdate
+   63  urpmi --auto-update --wet
+   64  urpmi --auto-update --wget
+   65  urpmq --wget -l openldap-clients
+   66  urpmq --wget -l openldap
+   67  urpmi --wget openldap
+   68  ll /etc/openldap/
+   69  ll /etc/securetty 
+   70  cat /etc/securetty 
+   71  cd
+   72  ll
+   73  rm xos20-g5k.tgz 
+   74  df -h
+   75  wget http://www.google.com
+   76  ll
+   77  rm index.html 
+   78  visudo
+   79  groups xuser
+   80  ll
+   81  cd /etc/openldap/
+   82  ll
+   83  cat ldapserver 
+   84  vim ldap.conf 
+   85  man 5 ldap.conf
+   86  cd ..
+   87  cat ldap.conf 
+   88  ll op
+   89  ll opt/
+   90  urpmi.removemedia -a
+   91  urpmi.addmedia --distrib --mirrorlist --wget
+   92  urpmi.removemedia -a
+   93  urpmi.addmedia --distrib --wget http://ftp.free.fr/mirrors/ftp.mandriva.com/MandrivaLinux/devel/xtreemos/2.0/i586/media/xtreemos/release/
+   94  urpmi.addmedia --distrib --wget http://ftp.free.fr/mirrors/ftp.mandriva.com/MandrivaLinux/devel/xtreemos/2.0/i586/media/xtreemos/
+   95  urpmi.addmedia --distrib --wget http://ftp.free.fr/mirrors/ftp.mandriva.com/MandrivaLinux/devel/xtreemos/2.0/i586/
+   96  grep -iRn proxy *
+   97  ll /mnt
+   98  mount -o bind / /mnt
+   99  ll /mnt
+  100  grep -iRn paradonf *
+  101  cd /mnt
+  102  ll
+  103  "tar --posix --numeric-owner --one-file-system -zcf - /mnt/" > /root/xos-clean.tar.gz
+  104  tar --posix --numeric-owner --one-file-system -zcf - /mnt/ > /root/xos-clean.tar.gz
+  105  ll /root
+  106  df -h
+  107  cd /etc/
+  108  ll rpm/
+  109  ll rpm/macros.d/
+  110  vim urpmi/urpmi.cfg 
+  111  vim urpmi/proxy.cfg 
+  112  vim /etc/ssh/sshd_config 
+  113  /etc/init.d/sshd restart
+  114  ll /mnt/
+  115  rm /root/xos-clean.tar.gz 
+  116  cd
+  117  cd mnt
+  118  cd /
+  119  cd mnt/
+  120  tar --posix --numeric-owner --one-file-system -zcf - /mnt/ > /root/xos-clean.tar.gz
+  121  ll /etc/nsswitch.conf 
+  122  cat /etc/nsswitch.conf 
+  123  ll
+  124  cd
+  125  ll
+  126  ifconfig 
+  127  man tar
+  128  ll
+  129  ll /mnt/
+  130  rm xos-clean.tar.gz 
+  131  tar --posix --numeric-owner --exclude=root/xos-clean.tar.gz --one-file-system -zcf - /mnt/ > /root/xos-clean.tar.gz
+  132  ll
+  133  df -h
+  134  umount /mnt
+  135  ll /mnt/
+  136  rm xos-clean.tar.gz 
+  137  tar --posix --numeric-owner --exclude=root/xos-clean.tar.gz --one-file-system -zcf - / > /root/xos-clean.tar.gz
+  138  export
+  139  cd
+  140  urpmi.addmedia --wget --distrib http://ftp.lip6.fr/pub/linux/distributions/Mandrakelinux/devel/xtreemos/2.0/i586/
+  141  cd etc
+  142  cd /etc
+  143  grep -iRn http://ftp.lip6.fr/pub/linux/distributions/Mandrakelinux *
+  144  ll urpmi/
+  145  cd urpmi/
+  146  ll
+  147  cat inst.list 
+  148  cat prefer.vendor.list 
+  149  ll
+  150  cat skip.list 
+  151  cd ..
+  152  cd ..
+  153  chown -R 0:0 *
+  154  ll
+  155  cd bin
+  156  cp -r data/* /etc/xos/xosautoconfig/
+  157  cd ..
+  158  cp -r data/* /etc/xos/xosautoconfig/
+  159  cp -r data/* /etc/xos/xosautoconfig/ -f
+  160  mkdir -p /usr/lib/xos/xosautoconfig
+  161  cp bin/* /usr/lib/xos/xosautoconfig
+  162  ll
+  163  ll
+  164  ll doc
+  165  vim /etc/xos/xosautoconfig/nodeTypes 
+  166  vim /etc/xos/xosautoconfig/services 
+  167  cd /usr/sbin/
+  168  mv xosautoconfig xosautoconfig-v1
+  169  ln -s ../lib/xos/xosautoconfig/xosautoconfig xosautoconfig
+  170  vim xosautoconfig
+  171  cd ..
+  172  cd /
+  173  ll /root
+  174  rm -rf /root/xos-clean.tar.gz 
+  175  man tar
+  176  tar --exclude=root/xos-clean.tar.gz --posix --numeric-owner --one-file-system -zcf - / > /root/xos-clean.tar.gz
+  177  ll root/
+  178  ll root/ -h
+  179  vim etc/ssh/sshd_config 
+  180  /etc/init.d/sshd restart
+  181  ll
+  182  ll -a
+  183  cd
+  184  ll
+  185  ll -a
+  186  mkdir .ssh
+  187  ll -a
+  188  la
+  189  lla
+  190  la
+  191  ll -a
+  192  chmod 0755 .ssh/
+  193  cd
+  194  cd .ssh/
+  195  ll
+  196  chmod 0640 authorized_keys 
+  197  ll
+  198  ll -a
+  199  rm -rf .ssh/authorized_keys 
+  200  ll tmp/
+  201  ll tmp/ -a
+  202  rm -rf xos-clean.tar.gz 
+  203  cd
+  204  cd /
+  205  grep -i permitroot /etc/ssh/sshd_config 
+  206  tar --exclude=root/xos-clean.tar.gz --posix --numeric-owner --one-file-system -zcf - / > /root/xos-clean.tar.gz
+  207  cd /etc/xos/xosautoconfig/
+  208  ll
+  209  ll conf/etc/xos/truststore/
+  210  ll conf/etc/xos/truststore/certs/
+  211  rm -rf conf/etc/xos/truststore/certs/*
+  212  rm -rf conf/etc/xos/truststore/private/**
+  213  ll conf/etc/xos/truststore/private/
+  214  c
+  215  cd
+  216  rm /root/xos-clean.tar.gz 
+  217  tar --exclude=root/xos-clean.tar.gz --posix --numeric-owner --one-file-system -zcf - / > /root/xos-clean.tar.gz
+  218  vim /etc/ssh/sshd_config 
+  219  /etc/init.d/sshd restart
+  220  pds -aef | grep amsd
+  221  ps -aef | grep amsd
+  222  xos-policy-admin-chk -pem /root/.xos/truststore/certs/user.crt
+  223  ls /root/.xos/truststore/certs/user.crt
+  224  ls /root/.xos
+  225  uname -a
+  226  hostname
+  227  exit
+  228  bash
+  229  xos-policy-admin-chk -pem /root/.xos/truststore/certs/user.crt
+  230  su - sk 
+  231  xos-policy-admin-chk -pem /root/.xos/truststore/certs/user.crt
+  232  whoami
+  233  bash
+  234  su - sk 
+  235  cd XOSI
+  236  git commit -a -m ';'
+  237  git push
+  238  emacs 0vo
+  239  cd /etc/xos/
+  240  cd xosautoconfig/
+  241  xosautoconfig
+  242  cd /etc/xos/
+  243  ls
+  244  tar fc xtreemfs.ok.tar xtreemfs
+  245  cd xosautoconfig/
+  246  rca_apply
+  247  rca_confirm
+  248  rca_list_registered 
+  249  finishConfig 
+  250  cd
+  251  cd XOSI
+  252  emacs 0vo 
+  253  git commit -a -m ';'
+  254  git push
+  255  passwd 
+  256  cd XOSI
+  257  more 0vo
+  258  more 0coe
+  259  more 0core
+  260  . 0core
+  261  rca_list_registered 
+  262  finishConfig 
+  263  rca_list_registered 
+  264  rca_list_pending 
+  265  cd
+  266  cd XOSI
+  267  emacs 0core 
+  268  emacs 0vo
+  269  bash
+  270  bash
+  271  service xtreemfs-osd stop
+  272  service xtreemfs-mrc stop
+  273  service xtreemfs-dir stop
+  274  service xtreemfs-dir start
+  275  service xtreemfs-mrc start
+  276  service xtreemfs-osd start
+  277  bash
+  278  su - sk
+  279  volife_run.sh -create-user sk "edf123" "sk" "kortas" "EDF " "sk@edf.fr"
+  280  volife_run.sh -list-all-users
+  281  volife_run.sh -approve-user sk
+  282  sudo -u tomcat volife_run.sh -create-vo test "test" sk
+  283  volife_run.sh -list-all-vos
+  284  volife_run.sh -list-all-vos | awk '/test/ { gsub(","," "); gsub("gvid","VO");print $4}' >> /root/.bashrc
+  285  . /root/.bashrc
+  286  echo $VO
+  287  mkdir -p /root/.xos/truststore/certs/
+  288  mkdir -p /root/.xos/truststore/private/
+  289  cp /root/user.crt  /root/.xos/truststore/certs/user.crt
+  290  cp /root/user.key  /root/.xos/truststore/private/user.key
+  291  cp /root/user.key  /root/.xos/user.key
+  292  openssl verify -CApath /etc/xos/truststore/certs/ /root/.xos/truststore/certs/user.crt
+  293  service xos-amsd stop
+  294  ps -aef | grep ams
+  295  service xos-amsd start
+  296  echo $VO
+  297  xos-policy-admin-am -vo $VO  --force
+  298  xos-policy-admin-gm -vo $VO  --force
+  299  xos-policy-admin-set -uidmax 60500 -uidmin 60000
+  300  xos-policy-admin-set -gidmax 60500 -gidmin 60000
+  301  xos-policy-admin-chk -pem /root/.xos/truststore/certs/user.crt
+  302  adduser sk
+  303  passwd sk
+  304  cp /root/user.crt  /home/sk/user.crt
+  305  cp /root/user.key  /home/sk/user.key
+  306  volife_run.sh -list-all-vos | awk '/test/ { gsub(","," ");gsub("gvid","VO");print $4}' >> /home/sk/.bashrc
+  307  chown -R sk.sk /home/sk
+  308  /etc/init.d/sshd-xos restart
+  309  su - sk 
+  310  hostname
+  311  su - sk
+  312  ps =aef | grep xtreemfs
+  313  ps -aef | grep xtreemfs
+  314  uname -a
+  315  hostname
+  316  ps -aef | grep amsd
+  317  cat /etc/xos/xosautoconfig/globalDefs 
+  318  ifconfig
+  319  ls /root/.xos
+  320  cat /etc/xos/xosautoconfig/services 
+  321  cat /etc/xos/xosautoconfig/nodeTypes 
+  322  less /etc/xos/config/XOSdConfig.conf 
+  323  less /etc/xos/xtreemfs/default_mrc
+  324  less /usr/bin/xtreemfs_mnt 
+  325  ls
+  326  ls /home
+  327  xos-policy-admin-chk -pem /root/.xos/truststore/certs/user.crt 
+  328  xtreemfs_mnt mount 9cf3ec28-cc81-4889-a767-48717752e2aa
+  329  ls /home
+  330  ls /home/9cf3ec28-cc81-4889-a767-48717752e2aa/
+  331  umount /home/9cf3ec28-cc81-4889-a767-48717752e2aa/
+  332  ls /home/9cf3ec28-cc81-4889-a767-48717752e2aa/
+  333  df /home/9cf3ec28-cc81-4889-a767-48717752e2aa/
+  334  /bin/rmdir /home/9cf3ec28-cc81-4889-a767-48717752e2aa
+  335  xtreemfs_mnt mount 9cf3ec28-cc81-4889-a767-48717752e2aa
+  336  df /home/9cf3ec28-cc81-4889-a767-48717752e2aa/
+  337  xtreemfs_mnt umount 9cf3ec28-cc81-4889-a767-48717752e2aa
+  338  df /home/9cf3ec28-cc81-4889-a767-48717752e2aa/
+  339  ls /home
+  340  xos-policy-admin-chk -pem /home/sk/.xos/truststore/certs/user.crt
+  341  ls /home
+  342  xtfs_lsvol localhost
+  343  pwd
+  344  ls
+  345  ls .ssh
+  346  cat .ssh/config_xos
+  347  ssh-xos localhost
+  348  cd /etc/xos/nss_pam/
+  349  ls
+  350  cd mapdata
+  351  ls
+  352  ps -aef | grep amsd
+  353  service xos-amsd stop
+  354  /bin/rm *
+  355  service xos-amsd start
+  356  cd
+  357  xos-policy-admin-chk -pem /home/sk/.xos/truststore/certs/user.crt
+  358  xos-policy-admin-am -vo 6eca77ec-8e2a-4bc1-b309-610951b503fc --force
+  359  xos-policy-admin-gm -vo 6eca77ec-8e2a-4bc1-b309-610951b503fc --force
+  360  xos-policy-admin-chk -pem /home/sk/.xos/truststore/certs/user.crt
+  361  ls /home
+  362  hostname
+  363  ssh-xos paraquad-52.rennes.grid5000.fr
+  364  ssh-xos localhost
+  365  less /var/log/auth.log
+  366  man pam_listfile
+  367  emacs /etc/pam.d/sshd-xos 
+  368  service sshd-xos restart
+  369  ssh-xos localhost
+  370  less /var/log/auth.log
+  371  openssl rsa -noout -text -in /root/.xos/truststore/private/user.key
+  372  service sshd-xos stop
+  373  ssh-xos localhost
+  374  xtfs_lsvol localhost
+  375  xtfs_rmvol localhost/vol-9cf3ec28-cc81-4889-a767-48717752e2aa
+  376  xtfs_lsvol localhost
+  377  ssh-xos localhost
+  378  ls /home
+  379  pwd
+  380  ls .ssh
+  381  ls -al .ssh
+  382  less .ssh/config-xos
+  383  ls -al /root/.xos/truststore/certs/
+  384  ls -al /root/.xos/truststore/private/
+  385  xps -a
+  386  xsub -f /etc/skel/psx.jsdl 
+  387  emacs -nw /etc/skel/psx.jsdl
+  388  ls /etc/xos/truststore/certs/
+  389  ls /etc/xos/truststore/certs/incoming/
+  390  xos-policy-admin-chk -pem /root/.xos/truststore/certs/user.crt 
+  391  ssh-xos paraquad-52
+  392  ssh-xos localhost
+  393  xos-policy-admin-chk -pem /root/.xos/truststore/certs/user.crt 
+  394  ssh-xos localhost
+  395  cat /etc/hosts
+  396  host 131.254.202.72
+  397  cat /etc/pam_xos.conf
+  398  cat /etc/xos/nss_pam/pam_xos.conf
+  399  history
+  400  ssh-xos paraquad-52
+  401  ssh-xos doorman@paraquad-52
+  402  less /etc/xos/nss_pam/nss_xos.conf
+  403  emacs /etc/xos/nss_pam/nss_xos.conf
+  404  ssh-xos doorman@paraquad-52
+  405  pam_app_conv 
+  406  pam_app_conv -pem /root/.xos/truststore/certs/user.crt 
+  407  ssh-xos doorman@paraquad-52
+  408  pam_app_conv -pem /root/.xos/truststore/certs/user.crt 
+  409  grep Root /etc/ssh/*
+  410  emacs /etc/ssh/sshd_config-xos
+  411  ssh-xos paraquad-52
+  412  grep PermitRootLogin /usr/sbin/xosautoconfig
+  413  exit
+  414  /usr/sbin/sshd-xos -d
+  415  ls /etc/pam.d/sshd-xos
+  416  cat /etc/pam.d/sshd-xos
+  417  emacs /etc/pam.d/sshd-xos
+  418  cd /etc/pam.d/
+  419  ls
+  420  cat /etc/nsswitch.conf 
+  421  less /etc/ssh/sshd_config-xos 
+  422  ps -aef | grep -i ssh
+  423  kill -9 15547
+  424  ps -aef | grep -i ssh
+  425  kill -9 11796
+  426  kill -9 11797
+  427  ps -aef | grep -i ssh
+  428  pwd
+  429  cd /etc/xos/nss_pam/
+  430  ls
+  431  service xos-amsd stop
+  432  cd mapdata/
+  433  /bin/rm *
+  434  ls
+  435  service xos-amsd start
+  436  xos-policy-admin-chk 
+  437  xos-policy-admin-chk  -pem /root/.xos/truststore/certs/user.crt 
+  438  xos-policy-admin-am -vo 6eca77ec-8e2a-4bc1-b309-610951b503fc --force
+  439  xos-policy-admin-gm -vo 6eca77ec-8e2a-4bc1-b309-610951b503fc --force
+  440  xos-policy-admin-chk  -pem /root/.xos/truststore/certs/user.crt 
+  441  ls /home
+  442  /usr/sbin/sshd-xos -d
+  443  pwd
+  444  less /etc/pam.d/sshd-xos
+  445  less /etc/pam.d/system-auth 
+  446  ls -al /usr/sbin/sshd-xos 
+  447  ldd /usr/sbin/sshd-xos
+  448  ls
+  449  /usr/sbin/sshd-xos -d
+  450  cd
+  451  emacs /etc/pam.d/sshd-xos
+  452  /usr/sbin/sshd-xos -d
+  453  emacs /etc/pam.d/sshd-xos
+  454  /usr/sbin/sshd-xos -d
+  455  emacs /etc/pam.d/sshd-xos
+  456  /usr/sbin/sshd-xos -d
+  457  emacs /etc/pam.d/sshd-xos
+  458  /usr/sbin/sshd-xos -d
+  459  emacs /etc/pam.d/sshd-xos
+  460  /usr/sbin/sshd-xos -d
+  461  strace -f /usr/sbin/sshd-xos -d 2>&1 |tee /tmp/t
+  462  strace -f /usr/sbin/sshd-xos -d 1>&2 |tee /tmp/t
+  463  emacs /tmp/t
+  464  strace -f /usr/sbin/sshd-xos -d 2>&1 |tee /tmp/t
+  465  emacs /tmp/t
+  466  emacs /etc/nsswitch.conf 
+  467  /usr/sbin/sshd-xos -d
+  468  emacs /tmp/t
+  469  /usr/sbin/sshd-xos -d
+  470  ls /etc/pam.d
+  471  cat /etc/pam.d/aem
+  472  cat /etc/pam.d/sshd-xos
+  473  cat /etc/pam.d/pam_app_conv 
+  474  pwd
+  475  cd /etc/pam.d
+  476  ls
+  477  mv sshd-xos sshd-xos-prev
+  478  cp aem sshd-xos
+  479  /usr/sbin/sshd-xos -d
+  480  emacs pam_app_conv 
+  481  emacs /tmp/t
+  482  /usr/sbin/sshd-xos -d
+  483  service sshd-xos start
+  484  ls
+  485  cp sshd-xos-prev sshd-xos
+  486  emacs sshd-xos
+  487  service sshd-xos restart
+  488  emacs /etc/xos/nss_pam/nss_xos.conf
+  489  exit
+  490  su - sk
+  491  history
+  492  history > h
