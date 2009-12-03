@@ -1,5 +1,3 @@
-# create Yvon-Admin with xtreenos passwd. create vo test
-# sk joins test
 # get user key and cert
 
 # comme root
