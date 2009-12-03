@@ -22,4 +22,5 @@ rca_list_registered
 cd /etc/xos/xosautoconfig/
 finishConfig
 
-
+cd /root/XOSI
+. ./fix_xtreemfs
