@@ -1,9 +1,9 @@
-sudo -u tomcat volife_run.sh -create-user sk "edf123" "sk" "kortas" "EDF " "sk@edf.fr"
-sudo -u tomcat volife_run.sh -list-all-users
-volife_run.sh -approve-user sk
-sudo -u tomcat volife_run.sh -create-vo test "test" sk
+volife_run.sh -create-user sko "edf123" "sko" "kortas" "EDF " "sko@edf.fr"
+volife_run.sh -list-all-users
+volife_run.sh -approve-user sko
+sudo -u tomcat volife_run.sh -create-vo test2 "test2" sko
 volife_run.sh -list-all-vos
-volife_run.sh -list-all-vos | awk '/test/ { gsub(","," "); gsub("gvid","VO");print $4}' >> /root/.bashrc
+volife_run.sh -list-all-vos | awk '/test2/ { gsub(","," "); gsub("gvid","VO");print $4}' >> /root/.bashrc
 . /root/.bashrc
 echo $VO
 
@@ -41,66 +41,64 @@ xos-policy-admin-set -gidmax 60500 -gidmin 60000
 xos-policy-admin-chk -pem /root/.xos/truststore/certs/user.crt
 
 
-adduser sk
-passwd sk
+adduser sko
+passwd sko
 
 
 
 # en root sur le ressource
-cp /root/user.crt  /home/sk/user.crt
-cp /root/user.key  /home/sk/user.key
+cp /root/user.crt  /home/sko/user.crt
+cp /root/user.key  /home/sko/user.key
 
-volife_run.sh -list-all-vos | awk '/test/ { gsub(","," ");gsub("gvid","VO");print $4}' >> /home/sk/.bashrc
+volife_run.sh -list-all-vos | awk '/test2/ { gsub(","," ");gsub("gvid","VO");print $4}' >> /home/sko/.bashrc
 
 
-chown -R sk.sk /home/sk
+chown -R sko.sko /home/sko
 
 
 /etc/init.d/sshd-xos restart
 
 
-su - sk 
+su - sko 
 
-mkdir -p /home/sk/.xos/truststore/certs/
-mkdir -p /home/sk/.xos/truststore/private/
-cp user.crt  /home/sk/.xos/truststore/certs/user.crt
-cp user.key  /home/sk/.xos/truststore/private/user.key
-cp user.key  /home/sk/.xos/truststore/user.key
+mkdir -p /home/sko/.xos/truststore/certs/
+mkdir -p /home/sko/.xos/truststore/private/
+cp user.crt  /home/sko/.xos/truststore/certs/user.crt
+cp user.key  /home/sko/.xos/truststore/private/user.key
+cp user.key  /home/sko/.xos/truststore/user.key
 
-openssl verify -CApath /etc/xos/truststore/certs/ /home/sk/.xos/truststore/certs/user.crt
-
-pam_app_conv -pem /home/sk/.xos/truststore/certs/user.crt 
+openssl verify -CApath /etc/xos/truststore/certs/ /home/sko/.xos/truststore/certs/user.crt
 
 
 
-# en sk sur la ressource
-# comme sk
-chown -R sk.sk /home/sk
+# en sko sur la ressource
+# comme sko
+chown -R sko.sko /home/sko
 
-su - sk
+su - sko
 
-mkdir -p /home/sk/.xos/truststore/certs/
-mkdir -p /home/sk/.xos/truststore/private/
+mkdir -p /home/sko/.xos/truststore/certs/
+mkdir -p /home/sko/.xos/truststore/private/
 
-cp /home/sk/user.crt  /home/sk/.xos/truststore/certs/user.crt
-cp /home/sk/user.key  /home/sk/.xos/truststore/private/user.key
-cp /home/sk/user.key  /home/sk/.xos/user.key
+cp /home/sko/user.crt  /home/sko/.xos/truststore/certs/user.crt
+cp /home/sko/user.key  /home/sko/.xos/truststore/private/user.key
+cp /home/sko/user.key  /home/sko/.xos/user.key
 
-pam_app_conv -pem /home/sk/.xos/truststore/certs/user.crt 
+pam_app_conv -pem /home/sko/.xos/truststore/certs/user.crt 
 
-cat > /home/sk/.ssh/config-xos.modele <<EOF
+cat > /home/sko/.ssh/config-xos.modele <<EOF
 Host __HOST__
-  XosProxyFile /home/sk/.xos/truststore/certs/user.crt
-  XosVoName   test
+  XosProxyFile /home/sko/.xos/truststore/certs/user.crt
+  XosVoName   test2
 EOF
 
 HOST=`hostname`
 
-sed "s/__HOST__/$HOST/g" /home/sk/.ssh/config-xos.modele  > /home/sk/.ssh/config-xos
-cat /home/sk/.ssh/config-xos
+sed "s/__HOST__/$HOST/g" /home/sko/.ssh/config-xos.modele  > /home/sko/.ssh/config-xos
+cat /home/sko/.ssh/config-xos
 
-#must remove w from group (due to umask?)
-chmod g-w /home/sk/.ssh/config-xos
+#must remove w from group (due to umasko?)
+chmod g-w /home/sko/.ssh/config-xos
 
 ssh-xos $HOST
 Last login: Tue Dec  2 16:39:02 2008 from paraxos5.irisa.fr
@@ -188,18 +186,18 @@ $ exit
 Bye
 ^C
 
-[sk@paraxos5 ~]$ cat /home/sk/.xos/XATIConfig.conf
+[sko@paraxos5 ~]$ cat /home/sko/.xos/XATIConfig.conf
 #Properties File for the client application
 #Wed Nov 12 15:01:17 CET 2008
 useSSL=false
 xosdaddress.externalAddress=131.254.201.20
 xosdaddress.host=131.254.201.20
-privateKeyLocation=/etc/xos/truststore/private/reskey.pem
-userKeyFile=/home/sk/.xos/truststore/private/user.key
+privateKeyLocation=/etc/xos/truststore/private/reskoey.pem
+userKeyFile=/home/sko/.xos/truststore/private/user.key
 networkInterface=
 trustStoreSSL=/etc/xos/truststore/certs/
 address.host=131.254.201.20
-userCertificateFile=/home/sk/.xos/truststore/certs/user.crt
+userCertificateFile=/home/sko/.xos/truststore/certs/user.crt
 xosdaddress.port=60000
 address.port=10000
 certificateLocation=/etc/xos/truststore/certs/rescert.pem
@@ -220,11 +218,11 @@ useSSL=false
 cdaaddress.host=paraxos5.irisa.fr
 cdaaddress.port=60000
 
-[sk@paraxos5 ~]$ xps -a
+[sko@paraxos5 ~]$ xps -a
 Could not open Config File: open: No such file or directory
-Expected File: /home/sk/.xos/XATICAConfig.conf
+Expected File: /home/sko/.xos/XATICAConfig.conf
 Using and writing default values for configError certificate File : /etc/xos/truststore/certs/xati_dummy.pem
-[sk@paraxos5 ~]$ cat /home/sk/.xos/XATICAConfig.conf
+[sko@paraxos5 ~]$ cat /home/sko/.xos/XATICAConfig.conf
 xosdaddress.host=paraxos5.irisa.fr
 xosdaddress.port=55000
 address.host=paraxos5.irisa.fr
@@ -267,7 +265,7 @@ resIdentityCertFileName=/etc/xos/truststore/certs/resource.crt
 #Properties File for the client application
 #Tue Dec 02 16:46:28 CET 2008
 VOPSPubCert=/etc/xos/truststore/certs/vops.crt
-testVOPS=false 
+test2VOPS=false 
 useADS=false
 
 [root@paraxos5 ~]# service xosd start
@@ -331,7 +329,7 @@ drwxr-xr-x 2 root root 4096 2008-11-26 15:42 ./
 drwxr-xr-x 3 root root 4096 2008-12-02 16:57 ../
 [root@paraxos5 ~]# chmod 777 /etc/xos/truststore/certs/incoming
 
-[root@paraxos5 ~]# dixi_test -RCA avo ffc8e45b-914d-41b7-aba0-a04fece111cf 131.254.201.20:60000
+[root@paraxos5 ~]# dixi_test2 -RCA avo ffc8e45b-914d-41b7-aba0-a04fece111cf 131.254.201.20:60000
 Returned from service call: successMethod
 Adding the resource 131.254.201.20:60000 to the VO.
 Added resource 131.254.201.20:60000 to VO ffc8e45b-914d-41b7-aba0-a04fece111cf.
@@ -353,7 +351,7 @@ Starting GANGLIA gmond:                                         [  OK  ]
 [root@paraxos5 ~]# cat /etc/xos/config/Rss/config.cfg
 local_port = 1905
 network_interface = eth0
-disk_device = sda4
+disko_device = sda4
 bootstrap_address = 131.254.201.20
 bootstrap_port = 1905
 bootstrap_time = 1000
@@ -377,10 +375,10 @@ socket_timeout = 60000
 #Properties File for the client application
 #Tue Dec 02 16:46:28 CET 2008
 VOPSPubCert=/etc/xos/truststore/certs/vops.crt
-testVOPS=true
+test2VOPS=true
 useADS=true
 
-[sk@paraxos5 ~]$ cat  psx.jsdl
+[sko@paraxos5 ~]$ cat  psx.jsdl
 <?xml version="1.0" encoding="UTF-8"?>
 <JobDefinition xmlns:jsdl="http://schemas.ggf.org/jsdl/2005/11/jsdl">
    <JobDescription>
@@ -404,7 +402,7 @@ useADS=true
      </JobDescription>
 </JobDefinition>
 
-[sk@paraxos5 ~]$ ssh-xos paraxos5.irisa.fr
+[sko@paraxos5 ~]$ ssh-xos paraxos5.irisa.fr
 Last login: Tue Dec  2 16:39:08 2008 from paraxos5.irisa.fr
 -bash-3.2$ pwd
 /home/584fddf7-69ae-47cc-b864-78f76e836aac
@@ -413,17 +411,17 @@ MyFirstFile*  tmp/
 -bash-3.2$ exit
 logout
 Connection to paraxos5.irisa.fr closed.
-[sk@paraxos5 ~]$ xconsole_dixi
+[sko@paraxos5 ~]$ xconsole_dixi
 XtreemOS Console
 
-$ xrs -jsdl /home/sk/psx.jsdl
+$ xrs -jsdl /home/sko/psx.jsdl
 Listing resources matching JSDL query:
   Address = [://paraxos5.irisa.fr/131.254.201.20:60000(/131.254.201.20)]
-$ xsub -f /home/sk/psx.jsdl
+$ xsub -f /home/sko/psx.jsdl
 Job submitted succesfully: f2c8c186-5f85-4861-852c-8aa41937a8b8
 $ exit
 Bye
-[sk@paraxos5 ~]$ ssh-xos paraxos5.irisa.fr
+[sko@paraxos5 ~]$ ssh-xos paraxos5.irisa.fr
 Last login: Tue Dec  2 17:16:21 2008 from paraxos5.irisa.fr
 -bash-3.2$ ls
 MyFirstFile*  ps.out*  tmp/
