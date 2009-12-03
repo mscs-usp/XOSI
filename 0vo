@@ -32,6 +32,11 @@ xos_amsd -init
 killall xos_amsd
 service xos-amsd start
 
+service xos-amsd stop
+rm /etc/xos/nss_pam/mapdata/*
+service xos-amsd start
+
+
 
 echo $VO
 
