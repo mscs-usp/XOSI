@@ -1,0 +1,9 @@
+service --status-all
+
+
+service xtreemfs-osd stop
+service xtreemfs-mrc stop
+service xtreemfs-dir stop
+service xtreemfs-dir start
+service xtreemfs-mrc start
+service xtreemfs-osd start
