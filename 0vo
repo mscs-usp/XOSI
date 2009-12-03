@@ -102,7 +102,7 @@ cat /home/sk/.ssh/config-xos
 #must remove w from group (due to umask?)
 chmod g-w /home/sk/.ssh/config-xos
 
-ssh-xos $HOST
+ssh-xos `hostname`
 Last login: Tue Dec  2 16:39:02 2008 from paraxos5.irisa.fr
 whoami
 #/CN=584fddf7-69ae-47cc-b864-78f76e836aac

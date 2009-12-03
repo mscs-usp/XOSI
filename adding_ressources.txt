@@ -1,10 +1,14 @@
 VO=daea3b80-8f68-4c50-bd48-154bd632e8b6
-rca_vo l $VO
-rca_vo a $VO 131.254.202.151:60000
-rca_vo l $VO
-xreservation -qf
 
-cd /home/sk/XOS/TESTS/AEM
+rca_vo l $VO
+rca_vo a $VO 131.254.202.72:60000
+rca_vo l $VO
+rca_resource_vo a < the number got on the line before>
+ls /etc/xos/trustore/certs/incoming/*crt 
+cp  /etc/xos/trustore/certs/incoming/*crt /etc/xos/truststore/certs
+xreservation -qf
+su - sk
+cd /home/sk/XOST/AEM
 xsub -f job_nu.jsdl 
 
 
