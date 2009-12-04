@@ -1,11 +1,20 @@
-VO=daea3b80-8f68-4c50-bd48-154bd632e8b6
+rca_list_registered
+RES=`rca_list_registered | awk '/Listing/ {next;} { gsub("ResourceID = .IP=",""); gsub("60000.*$","60000"); print $0}' `
+echo $VO, $RES
 rca_vo l $VO
-rca_vo a $VO 131.254.202.151:60000
+rca_vo a $VO $RES
 rca_vo l $VO
+ADD=`rca_vo l $VO`
+echo $ADD
+rca_resource_vo a $ADD
+ls /etc/xos/truststore/certs/incoming/*crt 
+cp  /etc/xos/truststore/certs/incoming/*crt /etc/xos/truststore/certs
 xreservation -qf
-
-cd /home/sk/XOS/TESTS/AEM
+su - sk
+git clone ssh://skortas@paramount/home/orsay/skortas/XOST
+cd /home/sk/XOST/AEM
 xsub -f job_nu.jsdl 
+xps -a
 
 
 #on ressource

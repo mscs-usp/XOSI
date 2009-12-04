@@ -1,5 +1,5 @@
-sudo -u tomcat volife_run.sh -create-user sk "edf123" "sk" "kortas" "EDF " "sk@edf.fr"
-sudo -u tomcat volife_run.sh -list-all-users
+volife_run.sh -create-user sk "edf123" "sk" "kortas" "EDF " "sk@edf.fr"
+volife_run.sh -list-all-users
 volife_run.sh -approve-user sk
 sudo -u tomcat volife_run.sh -create-vo test "test" sk
 volife_run.sh -list-all-vos
@@ -20,24 +20,30 @@ cp /root/user.key  /root/.xos/user.key
 
 openssl verify -CApath /etc/xos/truststore/certs/ /root/.xos/truststore/certs/user.crt
 
+cp -f sshd_config-xos /etc/ssh/sshd_config-xos
+/etc/init.d/sshd-xos restart
+
+
 service xos-amsd stop
 ps -aef | grep ams
-\rm  -rf /etc/xos/nss_pam/mapdatabak
+\rm  -rf /etc/xos/nss_pam/mapdata
 mkdir  -p /etc/xos/nss_pam/mapdata 
 xos_amsd -init
 killall xos_amsd
 service xos-amsd start
+
+service xos-amsd stop
+\rm -rf /etc/xos/nss_pam/mapdata/*
+service xos-amsd start
+
 
 
 echo $VO
 
 xos-policy-admin-am -vo $VO  --force
 xos-policy-admin-gm -vo $VO  --force
-
 xos-policy-admin-set -uidmax 60500 -uidmin 60000
 xos-policy-admin-set -gidmax 60500 -gidmin 60000
-
-
 xos-policy-admin-chk -pem /root/.xos/truststore/certs/user.crt
 
 
@@ -51,16 +57,12 @@ cp /root/user.crt  /home/sk/user.crt
 cp /root/user.key  /home/sk/user.key
 
 volife_run.sh -list-all-vos | awk '/test/ { gsub(","," ");gsub("gvid","VO");print $4}' >> /home/sk/.bashrc
-
-
 chown -R sk.sk /home/sk
 
 
-/etc/init.d/sshd-xos restart
 
 
 su - sk 
-
 mkdir -p /home/sk/.xos/truststore/certs/
 mkdir -p /home/sk/.xos/truststore/private/
 cp user.crt  /home/sk/.xos/truststore/certs/user.crt
@@ -71,22 +73,6 @@ openssl verify -CApath /etc/xos/truststore/certs/ /home/sk/.xos/truststore/certs
 
 pam_app_conv -pem /home/sk/.xos/truststore/certs/user.crt 
 
-
-
-# en sk sur la ressource
-# comme sk
-chown -R sk.sk /home/sk
-
-su - sk
-
-mkdir -p /home/sk/.xos/truststore/certs/
-mkdir -p /home/sk/.xos/truststore/private/
-
-cp /home/sk/user.crt  /home/sk/.xos/truststore/certs/user.crt
-cp /home/sk/user.key  /home/sk/.xos/truststore/private/user.key
-cp /home/sk/user.key  /home/sk/.xos/user.key
-
-pam_app_conv -pem /home/sk/.xos/truststore/certs/user.crt 
 
 cat > /home/sk/.ssh/config-xos.modele <<EOF
 Host __HOST__
@@ -102,27 +88,8 @@ cat /home/sk/.ssh/config-xos
 #must remove w from group (due to umask?)
 chmod g-w /home/sk/.ssh/config-xos
 
-ssh-xos $HOST
-Last login: Tue Dec  2 16:39:02 2008 from paraxos5.irisa.fr
-whoami
-#/CN=584fddf7-69ae-47cc-b864-78f76e836aac
-pwd
-#/home/584fddf7-69ae-47cc-b864-78f76e836aac
-cat > MyFirstFile < EOF
-abc
-EOF
+ssh-xos `hostname`
 
-ls -al
-
-total 17
-drwxrwxrwx  1 root                                     root              0 2008-12-02 16:39 ./
-drwxr-xr-x 13 root                                     root           4096 2008-12-02 16:25 ../
--rwxrwxrwx  1 /CN=584fddf7-69ae-47cc-b864-78f76e836aac root             19 2008-12-02 16:37 .bash_history*
--rwxrwxrwx  1 /CN=584fddf7-69ae-47cc-b864-78f76e836aac xosuser_g60297    4 2008-12-02 16:39 MyFirstFile*
-drwxrwxrwx  1 /CN=584fddf7-69ae-47cc-b864-78f76e836aac root              0 2008-12-02 16:36 tmp/
--bash-3.2$ exit
-logout
-Connection to paraxos5.irisa.fr closed.
 
 
 [root@paraxos5 ~]# service xosd stop
