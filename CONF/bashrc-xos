@@ -1,1 +1,3 @@
     PS1="[\u@\h $XOSHOST \W]\\$ "
+alias gi='git commit '
+alias gip='git commit -v -m '...' -a; git push -v'
