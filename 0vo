@@ -63,9 +63,9 @@ chown -R sk.sk /home/sk
 su - sk 
 mkdir -p /home/sk/.xos/truststore/certs/
 mkdir -p /home/sk/.xos/truststore/private/
-cp user.crt  /home/sk/.xos/truststore/certs/user.crt
-cp user.key  /home/sk/.xos/truststore/private/user.key
-cp user.key  /home/sk/.xos/user.key
+cp -f user.crt  /home/sk/.xos/truststore/certs/user.crt
+cp -f user.key  /home/sk/.xos/truststore/private/user.key
+cp -f user.key  /home/sk/.xos/user.key
 
 openssl verify -CApath /etc/xos/truststore/certs/ /home/sk/.xos/truststore/certs/user.crt
 pam_app_conv -pem /home/sk/.xos/truststore/certs/user.crt 

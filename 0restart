@@ -1,9 +1,7 @@
-service --status-all
+cd /etc/xos/xosautoconfig/
+xosautoconfig
+finishConfig
 
+cd /root/XOSI
+. ./fix_xtreemfs
 
-service xtreemfs-osd stop
-service xtreemfs-mrc stop
-service xtreemfs-dir stop
-service xtreemfs-dir start
-service xtreemfs-mrc start
-service xtreemfs-osd start
