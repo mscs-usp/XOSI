@@ -68,7 +68,6 @@ cp user.key  /home/sk/.xos/truststore/private/user.key
 cp user.key  /home/sk/.xos/user.key
 
 openssl verify -CApath /etc/xos/truststore/certs/ /home/sk/.xos/truststore/certs/user.crt
-
 pam_app_conv -pem /home/sk/.xos/truststore/certs/user.crt 
 
 
