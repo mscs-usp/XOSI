@@ -20,4 +20,6 @@ cd /etc/xos/xosautoconfig/
 xosautoconfig
 finishConfig
 
-cd -
+cd /root/XOSI/
+cp -f xtreemfs_mnt /usr/bin/xtreemfs_mnt 
+chmod 777 /usr/bin/xtreemfs_mnt 

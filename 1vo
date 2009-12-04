@@ -19,7 +19,6 @@ xos-policy-admin-am -vo $VO  --force
 xos-policy-admin-gm -vo $VO  --force
 xos-policy-admin-chk -pem /root/.xos/truststore/certs/user.crt
 
-
 service sshd-xos restart
 adduser sk
 
