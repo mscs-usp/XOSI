@@ -16,3 +16,5 @@ service xtreemfs-dir stop
 service xtreemfs-dir start
 service xtreemfs-mrc start
 service xtreemfs-osd start
+
+cd -
