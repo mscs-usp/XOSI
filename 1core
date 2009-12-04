@@ -1,3 +1,7 @@
+cd /etc/xos/xosautoconfig/
+xosautoconfig
+
+
 
  urpmi --auto-update --auto
  urpmi task-xtreemos-coreservice --auto
@@ -5,8 +9,15 @@
  urpmi create-csr --auto
 
   xos-init-certs `hostname`
+
+mv /usr/bin/xtreemfs_mnt  /usr/bin/xtreemfs_mnt.orig
+cp xtreemfs_mnt /usr/bin/xtreemfs_mnt 
+chmod 777 /usr/bin/xtreemfs_mnt 
+
   
 
 cd /etc/xos/xosautoconfig/
 xosautoconfig
 finishConfig
+
+cd -

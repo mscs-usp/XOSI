@@ -8,7 +8,6 @@ volife_run.sh -list-all-vos | awk '/test/ { gsub(","," "); gsub("gvid","VO");pri
 echo $VO
 
 # get user key and cert
-
 mkdir -p /root/.xos/truststore/certs/
 mkdir -p /root/.xos/truststore/private/
 cp /root/user.crt  /root/.xos/truststore/certs/user.crt
@@ -42,9 +41,6 @@ cp -f user.key  /home/sk/.xos/user.key
 
 
 openssl verify -CApath /etc/xos/truststore/certs/ /home/sk/.xos/truststore/certs/user.crt
-
-mv /usr/bin/xtreemfs_mnt  /usr/bin/xtreemfs_mnt.orig
-cp xtreemfs_mnt /usr/bin/xtreemfs_mnt 
 
 pam_app_conv -pem /home/sk/.xos/truststore/certs/user.crt 
 
