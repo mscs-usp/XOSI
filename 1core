@@ -1,5 +1,3 @@
-cd /etc/xos/xosautoconfig/
-xosautoconfig
 
 
 
@@ -11,7 +9,7 @@ xosautoconfig
   xos-init-certs `hostname`
 
 mv /usr/bin/xtreemfs_mnt  /usr/bin/xtreemfs_mnt.orig
-cp xtreemfs_mnt /usr/bin/xtreemfs_mnt 
+cp -f xtreemfs_mnt /usr/bin/xtreemfs_mnt 
 chmod 777 /usr/bin/xtreemfs_mnt 
 
   
