@@ -102,15 +102,6 @@ log_echo "+++ +++ +++    LAUNCHING DEPLOYMENT ON NODES    +++ +++ +++"
 
 kadeploy3 -e $ENVIRONMENT -f nodes -u mobrovac -k ${KEY_FILE}
 
-#add your public ssh key to be able to connect to that environment
-#if [ -f "$KEY_FILE" ] ; then
- #kaaddkeys -k $KEY_FILE -f ~/OAR.$OAR_JOB_ID.nodes
- 
-#else
- # echo "Could not add $KEY_FILE to the environment : no such file"
-#fi
-
-
 #do stuff with this deployed environment
 # configuring globalDefs and nodeTypes in ALL NODES
 echo
@@ -126,11 +117,6 @@ for node in ${nodes_list}; do
 		echo -e "$(ssh root@$node $SSH_OPTS cat /etc/xos/xosautoconfig/nodeTypes)";
 	fi
 done
-
- #launching xosautoconfig on head machine
-#echo 
-#log_echo "++++++++++ LAUNCHING XOSAUTOCOFIG ON HEAD MACHINE ++++++++++"
-#ssh root@$HEADNODE $SSH_OPTS xosautoconfig
 
 #create certificates on root node
 echo 
@@ -152,7 +138,7 @@ echo
 log_echo "+++ +++ +++    CONFIGURING ALL THE MACHINES USING XOSAUTOCONFIG    +++ +++ +++"
 for node in ${nodes_list}; do
 	ok_echo "xosautoconfig on ${node}";
-	ssh root@$node $SSH_OPTS xosautoconfig 
+	ssh ${SSH_OPTS} root@$node xosautoconfig --myhostname ${node};
 done
 echo;
 ok_echo "confirming resources...";
@@ -163,7 +149,7 @@ echo
 log_echo "+++ +++ +++    RESTARTING XOSD    +++ +++ +++"
 for node in ${nodes_list}; do 
 	ok_echo "xosd on ${node}";
-  ssh root@$node $SSH_OPTS service xosd restart
+  ssh ${SSH_OPTS} root@$node service -f xosd restart;
 done
 
 # clean up the environment
@@ -174,14 +160,3 @@ cd;
 rm -rf ${deploy_tmp_dir};
 echo "done.";
 
-#if [ $# -gt 1 ] ; then
-# if [ -x "$2" ] ; then
-     #we elect a head node to run the script
-     
-     #we copy the script to the headnode
-#     echo "scp  $SSH_OPTS $2 root@$HEADNODE:"
-#     echo "exec ssh $SSH_OPT root@$HEADNODE ./`basename $2`"
-# else
-#     echo Could not find $2 to run on $HEADNODE
-# fi
-#fi
