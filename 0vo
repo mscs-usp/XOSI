@@ -12,9 +12,9 @@ echo $VO
 
 mkdir -p /root/.xos/truststore/certs/
 mkdir -p /root/.xos/truststore/private/
-cp -f /root/user.crt  /root/.xos/truststore/certs/user.crt
-cp -f /root/user.key  /root/.xos/truststore/private/user.key
-cp -f /root/user.key  /root/.xos/user.key
+cp /root/user.crt  /root/.xos/truststore/certs/user.crt
+cp /root/user.key  /root/.xos/truststore/private/user.key
+cp /root/user.key  /root/.xos/user.key
 
 openssl verify -CApath /etc/xos/truststore/certs/ /root/.xos/truststore/certs/user.crt
 
