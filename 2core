@@ -1,6 +1,6 @@
 
- urpmi task-xtreemos-coreservice --auto
  urpmi --auto-update --auto
+ urpmi task-xtreemos-coreservice --auto
  urpmi rootca-config --auto
  urpmi create-csr --auto
 
