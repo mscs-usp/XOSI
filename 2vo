@@ -1,6 +1,10 @@
+mv /usr/bin/xtreemfs_mnt /usr/bin/xtreemfs_mnt.new
+cp xtreemfs_mnt  /usr/bin/xtreemfs_mnt
+chmod 777 /usr/bin/xtreemfs_mnt
+
 volife_run.sh -create-user sk "edf123" "sk" "kortas" "EDF " "sk@edf.fr"
 volife_run.sh -approve-user sk
-sudo -u tomcat volife_run.sh -create-vo test "test" sk
+volife_run.sh -create-vo test "test" sk
 volife_run.sh -list-all-vos | awk '/test/ { gsub(","," "); gsub("gvid","VO");print $4}' >> /root/.bashrc
 . /root/.bashrc
 echo $VO
@@ -9,51 +13,24 @@ echo $VO
 # get user key and cert
 
 # comme root
-
 mkdir -p /root/.xos/truststore/certs/
 mkdir -p /root/.xos/truststore/private/
 cp /root/user.crt  /root/.xos/truststore/certs/user.crt
 cp /root/user.key  /root/.xos/truststore/private/user.key
 cp /root/user.key  /root/.xos/user.key
-
 openssl verify -CApath /etc/xos/truststore/certs/ /root/.xos/truststore/certs/user.crt
-
-cp -f sshd_config-xos /etc/ssh/sshd_config-xos
-/etc/init.d/sshd-xos restart
-
-
-service xos-amsd stop
-ps -aef | grep ams
-\rm  -rf /etc/xos/nss_pam/mapdata
-mkdir  -p /etc/xos/nss_pam/mapdata 
-xos_amsd -init
-killall xos_amsd
-service xos-amsd start
-
-service xos-amsd stop
-\rm -rf /etc/xos/nss_pam/mapdata/*
-service xos-amsd start
-
-
-
 echo $VO
-
 xos-policy-admin-am -vo $VO  --force
 xos-policy-admin-gm -vo $VO  --force
-xos-policy-admin-set -uidmax 60500 -uidmin 60000
-xos-policy-admin-set -gidmax 60500 -gidmin 60000
 xos-policy-admin-chk -pem /root/.xos/truststore/certs/user.crt
 
 
+service sshd-xos restart
 adduser sk
-passwd sk
 
-
-
-# en root sur le ressource
+cp -rf /root/.ssh /home/sk
 cp /root/user.crt  /home/sk/user.crt
 cp /root/user.key  /home/sk/user.key
-
 volife_run.sh -list-all-vos | awk '/test/ { gsub(","," ");gsub("gvid","VO");print $4}' >> /home/sk/.bashrc
 chown -R sk.sk /home/sk
 
