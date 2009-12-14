@@ -10,5 +10,5 @@
 cd /etc/xos/xosautoconfig/
 xosautoconfig
 
-rca_list_registered
-finishConfig
+cd -
+
