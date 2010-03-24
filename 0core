@@ -1,4 +1,4 @@
-cd /etc/xos/xosautoconfig/
+²cd /etc/xos/xosautoconfig/
 xosautoconfig
 cd /root/XOSI
 . ./fix_xtreemfs

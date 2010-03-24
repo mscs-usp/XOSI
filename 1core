@@ -8,7 +8,7 @@
   
 
 cd /etc/xos/xosautoconfig/
-xosautoconfig
+xosautoconfig --setmedia
 
 rca_list_registered
 finishConfig
