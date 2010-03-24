@@ -1,0 +1,31 @@
+rca_list_registered
+RES=`rca_list_registered | awk '/Listing/ {next;} { gsub("ResourceID = .IP=",""); gsub("60000.*$","60000"); print $0}' `
+echo $VO, $RES
+rca_vo l $VO
+rca_vo a $VO $RES
+rca_vo l $VO
+ADD=`rca_vo l $VO`
+echo $ADD
+rca_resource_vo a $ADD
+ls /etc/xos/truststore/certs/incoming/*crt 
+cp  /etc/xos/truststore/certs/incoming/*crt /etc/xos/truststore/certs
+xreservation -qf
+su - sk
+git clone ssh://kortas@claui2t0/home/kortas/GITBASE/XOST
+cd /home/sk/XOST/AEM
+xsub -f job_nu.jsdl 
+xps -a
+
+
+#on ressource
+chmod 777 /etc/xos/truststore/certs/incoming
+service gmond restart
+service xosd stop
+service xosd start
+rca_apply
+rca_list_pending
+
+#on core
+rca_vo a $VO 130.98.91.254:60000
+
+#on ressource

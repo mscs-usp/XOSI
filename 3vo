@@ -21,6 +21,17 @@ cp /root/user.key  /root/.xos/truststore/private/user.key
 cp /root/user.key  /root/.xos/user.key
 openssl verify -CApath /etc/xos/truststore/certs/ /root/.xos/truststore/certs/user.crt
 echo $VO
+
+mkdir /xfs
+chown -R xtreemfs:xtreemfs /xfs/
+service xtreemfs-osd stop
+service xtreemfs-mrc stop
+service xtreemfs-dir stop
+service xtreemfs-dir start
+service xtreemfs-mrc start
+service xtreemfs-osd start
+
+
 xos-policy-admin-am -vo $VO  --force
 xos-policy-admin-gm -vo $VO  --force
 xos-policy-admin-chk -pem /root/.xos/truststore/certs/user.crt

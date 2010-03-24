@@ -1,0 +1,8 @@
+cd /etc/xos/xosautoconfig/
+xosautoconfig
+cd /root
+
+service tomcat5 restart
+
+
+

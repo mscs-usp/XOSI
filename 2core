@@ -9,6 +9,5 @@
 
 cd /etc/xos/xosautoconfig/
 xosautoconfig
-
 cd -
 
