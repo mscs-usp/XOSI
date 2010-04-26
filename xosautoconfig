@@ -1,0 +1,2199 @@
+#!/bin/bash
+
+#This is the configXos tool.
+#Before running it, please read the README.txt file
+#
+#Author: Yvon . Jegou at INRIA . fr
+#Modifications by: Marko . Obrovac at INRIA . fr
+
+
+###############################
+#    VARIABLES DECLARATION    #
+###############################
+
+DOIT=true
+DEBUG=false
+CONFIGONLY=false
+USESSL=
+VERBOSE=true
+LINUXONLY=false
+DATAPATH="/etc/xos/xosautoconfig"
+
+COLOUR_OK="\033[1;32m";
+COLOUR_ERR="\033[1;31m";
+COLOUR_LOG="\033[1;34m";
+COLOUR_RESET="\033[0m";
+OUTPUT_ALIGN="\033[65G";
+
+urpmi_args="--wget --force";
+
+modifieddefs=false
+localdefs=./localDefs
+globaldefs=./globalDefs
+services=./services
+nodetypes=./nodeTypes
+
+packagecdaclient=false
+packagecdaserver=false
+packagetomcat=false
+packagextreemfsserver=false
+packagextreemfsclient=false
+packagediximain=false
+packagedixiservices=false
+packagedixixati=false
+packagedixicxati=false
+packagexosamsd=false
+packagensspam=false
+packagenssxos=false
+packagepamxos=false
+packagercanode=false
+packagercaserver=false
+packagevomvops=false
+packageaemnode=false
+packageaemserver=false
+packagescalaris=false
+packagesrds=false
+packagextreemrss=false
+packagevolife=false
+packagextreemosopenssh=false
+packageopenssh=false
+packagexosaga=false
+packagexvoms=false
+packagentp=false
+packagesshd=false
+packagesshclient=false
+packagexossshd=false
+packagexossshclient=false
+
+#packagenssxos=false
+
+services_to_run=""
+run_ntp=false;
+run_xos_ssh=false;
+run_openssh=false;
+run_rca_server=false;
+run_cda_server=false;
+run_cda_client=false;
+run_vops=false;
+run_nsspam=false;
+run_amsd=false;
+run_xfs_client=false;
+run_cron_daemon=false;
+run_daemon_global=false;
+run_xml_extractor=false;
+run_exec_mng=false;
+run_job_directory=false;
+run_job_mng=false;
+run_rca_client=false;
+run_res_allocator=false;
+run_reservation_manager=false;
+run_res_mng=false;
+run_resource_monitor=false;
+run_srds_mng=false;
+run_volife=false;
+run_xvoms=false;
+run_xfs_dir=false;
+run_xfs_mrc=false;
+run_xfs_osd=false;
+run_dixi=false;
+
+amsdservice=false
+sshdservice=ignore
+ntpdservice=ignore
+sshdxosservice=false
+
+xosdservice=false
+tomcatservice=ignore
+mysqldservice=ignore
+cdaserverservice=false
+xtreemfsosdservice=false
+xtreemfsmrcservice=false
+xtreemfsdirservice=false
+
+startcdaserver=stopped
+starttomcat=stopped
+startxtreemfsdir=stopped
+startxtreemfsmrc=stopped
+startxtreemfsosd=stopped
+startxosd=stopped
+startamsd=stopped
+
+
+###################
+#    FUNCTIONS    #
+###################
+
+
+## Checks whether a given dir exists and is actually a dir
+#  $1 - the path of the dir to check
+#  returns: 0 if the dir exists
+#           1 otherwise
+check_dir() {
+	
+	echo -e "$1:\c ";
+	if [ -d $1 ]; then
+		service_success_msg "OK";
+		return 0;
+	else
+		service_error_msg "NOT OK";
+		error_echo "The directory either doesn't exist or is not a directory!";
+		error_echo "Pass a valid --datapath argument to the script! Leaving...";
+		exit 1;
+		return 1;  # superficial, here for readability purposes only
+	fi;
+	
+}
+
+
+## Checks whether a given file exists and is a regular file
+#  $1 - the path of the file to check
+#  returns: 0 if the file exists
+#           1 otherwise
+check_file() {
+	
+	echo -e "$1:\c ";
+	if [ -f $1 ]; then
+		service_success_msg "OK";
+		return 0;
+	else
+		service_error_msg "NOT OK";
+		error_echo "The file either doesn't exist or is not a regular file!";
+		error_echo "Pass a valid --datapath argument to the script! Leaving...";
+		exit 1;
+		return 1;  # superficial, here for readability purposes only
+	fi;
+	
+}
+
+
+## Checks whether a package is installed
+#  $1 - the name of the package
+#  returns: 0 if the package is installed
+#           1 otherwise
+check_pkg() {
+	
+	if [ X$1 == X ]; then
+		return 0; # in case of an errorness call, treat it gracefully
+	fi;
+	
+	echo -e "Checking package: $1...\c ";
+	
+	inst=`rpm -q $1`;
+	if [ $? -eq 0 ]; then
+		service_success_msg "present";
+		return 0;
+	fi;
+	
+	service_error_msg "not installed";
+	return 1;
+	
+}
+
+
+## Checks whether a package is installed and sets a given variable
+#  $1 - the name of the package
+#  $2 - the name of the variable to set
+# returns: 0 if the package is installed
+#          1 otherwise
+check_pkg_set_var() {
+	
+	check_pkg $1;
+	if [ $? -eq 0 ]; then
+		[ X$2 != X ] && eval "$2=installed";
+		return 0;
+	fi;
+
+	return 1;
+	
+}
+
+## Checks the existance of the package and installs it
+#  $1 - the name of the package
+#  $2 - (optional) indicates whether a check should be performed
+#       prior to install
+#  returns: 0 if the package has been installed
+#           1 otherwise
+install_pkg() {
+	
+	if [ X$2 == X ]; then
+		check_pkg $1;
+		if [ $? -eq 0 ]; then
+			return 0;
+		fi;
+	fi;
+	
+	urpmi $urpmi_args $1;
+	
+	return $?;
+	
+}
+
+
+## Installs the given package (install_pkg) and sets the given variable
+#  $1 - the name of the package
+#  $2 - the name of the variable to set
+#  returns: 0 if the package has been installed
+#           1 otherwise
+install_pkg_set_var() {
+	
+	install_pkg $1;
+	
+	if [ $? -eq 0 ]; then
+		eval "$2=installed";
+		return 0;
+	fi;
+	
+	eval "$2=false";
+	return $?;
+	
+}
+
+
+## If the scripts operates in CONFIG_ONLY mode, mark the package
+## as required. Install it otherwise.
+#  $1 - the name of the package
+#  $2 - the name of the variable to set
+# returns: 0 if the package has been installed
+#          1 otherwise
+install_or_req_pkg() {
+	
+	check_pkg $1;
+	if [ $? -eq 0 ]; then
+		eval "$2=installed";
+		return 0;
+	fi;
+
+	if [ $CONFIGONLY == true ]; then
+		eval "$2=requested";
+		return 1;
+	fi;
+
+	install_pkg $1 nocheck;
+	if [ $? -eq 0 ]; then
+		eval "$2=installed";
+		return 0;
+	fi;
+
+	eval "$2=false";
+	return 1;
+	
+}
+
+
+amirunning() {
+	[ X$MYHOSTNAME != X ] && [ $(sed -e "s/\#.*\$//" $services | grep $MYHOSTNAME  | grep $1 | wc -w) != 0 ] && return 0
+	[ X$MYNODETYPE != X ] && [ $(sed -e "s/\#.*\$//" $services | grep $MYNODETYPE | grep $1 | wc -w) != 0 ] && return 0
+	[ $(sed -e "s/\#.*\$//" $services | grep all-nodes | grep $1 | wc -w) != 0 ] && return 0
+	return 1
+}
+
+
+## Checks whether a service needs to be run on the node and sets
+## the variable as required
+#  $1 - the name of the service to check
+#  $2 - the name of the variable to set
+#  returns: 0 if the service needs to be run
+#           1 otherwise
+is_service_needed() {
+	
+	if [ X$1 == X ]; then
+		return 1;
+	fi;
+
+	echo -e "Run $1:\t\t\c ";
+	echo $services_to_run | grep $1 > /dev/null;
+	if [ $? -eq 0 ]; then
+		eval "$2=true";
+		service_success_msg "YES";
+		return 0;
+	fi;
+
+	eval "$2=false";
+	service_error_msg "NO";
+	return 1;
+	
+}
+
+
+doineeddixi() {
+	
+	if [ $run_daemon_global == true -o $run_cron_daemon == true ]; then
+		run_dixi=true;
+		return 0;
+	fi;
+
+	run_dixi=false;
+	return 1
+}
+
+
+#proxy config for wget
+#$1 is proxy type, $2 is proxy value
+update_proxy() {
+	
+	[ $VERBOSE == true ] && log_echo "checking $1 proxy"
+	log_echo "checking $1"
+	if [ -e $ETC/wgetrc ]; then
+		if [ x$2 == xnoProxy ]; then
+			if [ $(grep -c "^$1" $ETC/wgetrc) != 0 ]; then
+				echo "  remove $1 from $ETC/wgetrc"
+				[ $DOIT == true ] && sed -i -e "/^$1/d" $ETC/wgetrc
+			fi
+		else
+			if [ $(grep -c "^$1" $ETC/wgetrc) == 0 ]; then
+				echo "  add $1 to $ETC/wgetrc"
+				if [ $DOIT == true ]; then
+					if [ $(grep -c "^#$1" $ETC/wgetrc) == 0 ]; then
+						sed -i -e"\$a $1=$2" $ETC/wgetrc
+					else
+						sed -i -e"/^#$1/a $1=$2" $ETC/wgetrc
+					fi
+				fi
+			else
+				val=$(grep "^$1" $ETC/wgetrc | head -1 | sed -e "s/^$1=//" | sed -e "s/[ #\t].*$//" )
+				if [ X$val != X$2 ]; then
+					echo "  replace $1 in $ETC/wgetrc"
+					if [ $DOIT == true ]; then
+						sed -i -e "/^$1/c $1=$2" $ETC/wgetrc
+					fi
+				fi
+			fi
+		fi
+	else
+		[ x$2 != xnoProxy ] && echo "  $1 defined but no $ETC/wgetrc file"
+	fi
+	if [ -e $ETC/profile.d/proxy.csh ]; then
+		if [ x$HTTPPROXY == xnoProxy ]; then
+			if [ $(grep -c "^setenv[ \t][ \t]*$1[ \t]" $ETC/profile.d/proxy.csh) != 0 ]; then
+				echo "  remove $1 from $ETC/profile.d/proxy.csh"
+				[ $DOIT == true ] && sed -i -e "/^setenv[ \t][ \t]*$1[ \t]/d" $ETC/profile.d/proxy.csh
+			fi
+		else
+			if [ $(grep -c "^setenv[ \t][ \t]*$1[ \t]" $ETC/profile.d/proxy.csh) == 0 ]; then
+				echo "  add $1 to $ETC/profile.d/proxy.csh"
+				if [ $DOIT == true ]; then
+					if [ $(grep -c "^#setenv $1 " $ETC/profile.d/proxy.csh) == 0 ]; then
+						sed -i -e"\$a setenv $1 $2" $ETC/profile.d/proxy.csh
+					else
+						sed -i -e"/^#setenv $1/a setenv $1 $2" $ETC/profile.d/proxy.csh
+					fi
+				fi
+			else
+				val=$(grep "^setenv[ \t][ \t]*$1[ \t]" $ETC/profile.d/proxy.csh | head -1 | sed -e "s/^setenv[ \t][ \t]*$1[ \t]//" | sed -e "s/[ #\t].*$//" )
+				if [ X$val != X$2 ]; then
+					echo "  replace $1 in $ETC/profile.d/proxy.csh"
+					if [ $DOIT == true ]; then
+						sed -i -e "/^setenv[ \t][ \t]*$1[ \t]/c setenv $1 $2" $ETC/profile.d/proxy.csh
+					fi
+				fi
+			fi
+		fi
+	else
+		[ x$2 != xnoProxy ] && echo "  $1 defined but no $ETC/profile.d/proxy.csh file"
+	fi
+	if [ -e $ETC/profile.d/proxy.sh ]; then
+		if [ x$HTTPPROXY == xnoProxy ]; then
+			if [ $(grep -c "^$1=" $ETC/profile.d/proxy.csh) != 0 ]; then
+				echo "  remove $1 from $ETC/profile.d/proxy.sh"
+				[ $DOIT == true ] && sed -i -e "/^$1=/d" $ETC/profile.d/proxy.sh
+			fi
+		else
+			if [ $(grep -c "^$1=" $ETC/profile.d/proxy.sh) == 0 ]; then
+				echo "  add $1 to $ETC/profile.d/proxy.sh"
+				if [ $DOIT == true ]; then
+					if [ $(grep -c "^#$1 " $ETC/profile.d/proxy.csh) == 0 ]; then
+						sed -i -e"\$a $1=$2" $ETC/profile.d/proxy.sh
+					else
+						sed -i -e"/^#$1/a $1=$2" $ETC/profile.d/proxy.sh
+					fi
+				fi
+			else
+				val=$(grep "^$1=" $ETC/profile.d/proxy.sh | head -1 | sed -e "s/^$1=//" | sed -e "s/[ #\t].*$//" )
+				if [ X$val != X$2 ]; then
+					echo "  replace $1 in $ETC/profile.d/proxy.sh"
+					if [ $DOIT == true ]; then
+						sed -i -e "/^$1=/c $1=$2" $ETC/profile.d/proxy.sh
+					fi
+				fi
+			fi
+		fi
+	else
+		[ x$2 != xnoProxy ] && echo "  $1 defined but no $ETC/profile.d/proxy.sh file"
+	fi
+
+}
+
+
+configure_ntp() {
+
+	if [ $run_ntp == true ]; then
+		if [ x$NTP != x ]; then
+			[ $VERBOSE == true ] && log_echo "checking ntp configuration"
+			if [ $packagentp == false ]; then
+				packagentp=requested
+			else
+				ntpdservice=true
+				restart=false
+				if [ -e $ETC/ntp.conf ]; then
+					val=$(grep "^server" $ETC/ntp.conf | head -1 | sed -e "s/^server[ \t]*\([0-9a-zA-Z.\t]*\).*/\1/")
+					#    echo "  val ntp is $val"
+					if [ X$val == X ]; then
+						echo "  add server $NTP to $ETC/ntp.conf"
+						if [ $DOIT == true ]; then
+							val=$(grep -c "^#server" $ETC/ntp.conf)
+							if [ $val == 0 ]; then
+								echo "server $NTP" >>$ETC/ntp.conf
+							else
+								/bin/rm $ETC/ntp.conf-new
+								sed -n -e "1,/^#server/p" $ETC/ntp.conf >$ETC/ntp.conf-new
+								echo "server $NTP" >>$ETC/ntp.conf-new
+								sed -n -e "/^#server/,\$p" $ETC/ntp.conf >>$ETC/ntp.conf-new
+								mv $ETC/ntp.conf-new $ETC/ntp.conf
+							fi
+						fi
+					elif [ $val != $NTP ]; then
+						if [ $DOIT == true ]; then
+							/bin/rm $ETC/ntp.conf-new
+							sed -i -e "s/^server/#server/" $ETC/ntp.conf
+							sed -n -e "1,/^#server/p" $ETC/ntp.conf >$ETC/ntp.conf-new
+							echo "server $NTP" >>$ETC/ntp.conf-new
+							sed -n -e "/^#server/,\$p" $ETC/ntp.conf >>$ETC/ntp.conf-new
+							mv $ETC/ntp.conf-new $ETC/ntp.conf
+						fi
+					fi
+				else
+					echo "  ntp defined but $ETC/ntp.conf config file missing"
+				fi
+				if [ -e $ETC/ntp/step-tickers ];then
+					val=$(grep  "^$NTP" $ETC/ntp/step-tickers| head -1 | sed -e 's/\([0-9a-zA-Z.]*\).*$/\1/')
+					if [ X$val == X ]; then
+						echo "  add $NTP to $ETC/ntp/step-tickers"
+						if [ $DOIT == true ]; then
+							echo "  add $NTP to $ETC/ntp/step-tickers"
+							sed -i -e "s/^/#/" $ETC/ntp/step-tickers
+							echo $NTP >>$ETC/ntp/step-tickers
+						fi
+					fi
+				else
+					echo "  ntp defined but $ETC/ntp/step-tickers config file missing"
+				fi
+				[ $restart == true ] && service ntpd restart
+			fi
+		fi
+	fi
+
+}
+
+
+place_cert() {
+	if [ X$1 != X ]
+		then
+		if [ ! -e $ETC/xos/truststore/certs/$1 ]
+			then
+			echo "  create $1" &&
+			if [ $DOIT == true ]; then
+				cp $CONF/etc/xos/truststore/certs/$1 $ETC/xos/truststore/certs/$1
+				restart=true
+			fi
+		else
+			diff -q $ETC/xos/truststore/certs/$1 $CONF/etc/xos/truststore/certs/$1 >/dev/null 2>&1
+			[ $? != 0 ] &&
+			echo "  update $1" &&
+			if [ $DOIT == true ]; then
+				cp $CONF/etc/xos/truststore/certs/$1 $ETC/xos/truststore/certs/$1
+				restart=true
+			fi
+		fi
+	fi
+}
+
+
+place_key() {
+	if [ X$1 != X ]
+		then
+		if [ ! -e $ETC/xos/truststore/private/$1 ]
+			then
+			echo "  create $1"
+			[ $DOIT == true ] &&
+			cp $CONF/etc/xos/truststore/private/$1 $ETC/xos/truststore/private/$1
+		else
+			#check key $1
+			diff -q $ETC/xos/truststore/private/$1 $CONF/etc/xos/truststore/private/$1 >/dev/null 2>&1
+			[ ! $? == 0 ] &&
+			echo "  update $1" &&
+			[ $DOIT == true ] &&
+			cp $CONF/etc/xos/truststore/private/$1 $ETC/xos/truststore/private/$1
+		fi
+	fi
+}
+
+
+## Update xosd_stage file
+#  $1 - the name of the service
+#  $2 - whether the service is enabled on not
+updatestage() {
+	
+	if [[ ! -e $ETC/xos/config/xosd_stages/$1.stage && $DOIT == true ]]; then
+		echo "  create $ETC/xos/config/xosd_stages/$1.stage";
+		cp $CONF/etc/xos/config/xosd_stages/$1.stage $ETC/xos/config/xosd_stages/$1.stage;
+	fi
+	
+	$exec_patch --params=enabled --values=$2 $ETC/xos/config/xosd_stages/$1.stage;
+
+	if [[ "$2" == "true" ]]; then
+		xosdservice=true;
+	fi
+	
+}
+
+
+#check that all requested services will start at boot
+configure_init() {
+	if [ $CONFIGONLY == false ]; then
+		chkconfig $1
+		if [ $? == 0 ]; then
+			if [ $2 == false ]; then
+				echo "  do not start $1 at boot"
+				[ $DOIT == true ] && chkconfig --del $1
+			fi
+		else
+			if [ $2 == true ]; then
+				echo "  start $1 at boot"
+				[ $DOIT == true ] && chkconfig --add $1
+			fi
+		fi
+	else
+		if [ $2 == true ]; then
+			echo "  start $1 at boot"
+		elif [ $2 == false ]; then
+			echo "  $1 not started at boot"
+		fi
+	fi
+}
+
+
+## Fancy output function
+#  $1 - the colour (escape sequence) to use
+#  $2 - the text to echo
+#  $3 - if present, do not output a newline character after the text
+#  returns: the value returned by echo
+fancy_print() {
+	
+	if [ "x$3" != "x" ]; then
+		echo -e "$1$2$COLOUR_RESET\c ";
+	else
+		echo -e "$1$2$COLOUR_RESET";
+	fi
+	return $?;
+	
+}
+
+
+## Fancy output function for services
+#  $1 - the colour (escape sequence) to use
+#  $2 - the text to echo
+#  $3 - if present, do not output a newline character after the text
+#  returns: the value returned by echo
+service_fancy_print() {
+	
+	if [ "x$3" != "x" ]; then
+		echo -e "$OUTPUT_ALIGN$1[ $2 ]$COLOUR_RESET\c ";
+	else
+		echo -e "$OUTPUT_ALIGN$1[ $2 ]$COLOUR_RESET";
+	fi
+	return $?;
+	
+}
+
+
+## Output a string in error colour
+#  $1 - the text to echo
+#  $2 - if present, do not output a newline character after the text
+#  returns: the value returned by service_fancy_print
+service_error_msg() {
+	
+	service_fancy_print $COLOUR_ERR "$1" $2;
+	return $?;
+	
+}
+
+
+## Output a string in success status colour
+#  $1 - the text to echo
+#  $2 - if present, do not output a newline character after the text
+#  returns: the value returned by service_fancy_print
+service_success_msg() {
+	
+	service_fancy_print $COLOUR_OK "$1" $2;
+	return $?;
+	
+}
+
+
+## Output a log string
+#  $1 - the text to echo
+#  returns: the value returned by echo
+log_echo() {
+	
+	echo -e "${COLOUR_LOG}*${COLOUR_RESET} $1";
+	return $?;
+	
+}
+
+
+## Output an error string
+#  $1 - the text to echo
+#  returns: the value returned by echo
+error_echo() {
+	
+	echo -e "${COLOUR_ERR}!!!${COLOUR_RESET} $1";
+	return $?;
+	
+}
+
+
+
+##############################
+#                            #
+#      SCRIPT BEGINNING      #
+#                            #
+##############################
+
+
+while [ X$1 != X ]; do
+	case $1 in
+		--nocommit) DOIT=false;;
+		--setmedia)
+			sed -i -e "/SETMEDIA=/c SETMEDIA=true" $DATAPATH/$localdefs
+			modifieddefs=true;
+			;;
+		--noservice) CONFIGONLY=true;;
+		--debug)  DEBUG=true;;
+		--monochrome)
+			COLOUR_ERR="";
+			COLOUR_OK="";
+			COLOUR_LOG="";
+			COLOUR_RESET="";
+			;;
+		--datapath)
+			if [ $modifieddefs == true ]; then
+				error_echo "The --datapath argument must be supplied before any other! Correct the program arguments and start the script again. Leaving...";
+				exit 1;
+			fi;
+			shift;
+			if [ "X$1" != "X" ]; then
+				DATAPATH="$1";
+			fi;
+			;;
+		--noprompt)
+			shift;
+			if [ X$1 == Xunset ]; then
+				sed -i -e "/NOPROMPT=/c NOPROMPT=true" $DATAPATH/$localdefs
+			else
+				sed -i -e "/NOPROMPT=/c NOPROMPT=$1" $DATAPATH/$localdefs
+			fi;
+			modifieddefs=true;
+			;;
+		--useSSL)
+			shift
+			USESSL=$1
+			;;
+		--myip)
+			shift
+			if [ X$1 == Xunset ]; then
+				sed -i -e "/MYIP=/c MYIP=" $DATAPATH/$localdefs
+			else
+				sed -i -e "/MYIP=/c MYIP=$1" $DATAPATH/$localdefs
+			fi
+			modifieddefs=true
+			;;
+		--myinterface)
+			shift
+			if [ X$1 == Xunset ]; then
+				sed -i -e "/MYINTERFACE=/c MYINTERFACE=" $DATAPATH/$localdefs
+			else
+				sed -i -e "/MYINTERFACE=/c MYINTERFACE=$1" $DATAPATH/$localdefs
+			fi
+			modifieddefs=true
+			;;
+		--mydisk)
+			shift
+			if [ X$1 == Xunset ]; then
+				sed -i -e "/MYDISK=/c MYDISK=" $DATAPATH/$localdefs
+			else
+				sed -i -e "/MYDISK=/c MYDISK=$1" $DATAPATH/$localdefs
+			fi
+			modifieddefs=true
+			;;
+		--myhostname)
+			shift
+			if [ X$1 == Xunset ]; then
+				sed -i -e "/MYHOSTNAME=/c MYHOSTNAME=" $DATAPATH/$localdefs
+			else
+				sed -i -e "/MYHOSTNAME=/c MYHOSTNAME=$1" $DATAPATH/$localdefs
+			fi
+			modifieddefs=true
+			;;
+		--configurevo)
+			shift
+			if [ X$1 == Xunset ]; then
+				sed -i -e "/CONFIGUREVO=/c CONFIGUREVO=" $DATAPATH/$localdefs
+			else
+				sed -i -e "/CONFIGUREVO=/c CONFIGUREVO=$1" $DATAPATH/$localdefs
+			fi
+			modifieddefs=true
+			;;
+		--localdefs)
+			if [ modifieddefs == true ]; then
+				error_echo "--localdefs must appear before --myip, --myinterface"
+				error_echo "--mydisk, --myhostname and --configurevo"
+				exit 1
+			fi
+			shift
+			if [ ! -e $1 ]; then
+				error_echo "--def: file $1 not found"
+				exit 1
+			fi
+			localdefs= $1
+			;;
+		--globaldefs)
+			shift
+			if [ ! -e $1 ]; then
+				error_echo "--globaldef: file $1 not found"
+				exit 1
+			fi
+			globaldefs= $1
+			;;
+		--services)
+			shift
+			if [ ! -e $1 ]; then
+				error_echo "--services: file $1 not found"
+				exit 1
+			fi
+			services=$1
+			;;
+		--verbose)
+			VERBOSE=true
+			;;
+		--exit)
+			exit 0
+			;;
+		--linuxonly)
+			LINUXONLY=true
+			;;
+		--help | -h)
+			echo "xosautoconfig [--nocommit] [--setmedia] [ --noservice]"
+			echo "    [--useSSL {true|false}] [--debug] [--datapath path] [--localdefs file] [--globaldefs file]"
+			echo "    [--services file] [--nodetypes] [--myip IP] [--myinterface interface]"
+			echo "    [--mydisk disk] [--myhostname hostname]"
+			echo "    [--configurevo VO-UUID] [--exit] [--linuxonly] [--noprompt {true|false}]"
+			echo "             --nocommit                do not modify local configuration"
+			echo "                                       files (experimental, for debug)"
+			echo "             --setmedia                configure default distribution mirrors"
+			echo "             --noservice               do not start/stop services"
+			echo "             --debug                   configure local etc and root"
+			echo "                                       directories, not /etc and /root"
+			echo "             --datapath <path>         tell the script to look in <path>"
+			echo "                                       for configuration files and data"
+			echo "             --localdefs file          use file for local configuration"
+			echo "             --globaldefs file         use file for global configuration"
+			echo "             --services file           use file for service distribution"
+			echo "             --nodetypes file          use file for node type selection"
+			echo "             --useSSL val              set useSSL=val in various config files"
+			echo "             --myip IP                 set MYIP variable in localdefs file"
+			echo "             --myinterface interface   set MYINTERFACE  variable in defs file"
+			echo "             --mydisk disk             set MYDISK variable in localdefs file"
+			echo "             --myhostname hostname     set MYHOSTNAME variable in localdefs file"
+			echo "             --configurevo VO-UUID     set CONFIGUREVO variable in localdefs file"
+			echo "             --exit                    exit immediatly. Usefull for updating"
+			echo "                                       localdefs file only"
+			echo "             --linuxonly               exit after having configured the linux"
+			echo "                                       node. Do not configure any XtreemOS service."
+			echo "             --noprompt val            when set to true, the script will try not"
+			echo "                                       to ask questions to the user"
+			echo "             --monochrome              do not colourise the output - suitable when"
+			echo "                                       the output is redirected to a file as it will"
+			echo "                                       not contain colour escape sequences"
+			exit 0
+			;;
+		*) error_echo "unknown argument $1";;
+	esac
+	shift
+done
+
+
+if [ $DEBUG == true ];then
+	ETC="$DATAPATH/etc"
+	ROOT="$DATAPATH/root"
+	CONF="$DATAPATH/conf"
+	USR="$DATAPATH/usr"
+	localdefs="$DATAPATH/localDefs"
+	globaldefs="$DATAPATH/globalDefs"
+	services="$DATAPATH/services"
+	nodetypes="$DATAPATH/nodeTypes"
+else
+	ETC=/etc
+	ROOT=/root
+	CONF="$DATAPATH/conf"
+	USR=/usr
+	localdefs="$DATAPATH/localDefs"
+	globaldefs="$DATAPATH/globalDefs"
+	services="$DATAPATH/services"
+	nodetypes="$DATAPATH/nodeTypes"
+fi
+
+
+log_echo "Checking configuration files and directories...";
+
+check_dir $ETC;
+check_dir $ROOT;
+check_dir $CONF;
+check_dir $USR;
+check_file $localdefs;
+check_file $globaldefs;
+check_file $services;
+check_file $nodetypes;
+
+log_echo "Using config path: $CONF";
+
+
+# Activate python components
+export CONFIGXOS_ACTIVE=true
+
+if [[ -h $0 ]]; then
+	xac_scripts_dir=$(dirname $(readlink $0));
+	if [[ "${xac_scripts_dir:0:1}" == "." ]]; then
+		xac_scripts_dir="$(dirname $0)/${xac_scripts_dir}";
+	fi
+else
+	xac_scripts_dir=$(dirname $0);
+fi
+
+exec_patch="${xac_scripts_dir}/patch_conf.py"
+exec_nodes="${xac_scripts_dir}/nodes.py"
+
+if [[ ! -x $exec_patch ]]; then
+	exec_patch=$(which patch_conf.py);
+fi
+
+if [[ ! -x $exec_nodes ]]; then
+	exec_nodes=$(which nodes.py);
+fi
+
+echo -e "patch_conf.py path: $exec_patch\c ";
+
+if [[ -z "$exec_patch" || ! -x "$exec_patch" ]]; then
+	service_error_msg "NOT FOUND";
+	error_echo "Could not find patch_conf.py! Please make sure it resides in the same directory as the";
+	error_echo "main script or in the search path and has the execute permission set on. Leaving...";
+	exit 1;
+else
+	service_success_msg "PRESENT";
+fi;
+
+echo -e "nodes.py path: $exec_nodes\c ";
+
+if [[ -z "$exec_nodes" || ! -x "$exec_nodes" ]]; then
+	service_error_msg "NOT FOUND";
+	error_echo "Could not find nodes.py! Please make sure it resides in the same directory as the";
+	error_echo "main script or in the search path and has the execute permission set on. Leaving...";
+	exit 1;
+else
+	service_success_msg "PRESENT";
+fi;
+
+exec_nodes="$exec_nodes --datapath $DATAPATH";
+# Set and create the backup directory
+backup_dir="$DATAPATH/backup-`date +%y%m%d-%H%M`";
+
+mkdir -p "$backup_dir";
+echo -e "Backup destination: $backup_dir\c ";
+
+if [ ! -d "$backup_dir" ]; then
+	service_error_msg "ERROR";
+	error_echo "The directory does not exist although it should have been created."
+	error_echo "Please check any error messages and try again. Leaving...";
+	exit 1;
+else
+	service_success_msg "OK";
+fi
+
+exec_patch="$exec_patch --backup-dir=$backup_dir";
+
+#variables that can be set in ./globaldefs
+# PROXY (HTTPPROXY, FTPPROXY, HTTPSPROXY)
+# NTP
+# SCALARISBOOTIP
+# OWBOOTSTRAPIP
+# RSSBOOTSTRAPIP
+# GLOBALVOPSIP
+# DIXIROOTHOST
+# DIXIROOTIP
+# DIRHOSTIP
+# MRCHOSTIP
+# OSDHOSTIP
+# USESSL
+
+#variables that can be set in ./localdefs
+# CONFIGUREVO
+# MYHOSTNAME
+# MYIP
+# MYINTERFACE
+# MYDISK
+# XOSDADDRESSEXTERNALADDRESS
+# XOSDADDRESSHOST
+# ADDRESSHOST
+# NOPROMPT
+
+
+. $globaldefs
+. $localdefs
+
+if [ X$MYIP == X ]; then
+	myinterface=$(/sbin/ip route | grep default | head -1 | sed -e "s/^.*[ \t][ \t]*dev[ \t][ \t]*\([^ \t]*\).*\$/\1/")
+	if [ X$myinterface != X ]; then
+		MYIP=$(/sbin/ip route | grep "[ \t][ \t]*dev[ \t][ \t]*$myinterface[ \t][ \t]*.*[ \t][ \t]*src[ \t][ \t]*" | head -1 | sed -e "s/^.*[ \t][ \t]*src[ \t][ \t]*\([0-9\.]*\)[ \t].*\$/\1/")
+		if [ X$MYIP == X ]; then
+			echo "could not detect the IP address"
+		else
+			[ X$MYINTERFACE == X ] && MYINTERFACE=$myinterface
+		fi
+	else
+		echo "could not detect the network interface"
+	fi
+fi
+
+if [ X$MYIP != X ] && [ X$MYHOSTNAME == X ]; then
+	MYHOSTNAME=$(host $MYIP | grep pointer | head -1 | sed -e "s/^.*pointer[ \t][ \t]*\([-a-zA-Z0-9\.]*\)\.[ \t]*\$/\1/")
+	if [ X$MYHOSTNAME == X ]; then
+		MYHOSTNAME=$(grep $MYIP /etc/hosts | head -1 | sed -e "s/^[ \t]*[0-9\.]*[ \t]*\([-0-9a-zA-Z\.]*\).*\$/\1/")
+	fi
+	if [ X$MYHOSTNAME == X ] && [ -e $CONF/etc/hosts ]; then
+		MYHOSTNAME=$(grep $MYIP $CONF/etc/hosts | head -1 | sed -e "s/^[ \t]*[0-9\.]*[ \t]*\([-0-9a-zA-Z\.]*\).*\$/\1/")
+	fi
+fi
+
+if [ X$XOSDADDRESSEXTERNALADDRESS == X ]; then
+	XOSDADDRESSEXTERNALADDRESS=$MYIP
+fi
+if [ X$XOSDADDRESSHOST == X ]; then
+	XOSDADDRESSHOST=$MYIP
+fi
+if [ X$ADDRESSHOST == X ]; then
+	ADDRESSHOST=$MYIP
+fi
+
+if [ X$MYHOSTNAME == X ]; then
+	error_echo "Error, could not determine the hostname. Exit"
+	exit 1;
+fi
+if [ X$MYIP == X ]; then
+	error_echo "Error, could not determine the IP adress of the node. Exit"
+	exit 1;
+fi
+log_echo "Configuring node with interface $MYINTERFACE, IP $MYIP, name $MYHOSTNAME"
+if [ X$PROXY != X ]; then
+	[ X$HTTPPROXY == X ] && HTTPPROXY=$PROXY
+	[ X$HTTPSPROXY == X ] && HTTPSPROXY=$PROXY
+	[ X$FTPPROXY == X ] && FTPPROXY=$PROXY
+fi
+
+[ X$HTTPPROXY == X ] && HTTPPROXY=noProxy
+[ X$HTTPSPROXY == X ] && HTTPSPROXY=noProxy
+[ X$FTPPROXY == X ] && FTPPROXY=noProxy
+
+if [ X$NOPROMPT == Xfalse ]; then
+	$urpmi_args="--wget";
+fi;
+
+#hostname
+[ $VERBOSE == true ] && log_echo "checking hostname"
+val=$(grep ^HOSTNAME $ETC/sysconfig/network |head -1 | sed -e "s/HOSTNAME=//")
+
+if [ $(echo $val | wc -w) != 1 ]; then
+	#something wrong in HOSTNAME or missing HOSTNAME
+	val=
+fi
+echo "  add HOSTNAME=$MYHOSTNAME to $ETC/sysconfig/network"
+if [ $DOIT == true ]; then
+	$exec_patch --params=HOSTNAME --values="$MYHOSTNAME" $ETC/sysconfig/network;
+fi;
+
+val=$(hostname)
+if [ X$val != X$MYHOSTNAME ]; then
+	echo "  set hostname to $MYHOSTNAME"
+	[ $DOIT == true ] && hostname $MYHOSTNAME
+fi
+
+if [ $CONFIGONLY == false ]; then
+	check_pkg_set_var cdaclient packagecdaclient;
+	check_pkg_set_var cdaserver packagecdaserver;
+	check_pkg_set_var tomcat5 packagetomcat;
+	check_pkg_set_var xtreemfs-server packagextreemfsserver;
+	check_pkg_set_var xtreemfs-client packagextreemfsclient;
+	check_pkg_set_var dixi-main packagediximain;
+	check_pkg_set_var dixi-services packagedixiservices;
+	check_pkg_set_var dixi-xati packagedixixati;
+	check_pkg_set_var dixi-cxati packagedixicxati;
+	check_pkg_set_var xos-amsd packagexosamsd;
+	check_pkg_set_var xtreemos-nss-pam packagensspam;
+	#check_pkg_set_var nss-xos packagenssxos;
+	check_pkg_set_var pam_xos packagepamxos;
+	check_pkg_set_var dixi-vom-rca-node packagercanode;
+	check_pkg_set_var dixi-vom-rca-server packagercaserver;
+	check_pkg_set_var dixi-vom-vops packagevomvops;
+	check_pkg_set_var dixi-aem-node packageaemnode;
+	check_pkg_set_var dixi-aem-server packageaemserver;
+	check_pkg_set_var scalaris packagescalaris;
+	check_pkg_set_var srds packagesrds;
+	check_pkg_set_var xtreemrss packagextreemrss;
+	check_pkg_set_var volife packagevolife;
+	check_pkg_set_var xvoms packagexvoms;
+	check_pkg_set_var openssh packageopenssh;
+	check_pkg_set_var xtreemos-openssh packagextreemosopenssh;
+	check_pkg_set_var xosaga packagexosaga;
+	check_pkg_set_var ntp packagentp;
+	check_pkg_set_var openssh-server packagesshd;
+	check_pkg_set_var openssh-clients packagesshclient;
+	check_pkg_set_var xtreemos-openssh-server packagexossshd;
+	check_pkg_set_var xtreemos-openssh-clients packagexossshclient;
+fi
+
+log_echo "Retrieving the list of services that will be run on this node..."
+services_to_run=$($exec_nodes $MYHOSTNAME)
+
+# find out what services we need to run on this node
+is_service_needed ntp run_ntp;
+is_service_needed openssh run_openssh;
+is_service_needed xtreemos-openssh run_xos_ssh;
+is_service_needed RCAServer run_rca_server;
+is_service_needed cdaserver run_cda_server;
+is_service_needed cdaclient run_cda_client;
+is_service_needed VOPS run_vops;
+is_service_needed nsspam run_nsspam;
+is_service_needed amsd run_amsd;
+is_service_needed xtreemfs-client run_xfs_client;
+is_service_needed CronDaemon run_cron_daemon;
+is_service_needed DaemonGlobal run_daemon_global;
+is_service_needed XMLExtractor run_xml_extractor;
+is_service_needed ExecMng run_exec_mng;
+is_service_needed JobDirectory run_job_directory;
+is_service_needed JobMng run_job_mng;
+is_service_needed RCAClient run_rca_client;
+is_service_needed ResAllocator run_res_allocator;
+is_service_needed ReservationManager run_reservation_manager;
+is_service_needed ResMng run_res_mng;
+is_service_needed ResourceMonitor run_resource_monitor;
+is_service_needed SRDSMng run_srds_mng;
+is_service_needed VOLife run_volife;
+is_service_needed xvoms run_xvoms;
+is_service_needed xtreemfs-dir run_xfs_dir;
+is_service_needed xtreemfs-mrc run_xfs_mrc;
+is_service_needed xtreemfs-osd run_xfs_osd;
+doineeddixi;
+
+update_proxy http_proxy  $HTTPPROXY
+update_proxy https_proxy $HTTPSPROXY
+update_proxy ftp_proxy   $FTPPROXY
+
+#try to configure ntp before accessing repositories
+configure_ntp
+
+if [ $CONFIGONLY == false ]; then
+	if [ X$SETMEDIA == Xtrue ]; then
+		[ $VERBOSE == true ] && log_echo "configuring repository"
+		#urpmi.removemedia -a
+		#urpmi.addmedia --wget --distrib --mirrorlist
+		sed -i -e "/SETMEDIA=/c SETMEDIA=false" $localdefs;
+		
+		#I need a decent file editor
+		install_pkg emacs-nox
+		install_pkg man
+	fi
+	urpmi $urpmi_args --auto-update
+fi
+
+
+#if [ -e $CONF/etc/hosts ]; then
+	log_echo "configuring $ETC/hosts"
+	if [ $DOIT == true ]; then
+		$exec_patch --input="$CONF/etc/hosts" --separator=' ' $ETC/hosts;
+	fi;
+#fi
+
+[ $VERBOSE == true ] && log_echo "check valid hostname in /etc/hosts"
+alias=$(echo $MYHOSTNAME | sed -e "s/\([-a-zA-Z0-9]*\).*\$/\1/")
+$exec_patch --separator=' ' --params="$MYIP" --values="$MYHOSTNAME $alias" $ETC/hosts;
+
+if [ -d $ETC/skel ]; then
+	[ $VERBOSE == true ] && log_echo "checking $ETC/skel"
+	if [ ! -d $ETC/skel/.ssh ]; then
+		echo "  creating  $ETC/skel/.ssh"
+		[ $DOIT == true ] && mkdir $ETC/skel/.ssh
+		[ $DOIT == true ] && chmod go-w $ETC/skel/.ssh
+	fi
+	if [ ! -e $ETC/skel/.ssh/config-xos ]; then
+		if [ -e $CONF/etc/skel/.ssh/config-xos ]; then
+			echo "  creating  $ETC/skel/.ssh/config-xos"
+			if [ $DOIT == true ]; then
+				cp $CONF/etc/skel/.ssh/config-xos $ETC/skel/.ssh/config-xos
+				chmod go-w $ETC/skel/.ssh/config-xos
+			fi
+		fi
+	fi
+	if [ ! -d $ETC/skel/.xos/truststore/certs ]; then
+		echo "  creating  path $ETC/skel/.xos/truststore/certs"
+		[ $DOIT == true ] && mkdir -p $ETC/skel/.xos/truststore/certs
+	fi
+	if [ ! -d $ETC/skel/.xos/truststore/private ]; then
+		echo "  creating  path $ETC/skel/.xos/truststore/private"
+		[ $DOIT == true ] && mkdir -p $ETC/skel/.xos/truststore/private
+	fi
+	if [ ! -e $ETC/skel/psx.jsdl ]; then
+		if [ -e $CONF/etc/skel/psx.jsdl ]; then
+			echo "  copying /etc/skel/psx.jsdl "
+			[ $DOIT == true ] && cp $CONF/etc/skel/psx.jsdl $ETC/skel/psx.jsdl
+		fi
+	fi
+fi
+
+if [ $packagentp == requested ]; then
+	log_echo "install package ntp"
+	if [ $CONFIGONLY == false ]; then
+		install_pkg_set_var ntp packagentp;
+	fi;
+	configure_ntp;
+fi
+
+kernelOK=true
+if [ $CONFIGONLY == false ]; then
+	[ $VERBOSE == true ] && log_echo "check the kernel"
+	install_pkg kernel-xos-smp-latest nocheck;
+	[ $(uname -r | grep xos | wc -w) == 0 ] && kernelOK=false
+fi
+
+if [ $kernelOK == false ]; then
+	error_echo "You are not running a valid XtreemOS kernel, please reboot and select an xos kernel";
+	exit 1;
+fi;
+
+if [ X$LINUXONLY == Xtrue ]; then
+	[ $kernelOK == false ] && error_echo "You are not running a valid XtreemOS kernel, please reboot and select an xos kernel"
+	exit
+fi
+
+#kernel connectors
+[ $VERBOSE == true ] && log_echo "checking kernel connector"
+errornokernelconfig=false
+kernelconnector=false
+if [ $DEBUG != true ]; then
+	if [ -e /boot/config-$(uname -r) ]; then
+		val=$(grep ^CONFIG_CONNECTOR /boot/config-$(uname -r)|head -1)
+		n=$(echo $val|wc -w)
+		if [ $n == 0 ]; then
+			echo "kernel connectors missing in the kernel"
+		else
+			n=$(echo $val|sed -e "s/^.*=\(.\)/\1/")
+			case X$n in
+				Xy)
+					echo " kernel connector OK"
+					kernelconnector=true
+					;;
+				Xm)
+					echo " kernel connector compiled as module"
+					;;
+				*)  error_echo " could not find any infos about kernel connectors";;
+			esac
+		fi
+	else
+		error_echo "no /boot/config-$(uname -r) file found: could not check if kernel connectors are present"
+		errornokernelconfig=true
+	fi
+fi
+
+if [ $CONFIGONLY == false ]; then
+	#    echo "stopping cdaserver  tomcat5 xtreemfs-osd xtreemfs-mrc xtreemfs-dir xosd"
+	[ $packagecdaserver == installed ] && echo "stopping cdaserver" && service cdaserver stop
+	[ $packagetomcat == installed ] && echo "stopping tomcat5" && service tomcat5 stop
+	[ $packagextreemfsserver == installed ] && echo "stopping xtreemfs-osd" && service xtreemfs-osd stop
+	[ $packagextreemfsserver == installed ] && echo "stopping xtreemfs-mrc" && service xtreemfs-mrc stop
+	[ $packagextreemfsserver == installed ] && echo "stopping xtreemfs-dir" && service xtreemfs-dir stop
+	[ $packagediximain == installed ] && echo "stopping xosd" && service xosd stop
+	[ $packagexosamsd == installed ] && echo "stopping amsd" && service xos-amsd stop
+fi
+
+#
+# Install all the packages needed by the services
+#
+install_or_req_pkg pam_xos packagepamxos;
+[ $run_openssh == true ] && install_or_req_pkg openssh packageopenssh;
+if [ $run_xos_ssh == true ]; then 
+	install_or_req_pkg xtreemos-openssh packagextreemosopenssh;
+	install_or_req_pkg xtreemos-openssh-server packagexossshd;
+	install_or_req_pkg xtreemos-openssh-clients packagexossshclient;
+fi
+[ $run_nsspam == true ] && install_or_req_pkg xtreemos-nss-pam packagensspam;
+[ $run_amsd == true ] && install_or_req_pkg xos-amsd packagexosamsd;
+[ $run_xfs_client == true ] && install_or_req_pkg xtreemfs-client packagextreemfsclient;
+if [ $run_dixi == true -o $run_xvoms ]; then
+	install_or_req_pkg java-1.6.0-openjdk packagejava;
+	install_or_req_pkg mysql packagemysql;
+fi
+if [ $run_dixi == true ]; then
+	install_or_req_pkg java-1.6.0-sun-devel packagejdk;
+	install_or_req_pkg tomcat5-servlet-2.4-api packagetomcatapi;
+	install_or_req_pkg xerces-j2 packagexerces;
+	install_or_req_pkg dixi-main packagediximain;
+	install_or_req_pkg dixi-main-jardeps packagediximainjardeps;
+	install_or_req_pkg dixi-xati packagedixixati;
+	install_or_req_pkg dixi-cxati packagedixicxati;
+	if [ $CONFIGONLY == false ]; then
+		service xosd start;
+		service xosd stop;
+	fi;
+fi;
+[ $run_exec_mng == true -o $run_res_allocator == true -o $run_resource_monitor == true -o $run_srds_mng == false ] && install_or_req_pkg dixi-aem-node packageaemnode;
+[ $run_srds_mng == true ] && install_or_req_pkg xtreemrss packagextreemrss;
+[ $run_job_directory == true -o $run_job_mng == true -o $run_rca_server == true -o $run_reservation_manager == true -o $run_res_mng == true ] && install_or_req_pkg dixi-aem-server packageaemserver;
+[ $run_rca_client == true ] && install_or_req_pkg dixi-vom-rca-node packagercanode;
+[ $run_vops == true ] && install_or_req_pkg dixi-vom-vops packagevomvops;
+if [ $run_volife == true ]; then
+	install_or_req_pkg tomcat5 packagetomcat;
+	install_or_req_pkg volife packagevolife;
+fi
+[ $run_xvoms == true ] && install_or_req_pkg xvoms packagexvoms;
+[ $run_cda_server == true ] && install_or_req_pkg cdaserver packagecdaserver;
+[ $run_cda_client == true ] && install_or_req_pkg cdaclient packagecdaclient;
+[ $run_xfs_dir == true -o $run_xfs_mrc == true -o $run_xfs_osd == true ] && install_or_req_pkg xtreemfs-server packagextreemfsserver;
+
+
+###                      ###
+#                          #
+#  XtreemOS Configuration  #
+#                          #
+###                      ###
+
+# open ssh -------------------------------------------
+if [ $run_openssh == true ]; then
+	sshdservice=true
+	#check that root has .ssh
+	[ $VERBOSE == true ] && log_echo "check $ROOT/.ssh directory"
+	if [ ! -d $ROOT/.ssh ]; then
+		echo "  create $ROOT/.ssh directory"
+		[ $DOIT == true ] && mkdir $ROOT/.ssh
+	fi
+	echo "patch $ROOT/.ssh/authorized_keys"
+	if [ $DOIT == true ]; then
+		$exec_patch --input="$CONF/root/.ssh/authorized_keys" --wholelines $ROOT/.ssh/authorized_keys;
+	fi;
+	echo "patch $ROOT/.ssh/authorized_keys2"
+	if [ $DOIT == true ]; then
+		$exec_patch --input="$CONF/root/.ssh/authorized_keys2" --wholelines $ROOT/.ssh/authorized_keys2;
+	fi;
+	
+	[ $VERBOSE == true ] && echo "check  login permission for root"
+	restart=false
+	if [ $DOIT == true ]; then
+		$exec_patch --separator=' ' --params=PermitRootLogin --values="without-password" $ETC/ssh/sshd_config;
+	fi;
+	echo "  restarting sshd";
+	if [ $DOIT == true ]; then
+		service sshd restart
+	fi;
+fi
+
+#ssh-xos --------------------------------------------
+if [ $run_xos_ssh == true ]; then
+	sshdxosservice=true
+	log_echo " patch $ROOT/.ssh/config-xos";
+	if [ $DOIT == true ]; then
+		$exec_patch --input="$CONF/root/.ssh/config-xos" --separator=' ' $ROOT/.ssh/config_xos;
+	fi;
+	
+	[ $VERBOSE == true ] && echo "check  login permission and X11 forwarding for root using ssh-xos"
+	if [ $DOIT == true ]; then
+		$exec_patch --separator=' ' --params=PermitRootLogin,X11Forwarding --values="yes","yes" $ETC/ssh/sshd_config-xos;
+	fi;
+	
+	echo "  restarting sshd-xos";
+	if [ $DOIT == true ]; then
+		service sshd-xos restart
+	fi;
+fi
+
+
+if [ -d $CONF/etc/xos/truststore/certs/ ]; then
+	[ $VERBOSE == true ] && log_echo "configuring certificates"
+	restart=false
+	#create these paths, if they are missing
+	if [ ! -d $ETC/xos/truststore/certs ] ; then
+		echo "  path $ETC/xos/truststore/certs missing"
+		[ $DOIT == true ] && mkdir -p $ETC/xos/truststore/certs/
+	fi
+	if [ ! -d $ETC/xos/truststore/private ] ; then
+		echo "  path $ETC/xos/truststore/private missing"
+		[ $DOIT == true ] && mkdir -p $ETC/xos/truststore/private
+	fi
+	#install certificates
+	place_cert xtreemos.crt
+	place_cert cda.crt
+	place_cert vops.crt
+	place_cert rcaserver.crt
+	if [ $DOIT == true -a -e $ETC/etc/xos/truststore/certs/cda.crt ]; then
+		chmod a+r $ETC/etc/xos/truststore/certs/cda.crt
+		chown cdauser:cdauser $ETC/etc/xos/truststore/certs/cda.crt
+	fi
+	[ $run_rca_server == true ] && place_key rcaserver.key
+	[ $run_cda_server == true ] && place_key cda.key
+	[ $run_vops == true ] && place_key vops.key
+	[ $DOIT == true ] && if [ -e $ETC/etc/xos/truststore/private/cda.key ]; then
+	chmod a+r $ETC/etc/xos/truststore/private/cda.key
+	fi
+	if [[ $DOIT == true ]]; then
+		c_rehash $ETC/xos/truststore/certs/;
+	fi
+fi
+
+if [ $run_amsd == true ]; then
+	amsdservice=true;
+fi
+
+[ $VERBOSE == true ] && log_echo "checking $ETC/xos/nss_pam/pam_xos.conf"
+if [ $DOIT == true ]; then
+	$exec_patch --separator=' ' --params=OpenAutoMount,VOCACertDir,VOCACertFile --values=yes,/etc/xos/truststore/certs,xtreemos.crt $ETC/xos/nss_pam/pam_xos.conf;
+fi;
+
+[ $VERBOSE == true ] && log_echo "configuring access to xtreemfs from nss_pam"
+#if [ -e $CONF/etc/xos/xtreemfs/default_mrc ];then
+	if [ X$MRCHOSTIP != X ]; then
+		echo "setting mrc.host to $MRCHOSTIP in $CONF/etc/xos/xtreemfs/default_mrc"
+		if [ $DOIT == true ]; then
+			$exec_patch --params=mrc.host --values=$MRCHOSTIP $CONF/etc/xos/xtreemfs/default_mrc;
+		fi;
+	fi
+	
+	if [ ! -d $ETC/xos/xtreemfs ]; then
+		echo "  create directory $ETC/xos/xtreemfs"
+		[ $DOIT == true ] && mkdir -p $ETC/xos/xtreemfs
+	fi
+	log_echo " patch $ETC/xos/xtreemfs/default_mrc";
+	if [ $DOIT == true ]; then
+		$exec_patch --input="$CONF/etc/xos/xtreemfs/default_mrc" $ETC/xos/xtreemfs/default_mrc;
+	fi;
+#fi
+
+#if [ -e $CONF/etc/xos/xtreemfs/default_dir ]; then
+	if [ X$DIRHOSTIP != X ]; then
+		echo "setting dir_service.host to $DIRHOSTIP in $CONF/etc/xos/xtreemfs/default_dir"
+		if [ $DOIT == true ]; then
+			$exec_patch --params=dir_service.host --values=$DIRHOSTIP $CONF/etc/xos/xtreemfs/default_dir;
+		fi;
+	fi
+	if [ X$MRCHOSTIP != X ]; then
+		echo "setting mrc.host to $MRCHOSTIP in $CONF/etc/xos/xtreemfs/default_dir"
+		if [ $DOIT == true ]; then
+			$exec_patch --params=mrc.host --values=$MRCHOSTIP $CONF/etc/xos/xtreemfs/default_dir;
+		fi;
+	fi
+	log_echo " patch $ETC/xos/xtreemfs/default_dir";
+	if [ $DOIT == true ]; then
+		$exec_patch --input="$CONF/etc/xos/xtreemfs/default_dir" $ETC/xos/xtreemfs/default_dir;
+	fi;
+#fi
+if [ $startamsd == stopped ]; then
+	startamsd=start
+else
+	startamsd=restart
+fi
+
+[ $VERBOSE == true ] && log_echo "configuring root access to the grid"
+if [ -d $ROOT/.xos/truststore/certs ]; then
+	if [ -e $CONF/root/.xos/truststore/certs/user.crt ];  then
+		if [ -e $ROOT/.xos/truststore/certs/user.crt ]; then
+			diff -q $ROOT/.xos/truststore/certs/user.crt $CONF/root/.xos/truststore/certs/user.crt >/dev/null 2>&1
+			if [ ! $? == 0 ]; then
+				echo "  install user.crt in  $ROOT/.xos/truststore/certs/user.crt"
+				[ $DOIT == true ] && cp $CONF/root/.xos/truststore/certs/user.crt $ROOT/.xos/truststore/certs/user.crt
+			fi
+		else
+			echo "  install user.crt in  $ROOT/.xos/truststore/certs/user.crt"
+			[ $DOIT == true ] && cp $CONF/root/.xos/truststore/certs/user.crt $ROOT/.xos/truststore/certs/user.crt
+		fi
+	fi
+	if [ -e $CONF/root/.xos/truststore/private/user.key ]; then
+		if [ -e $ROOT/.xos/truststore/private/user.key ]; then
+			diff -q $ROOT/.xos/truststore/private/user.key $CONF/root/.xos/truststore/private/user.key >/dev/null 2>&1
+			if [ ! $? == 0 ]; then
+				echo "  install user.key in  $ROOT/.xos/truststore/private/user.key"
+				[ $DOIT == true ] && cp $CONF/root/.xos/truststore/private/user.key $ROOT/.xos/truststore/private/user.key
+			fi
+		else
+			echo "  install user.key in  $ROOT/.xos/truststore/private/user.key"
+			[ $DOIT == true ] && cp $CONF/root/.xos/truststore/private/user.key $ROOT/.xos/truststore/private/user.key
+		fi
+	fi
+else
+	echo "  create  $ROOT/.xos/truststore/certs/ and $ROOT/.xos/truststore/private"
+	[ $DOIT == true ] && mkdir -p $ROOT/.xos/truststore/certs/
+	if [ -e $CONF/root/.xos/truststore/certs/user.crt ];  then
+		echo "  install user.crt in $ROOT/.xos/truststore/certs/"
+		[ $DOIT == true ] && cp $CONF/root/.xos/truststore/certs/user.crt $ROOT/.xos/truststore/certs/user.crt
+	fi
+	[ $DOIT == true ] && mkdir -p $ROOT/.xos/truststore/private
+	if [ -e $CONF/root/.xos/truststore/private/user.key ]; then
+		echo "  install user.key in $ROOT/.xos/truststore/private/"
+		[ $DOIT == true ] && cp $CONF/root/.xos/truststore/private/user.key $ROOT/.xos/truststore/private/user.key
+	fi
+fi
+
+
+if [ $CONFIGONLY == false ] && [ -e $ROOT/.xos/truststore/certs/user.crt ]; then
+	if [ -e $ROOT/.xos/truststore/certs/user.crt ]; then
+		echo "  check that certificates are OK"
+		openssl verify -CApath $ETC/xos/truststore/certs/ $ROOT/.xos/truststore/certs/user.crt
+	fi
+fi
+
+
+[ $VERBOSE == true ] && log_echo "configuring ssh-xos for root"
+if [ $DOIT == true ]; then
+	$exec_patch --separator=' ' --input="$CONF/root/.ssh/config-xos" $ROOT/.ssh/config-xos;
+fi;
+
+[ $VERBOSE == true ] && log_echo "configuring $ROOT/.xos/XATIConfig.conf and $ROOT/.xos/XATICAConfig.conf"
+if [ $DOIT == true ]; then
+	pars="";
+	vals="";
+	if [ "X$XOSDADDRESSHOST" != "X" ]; then
+		pars="xosdaddress.host";
+		vals="$XOSDADDRESSHOST";
+	fi
+	if [ "X$ADDRESSHOST" != "X" ]; then
+		if [ -n "$pars" ]; then
+			pars="$pars,address.host";
+			vals="$vals,$ADDRESSHOST";
+		else
+			pars="address.host";
+			vals="$ADDRESSHOST";
+		fi;
+	fi;
+	if [ -n "$pars" ]; then
+		$exec_patch --params=$pars --values=$vals $CONF/root/.xos/XATICAConfig.conf;
+	fi;
+	# autogenerate the XATICAConfig.conf file if it doesn't exist
+	if [[ ! -e $ROOT/.xos/XATICAConfig.conf ]]; then
+		xps -a 2>&1 < /dev/null > /dev/null;
+	fi
+	$exec_patch --input="$CONF/root/.xos/XATICAConfig.conf" $ROOT/.xos/XATICAConfig.conf;
+fi;
+
+if [ $DOIT == true ]; then
+	pars="";
+	vals="";
+	if [ X$MYINTERFACE != X ]; then
+		pars="networkInterface";
+		vals="$MYINTERFACE";
+	fi;
+	if [ "X$XOSDADDRESSHOST" != "X" ]; then
+		if [ -n "$pars" ]; then
+			pars="$pars,xosdaddress.host";
+			vals="$vals,$XOSDADDRESSHOST";
+		else
+			pars="xosdaddress.host";
+			vals="$XOSDADDRESSHOST";
+		fi
+	fi
+	if [ "X$ADDRESSHOST" != "X" ]; then
+		if [ -n "$pars" ]; then
+			pars="$pars,address.host";
+			vals="$vals,$ADDRESSHOST";
+		else
+			pars="address.host";
+			vals="$ADDRESSHOST";
+		fi;
+	fi
+	if [ "X$XOSDADDRESSEXTERNALADDRESS" != "X" ]; then
+		if [ -n "$pars" ]; then
+			pars="$pars,xosdaddress.externalAddress";
+			vals="$vals,$XOSDADDRESSEXTERNALADDRESS";
+		else
+			pars="xosdaddress.externalAddress";
+			vals="$XOSDADDRESSEXTERNALADDRESS";
+		fi;
+	fi;
+	if [ -n "$pars" ]; then
+		$exec_patch --params=$pars --values=$vals $CONF/root/.xos/XATIConfig.conf;
+	fi;
+	# auto generate the XATIConfig.conf file if it doesn't exist
+	if [[ ! -e $ROOT/.xos/XATIConfig.conf ]]; then
+		xconsole_dixi 2>&1 < /dev/null > /dev/null;
+	fi
+	$exec_patch --input="$CONF/root/.xos/XATIConfig.conf" $ROOT/.xos/XATIConfig.conf;
+fi;
+
+if [ $packagediximain == installed ]; then
+	[ $VERBOSE == true ] && log_echo "configuring dixi"
+	if [ $startxosd == stopped ]; then
+		startxosd=start
+	else
+		startxosd=restart
+	fi
+	if [ ! -d $ETC/xos/config/xosd_stages ]; then
+		echo "  create $ETC/xos/config/xosd_stages directory"
+		[ $DOIT == true ] && mkdir -p $ETC/xos/config/xosd_stages
+	fi
+	
+	if [ $DOIT == true ]; then
+		pars="";
+		vals="";
+		if [ X$MYINTERFACE != X ]; then
+			pars="networkInterface";
+			vals="$MYINTERFACE";
+		fi;
+		if [ "X$DIXIROOTHOST" != "X" ]; then
+			if [ -n "$pars" ]; then
+				pars="$pars,rootaddress.host";
+				vals="$vals,$DIXIROOTHOST";
+			else
+				pars="rootaddress.host";
+				vals="$DIXIROOTHOST";
+			fi
+		fi;
+		if [ "X$MYIP" != "X" ]; then
+			if [ -n "$pars" ]; then
+				pars="$pars,externalAddress";
+				vals="$vals,$MYIP";
+			else
+				pars="externalAddress";
+				vals="$MYIP";
+			fi;
+		fi
+		if [ "X$DIXIROOTIP" != "X" ]; then
+			if [ -n "$pars" ]; then
+				pars="$pars,rootaddress.externalAddress";
+				vals="$vals,$DIXIROOTIP";
+			else
+				pars="rootaddress.externalAddress";
+				vals="$DIXIROOTIP";
+			fi;
+		fi;
+		if [ -n "$pars" ]; then
+			$exec_patch --params=$pars --values=$vals $CONF/etc/xos/config/XOSdConfig.conf;
+		fi;
+		$exec_patch --input="$CONF/etc/xos/config/XOSdConfig.conf" $ETC/xos/config/XOSdConfig.conf;
+	fi;
+
+	if [ -d $ETC/xos/config/xosd_stages ]; then
+		#CronDaemon
+		log_echo "Configuring CronDaemon...";
+		updatestage CronDaemon $run_cron_daemon;
+		
+		#DaemonGlobal
+		log_echo "Configuring DaemonGlobal..."
+		updatestage DaemonGlobal $run_daemon_global;
+		
+		#XMLExtractor
+		log_echo "Configuring XMLExtractor...";
+		updatestage XMLExtractor $run_xml_extractor;
+		
+		#ExecMng
+		log_echo "Configuring ExecMng..."
+		updatestage ExecMng $run_exec_mng;
+		
+		#JobDirectory.
+		log_echo "Configuring JobDirectory...";
+		updatestage JobDirectory $run_job_directory;
+		if [ $run_job_directory == true -a $DOIT == true ]; then
+			$exec_patch --input="$CONF/etc/xos/config/JobDirectory.conf" $ETC/xos/config/JobDirectory.conf;
+		fi
+		
+		#JobMng.
+		log_echo "Configuring JobMng...";
+		updatestage JobMng $run_job_mng;
+		if [ $run_job_mng == true -a $DOIT == true ]; then
+			$exec_patch --input="$CONF/etc/xos/config/JobMng.conf" $ETC/xos/config/JobMng.conf;
+		fi
+		
+		#RCAServer.
+		log_echo "Configuring RCAServer...";
+		updatestage RCAServer $run_rca_server;
+		if [ $run_rca_server == true -a $DOIT == true ]; then
+			$exec_patch --input="$CONF/etc/xos/config/RCAServerConfig.conf" $ETC/xos/config/RCAServerConfig.conf;
+		fi
+		
+		#RCAClient.
+		log_echo "Configuring RCAClient...";
+		updatestage RCAClient $run_rca_client;
+		if [ $run_rca_client == true -a $DOIT == true ]; then
+			$exec_patch --input="$CONF/etc/xos/config/RCAClientConfig.conf" $ETC/xos/config/RCAClientConfig.conf;
+		fi
+		
+		#ResAllocator.
+		log_echo "Configuring ResAllocator...";
+		updatestage ResAllocator $run_res_allocator;
+		
+		#ReservationManager.
+		log_echo "Configuring ReservationManager...";
+		updatestage ReservationManager $run_reservation_manager;
+		
+		#ResMng.
+		log_echo "Configuring ResMng...";
+		updatestage ResMng $run_res_mng;
+		if [ $run_res_mng == true -a $DOIT == true ]; then
+			$exec_patch --input="$CONF/etc/xos/config/ResMng.conf" $ETC/xos/config/ResMng.conf;
+		fi
+		
+		#ResourceMonitor.
+		log_echo "Configuring ResourceMonitor...";
+		updatestage ResourceMonitor $run_resource_monitor;
+		if [ $run_resource_monitor == true -a $DOIT == true ]; then
+			$exec_patch --input="$CONF/etc/xos/config/ResourceMonitorConfig.conf" $ETC/xos/config/ResourceMonitorConfig.conf;
+		fi
+		
+		#SRDSMng.
+		log_echo "Configuring SRDSMng...";
+		updatestage SRDSMng $run_srds_mng;
+		if [ $run_srds_mng == true ]; then #################################
+			#scalaris config file should have been already installed by the scalaris package.
+			if [ ! -d $ETC/scalaris/ ]; then
+				#echo "  creating directory $ETC/scalaris
+				mkdir $ETC/scalaris
+			fi
+			val=$(grep '^{boot_host' $CONF/etc/scalaris/scalaris.cfg | head -1 | sed -e "s/{.*{{//" -e "s/}.*\$//")
+			scalarisbootip=$(echo $val | sed -e "s/,/./g")
+			if [ X$SCALARISBOOTIP != X ]; then
+				if [ X$SCALARISBOOTIP != X$scalarisbootip ]; then
+					val=$(echo $SCALARISBOOTIP | sed -e "s/\./,/g")
+					echo "  setting scalaris boot node to $val in $CONF/etc/scalaris/scalaris.cfg (from $scalarisbootip to $val)"
+					if [ $DOIT == true ]; then
+						sed -i -e "/^{boot_host/c {boot_host, {{${val}},14195,boot}}." $CONF/etc/scalaris/scalaris.cfg
+					fi
+					scalarisbootip=$SCALARISBOOTIP
+				fi
+			fi
+			#now check in scalaris.local.cfg
+			vall=$(grep '^{boot_host' $CONF/etc/scalaris/scalaris.local.cfg | head -1 | sed -e "s/{.*{{//" -e "s/}.*\$//")
+			if [ $val != $vall ]; then
+				echo "  setting scalaris boot node to $val in $CONF/etc/scalaris/scalaris.local.cfg"
+				if [ $DOIT == true ]; then
+					sed -i -e "/^{boot_host/c {boot_host, {{${val}},14195,boot}}." $CONF/etc/scalaris/scalaris.local.cfg
+				fi
+			fi
+			#echo "  scalaris boot node is \"$scalarisbootip\" in scalaris.cfg"
+			scalaris_node_type=;
+			if [ $scalarisbootip == $MYIP ]; then
+				[ $VERBOSE == true ] && echo "  setting scalaris boot node configuration in $CONF/etc/scalaris/scalaris.properties"
+				#forcefieldto $CONF/etc/scalaris/scalaris.properties scalaris.node  boot@localhost
+				scalaris_node_type="boot@localhost";
+			else
+				[ $VERBOSE == true ] && echo "  setting scalaris non boot node configuration in $CONF/etc/scalaris/scalaris.properties"
+				#forcefieldto $CONF/etc/scalaris/scalaris.properties scalaris.node node@localhost
+				scalaris_node_type="node@localhost";
+			fi
+			if [ $DOIT == true ]; then
+				$exec_patch --params="scalaris.node" --values="$scalaris_node_type" $CONF/etc/scalaris/scalaris.properties;
+				$exec_patch --separator=',' --input="$CONF/etc/scalaris/scalaris.cfg" $ETC/scalaris/scalaris.cfg;
+				$exec_patch --separator=',' --input="$CONF/etc/scalaris/scalaris.local.cfg" $ETC/scalaris/scalaris.local.cfg;
+				$exec_patch --input="$CONF/etc/scalaris/scalaris.properties" $ETC/scalaris/scalaris.properties;
+			fi;
+			
+			if [ ! -d $ETC/xos/config/Ads ]; then
+				echo "  create directory $ETC/xos/config/Ads/"
+				[ $DOIT == true ] && mkdir $ETC/xos/config/Ads/
+			fi
+			if [ $DOIT == true ]; then
+				$exec_patch --input="$CONF/etc/xos/config/Ads/srdslog.properties" $ETC/xos/config/Ads/srdslog.properties;
+			fi;
+			isscalarisbootnode=false;
+			if [ X$scalarisbootip == X$MYIP ] && [ X$MYIP != X ]; then
+				isscalarisbootnode=true;
+			fi
+			if [ $DOIT == true ]; then
+				$exec_patch --params=srds.configuration.device.ethernet,srds.configuration.device.disk,srds.configuration.bootstraping.isScalarisBootNode --values=$MYINTERFACE,$MYDISK,$isscalarisbootnode $CONF/etc/xos/config/Ads/srds.properties;
+				$exec_patch --input="$CONF/etc/xos/config/Ads/srds.properties" $ETC/xos/config/Ads/srds.properties;
+			fi;
+		fi
+
+		if [ ! -d $ETC/xos/config/OW ]; then
+			echo "  create directory $ETC/xos/config/OW/"
+			[ $DOIT == true ] && mkdir $ETC/xos/config/OW/
+		fi
+		if [ $DOIT == true ]; then
+			$exec_patch --input="$CONF/etc/xos/config/OW/owlogging.properties" $ETC/xos/config/OW/owlogging.properties;
+		fi;
+		
+		if [ X$OWBOOTSTRAPIP != X -a $DOIT == true ]; then
+			$exec_patch --params=dht.BootstrapHost --values=$OWBOOTSTRAPIP $CONF/etc/xos/config/OW/OWconfig.cfg;
+		fi
+		if [ $DOIT == true ]; then
+			$exec_patch --input="$CONF/etc/xos/config/OW/OWconfig.cfg" $ETC/xos/config/OW/OWconfig.cfg;
+		fi;
+		
+		if [ ! -d $ETC/xos/config/Rss ]; then
+			echo "  create directory $ETC/xos/config/Rss/"
+			[ $DOIT == true ] && mkdir $ETC/xos/config/Rss/
+		fi
+		if [ $DOIT == true ]; then
+			pars="";
+			vals="";
+			if [ X$MYINTERFACE != X ]; then
+				pars="network_interface";
+				vals="$MYINTERFACE";
+			fi;
+			if [ X$MYDISK != X ]; then
+				if [ -n $pars ]; then
+					pars="$pars,disk_device";
+					vals="$vals,$MYDISK";
+				else
+					pars="disk_device"
+					vals="$MYDISK";
+				fi;
+			fi;
+			if [ X$RSSBOOTSTRAPIP != X ]; then
+				if [ -n $pars ]; then
+					pars="$pars,bootstrap_address";
+					vals="$vals,$RSSBOOTSTRAPIP";
+				else
+					pars="bootstrap_address"
+					vals="$RSSBOOTSTRAPIP";
+				fi;
+			fi;
+			if [ -n $pars ]; then
+				$exec_patch --params=$pars --values=$vals $CONF/etc/xos/config/Rss/config.cfg;
+			fi;
+			$exec_patch --input="$CONF/etc/xos/config/Rss/config.cfg" $ETC/xos/config/Rss/config.cfg;
+		fi;
+		
+	fi
+	
+	#VOPS.
+	log_echo "Configuring VOPS...";
+	updatestage VOPS $run_vops;
+	
+	globalvopsip=$GLOBALVOPSIP;
+	if [ X$GLOBALVOPSIP != X -a $DOIT == true ]; then
+		$exec_patch --params=globalVOPS.host --values=$GLOBALVOPSIP $CONF/etc/xos/config/VOPSConfig.conf;
+	fi;
+	if [ $run_vops == true ]; then
+		if [ X$MYIP != X ]; then
+			if [ X$MYIP != X$globalvopsip ]; then
+				error_echo "possible bug in VOPS: globalVOPS.host is $globalvopsip and should be $MYIP in $CONF/etc/xos/config/VOPSConfig.conf"
+			fi
+		fi
+	else
+		if [ X$MYIP != X ]; then
+			if [ X$MYIP == $globalvopsip ]; then
+				error_echo "possible bug in VOPS: globalVOPS.host should not be $MYIP in $CONF/etc/xos/config/VOPSConfig.conf"
+			fi
+			if [ $DOIT == true ]; then
+				$exec_patch --input="$CONF/etc/xos/config/VOPSConfig.conf" $ETC/xos/config/VOPSConfig.conf;
+			fi;
+		fi
+	fi
+fi
+
+#VOLife
+log_echo "Configuring VOLife...";
+if [ $run_volife == true ]; then
+	tomcatservice=true
+	if [ $starttomcat == stopped ]; then
+		starttomcat=start
+	else
+		starttomcat=restart
+	fi
+	if [ ! -d $ETC/xos/config/volife ]; then
+		echo "  create $ETC/xos/config/volife/ directory"
+		[ $DOIT == true ] && mkdir -p $ETC/xos/config/volife/volife
+	fi
+	if [ $DOIT == true ]; then
+		$exec_patch --input="$CONF/etc/xos/config/volife/volife.properties" $ETC/xos/config/volife/volife.properties;
+	fi;
+	
+	#correct a possible error in /etc/init.d/tomcat5
+	if [ -e $ETC/init.d/tomcat5 ]; then
+		if [ $(grep "^# Default-Start" $ETC/init.d/tomcat5 | sed -e "s/^# Default-Start//" | wc -w) == 0 ]; then
+			echo "  update start and stop runlevels of tomcat5"
+			[ $DOIT == true ] && sed -i -e "/^# Default-Start/c # Default-Start: 3 4 5" $ETC/init.d/tomcat5
+			[ $DOIT == true ] && sed -i -e "/^# Default-Stop/c # Default-Stop: 0 1 2 6" $ETC/init.d/tomcat5
+			if [ $CONFIGONLY == false ]
+				then
+				chkconfig --del tomcat5
+				chkconfig --add tomcat5
+			fi
+		fi
+	fi
+fi
+
+#xvoms
+log_echo "Configuring xvoms...";
+if [ $run_xvoms == true ]; then
+	mysqldservice=true
+	if [ ! -d $ETC/xos/config/xvoms/ ]; then
+		echo "create $ETC/xos/config/xvoms/ directory"
+		[ $DOIT == true ] && mkdir -p $ETC/xos/config/xvoms/
+	fi
+	if [ $DOIT == true ]; then
+		$exec_patch --separator='>' --input="$CONF/etc/xos/config/xvoms/hibernate.cfg.xml" $ETC/xos/config/xvoms/hibernate.cfg.xml;
+	fi;
+	if [ $DOIT == true ]; then
+		$exec_patch --params=mrc.host --values=$MRCHOSTIP $CONF/etc/xos/config/xvoms/MRC.properties;
+		$exec_patch --input="$CONF/etc/xos/config/xvoms/MRC.properties" $ETC/xos/config/xvoms/MRC.properties;
+	fi;
+
+	#now check that the database has been initialised
+	if [ ! -d /etc/xos/config/xvoms/data ]; then
+		isOK=true
+		if [ -d /usr/share/xvoms/data ]; then
+			echo "copy /usr/share/xvoms/data to /etc/xos/config/xvoms/data"
+			[ $DOIT == true ] && cp -pr /usr/share/xvoms/data /etc/xos/config/xvoms/
+		else
+			echo "no directory /usr/share/xvoms/data"
+			isOK=false
+		fi
+		if [ -d /usr/share/xvoms/scripts ]; then
+			echo "copy /usr/share/xvoms/scripts to /etc/xos/config/xvoms/scripts"
+			[ $DOIT == true ] && cp -pr /usr/share/xvoms/scripts /etc/xos/config/xvoms/
+		else
+			echo "no directory /usr/share/xvoms/data"
+			isOK=false
+		fi
+		if [ $isOK == true -a $DOIT == true ]; then
+			echo -e "checking whether mysqld is running... \c ";
+			service mysqld status > /dev/null;
+			if [ $? -ne 0 ]; then
+				service_error_msg "NO";
+				echo "Starting the service...";
+				service mysqld start;
+			else
+				service_success_msg "YES";
+			fi;
+			echo "/usr/share/xvoms/bin/xvoms_init.sh"
+			/usr/share/xvoms/bin/xvoms_init.sh
+		fi
+	fi
+fi
+
+#cdaserver
+log_echo "Configuring cdaserver...";
+if [ $run_cda_server == true ]; then
+	cdaserverservice=true
+	if [ $startcdaserver == stopped ]; then
+		startcdaserver=start
+	else
+		startcdaserver=restart
+	fi
+	if [ $DOIT == true ]; then
+		$exec_patch --input="$CONF/etc/xos/config/cdaserver/cdaserver.properties" $ETC/xos/config/cdaserver/cdaserver.properties;
+	fi;
+	if [ $CONFIGONLY == false ]; then
+		chkconfig --add cdaserver
+	fi
+fi
+
+#xtreemfs-dir
+log_echo "Configuring xtreemfs-dir... ";
+if [ $run_xfs_dir == true ]; then
+	xtreemfsdirservice=true
+	if [ $startxtreemfsdir == stopped ]; then
+		startxtreemfsdir=start
+	else
+		startxtreemfsdir=restart
+	fi
+	if [ $DOIT == true ]; then
+		$exec_patch --input="$CONF/etc/xos/xtreemfs/dirconfig.properties" $ETC/xos/xtreemfs/dirconfig.properties;
+	fi;
+	if [ $DOIT == true ]; then
+		#check babudb.baseDir
+		signature=$(grep ^babudb.baseDir $ETC/xos/xtreemfs/dirconfig.properties | head -1 | sed -e "s/^.*=//")
+		if [[ "X$signature" != "X/var/lib/xtreemfs/dir/database" && -n "$signature" ]]; then
+			#need to check that the babudb.baseDir is OK
+			if [ ! -e "$signature" ]; then
+				echo "  creating path $signature for xtreemfs"
+				if [ $DOIT == true ]; then
+					if [ $CONFIGONLY == false ]; then
+						mkdir -p $signature
+						chown xtreemfs:xtreemfs  $signature
+					fi
+				fi
+			fi
+		fi
+		
+	fi
+fi
+
+#xtreemfs-mrc
+log_echo "Configuring xtreemfs-mrc...";
+if [ $run_xfs_mrc == true ]; then
+	xtreemfsmrcservice=true
+	if [ $startxtreemfsmrc == stopped ]; then
+		startxtreemfsmrc=start
+	else
+		startxtreemfsmrc=restart
+	fi
+	if [ -e $CONF/etc/xos/xtreemfs/mrcconfig.properties ]; then
+		if [ X$DIRHOSTIP != X ]; then
+			if [ $DOIT == true ]; then
+				$exec_patch --params=dir_service.host --values=$DIRHOSTIP $CONF/etc/xos/xtreemfs/mrcconfig.properties;
+			fi;
+		fi
+		if [ $DOIT == true ]; then
+			$exec_patch --input="$CONF/etc/xos/xtreemfs/mrcconfig.properties" $ETC/xos/xtreemfs/mrcconfig.properties;
+		fi;
+		if [ $DOIT == true ]; then
+			#check babudb.baseDir
+			signature=$(grep ^babudb.baseDir $ETC/xos/xtreemfs/mrcconfig.properties | head -1 | sed -e "s/^.*=//")
+			if [[ "X$signature" != "X/var/lib/xtreemfs/dir/database" && -n "$signature" ]]; then
+				#need to check that the babudb.baseDir is OK
+				if [ ! -e "$signature" ]; then
+					echo "  creating path $signature for xtreemfs"
+					if [ $DOIT == true ]; then
+						if [ $CONFIGONLY == false ]; then
+							mkdir -p $signature
+							chown xtreemfs:xtreemfs  $signature
+						fi
+					fi
+				fi
+			fi
+		fi
+	fi
+fi
+
+#xtreemfs-osd
+log_echo "Configuring xtreemfs-osd";
+if [ $run_xfs_osd == true ]; then
+	xtreemfsosdservice=true
+	if [ $startxtreemfsosd == stopped ]; then
+		startxtreemfsosd=start
+	else
+		startxtreemfsosd=restart
+	fi
+	if [ -e $CONF/etc/xos/xtreemfs/osdconfig.properties ]; then
+		if [ X$DIRHOSTIP != X ]; then
+			if [ $DOIT == true ]; then
+				$exec_patch --params=dir_service.host --values=$DIRHOSTIP $CONF/etc/xos/xtreemfs/osdconfig.properties;
+			fi;
+		fi
+		if [ $DOIT == true ]; then
+			$exec_patch --input="$CONF/etc/xos/xtreemfs/osdconfig.properties" $ETC/xos/xtreemfs/osdconfig.properties;
+		fi;
+		if [ $DOIT == true ]; then
+			#check object_dir
+			signature=$(grep ^object_dir $ETC/xos/xtreemfs/osdconfig.properties | head -1 | sed -e "s/^.*=//")
+			if [[ "X$signature" != "X/var/lib/xtreemfs/objs/" && -n "$signature" ]]; then
+				#need to check that the object_dir is OK
+				if [ ! -e "$signature" ]; then
+					echo "  creating path $signature for xtreemfs"
+					if [ $DOIT == true ]; then
+						if [ $CONFIGONLY == false ]; then
+							mkdir -p $signature
+							chown xtreemfs:xtreemfs  $signature
+						fi
+					fi
+				fi
+			fi
+		fi
+	fi
+fi
+
+if [ x$USESSL != x -a $DOIT == true ]; then
+	$exec_patch --nobackup --params=useSSL --values=$USESSL $CONF/etc/xos/config/XOSdConfig.conf;
+	$exec_patch --nobackup --params=useSSL --values=$USESSL $CONF/root/.xos/XATICAConfig.conf;
+	$exec_patch --nobackup --params=useSSL --values=$USESSL $CONF/root/.xos/XATIConfig.conf;
+	$exec_patch --nobackup --params=useSSL --values=$USESSL $ETC/xos/config/XOSdConfig.conf;
+	$exec_patch --nobackup --params=useSSL --values=$USESSL $ROOT/.xos/XATICAConfig.conf;
+	$exec_patch --nobackup --params=useSSL --values=$USESSL $ROOT/.xos/XATIConfig.conf;
+fi
+
+
+
+[ $VERBOSE == true ] && log_echo "restarting xtreemos services"
+sleepxfs=0
+sleepamsd=0
+sleepxosd=0
+
+if [ $startcdaserver == start -o $startcdaserver == restart ]; then
+	echo "  $startcdaserver cdaserver";
+	if [ $DOIT == true -a $CONFIGONLY == false ]; then
+		echo "  $startcdaserver cdaserver";
+		service cdaserver $startcdaserver;
+	fi;
+fi
+if [ $starttomcat == start -o $starttomcat == restart ]; then
+	echo "  $starttomcat tomcat";
+	if [ $DOIT == true -a $CONFIGONLY == false ]; then
+		echo "  $starttomcat tomcat5";
+		service tomcat5 $starttomcat;
+	fi;
+fi
+
+if [ $startxtreemfsdir == start -o $startxtreemfsdir == restart ]; then
+	echo "  $startxtreemfsdir xtreemfs-dir";
+	if [ $DOIT == true -a $CONFIGONLY == false ]; then
+		echo "  $startxtreemfsdir xtreemfs-dir";
+		sleep $sleepxfs;
+		service xtreemfs-dir $startxtreemfsdir;
+		sleepxfs=1;
+	fi;
+fi
+
+if [ $startxtreemfsmrc == start -o $startxtreemfsmrc == restart ]; then
+	echo "  $startxtreemfsmrc xtreemfs-mrc";
+	if [ $DOIT == true -a $CONFIGONLY == false ]; then
+		echo "  $startxtreemfsmrc xtreemfs-mrc";
+		sleep $sleepxfs;
+		service xtreemfs-mrc $startxtreemfsmrc;
+		sleepxfs=1;
+	fi;
+fi
+
+if [ $startxtreemfsosd == start -o $startxtreemfsosd == restart ]; then
+	echo "  $startxtreemfsosd xtreemfs-osd";
+	if [ $DOIT == true -a $CONFIGONLY == false ]; then
+		echo "  $startxtreemfsosd xtreemfs-osd";
+		sleep $sleepxfs;
+		service xtreemfs-osd $startxtreemfsosd;
+		sleepxfs=0;
+	fi;
+fi
+
+if [ $startxosd == start -o $startxosd == restart ]; then
+	echo "  $startxosd xosd";
+	if [ $DOIT == true -a $CONFIGONLY == false ]; then
+		echo " $startxosd  xosd";
+		service -f gmond restart;
+		service -f xosd $startxosd;
+		sleepxosd=5;
+	fi;
+fi
+
+if [ $startamsd == start -o $startamsd == restart ]; then
+	if [ $amsdservice == true ]; then
+		echo "  $startamsd amsd";
+		if [ $DOIT == true -a $CONFIGONLY == false ]; then
+			echo " $startamsd  xos-amsd";
+			service xos-amsd $startamsd;
+			sleepamsd=4;
+		fi;
+	fi
+fi
+
+[ $VERBOSE == true ] && log_echo "configure services started at boot time"
+configure_init xos-amsd $amsdservice
+configure_init sshd     $sshdservice
+configure_init ntpd     $ntpdservice
+configure_init sshd-xos $sshdxosservice
+configure_init xosd     $xosdservice
+configure_init tomcat5  $tomcatservice
+configure_init mysqld   $mysqldservice
+configure_init cdaserver $cdaserverservice
+configure_init xtreemfs-dir $xtreemfsdirservice
+configure_init xtreemfs-mrc $xtreemfsmrcservice
+configure_init xtreemfs-osd $xtreemfsosdservice
+
+if [ X$CONFIGUREVO != X ] && [ -e $ROOT/.xos/truststore/certs/user.crt ]; then
+	log_echo "configuring policies"
+	if [ $CONFIGONLY == false ]
+		then
+		#it seems that we need to wait for some time before doing this
+		sleep $sleepamsd
+		sleepamsd=0
+		xos-policy-admin-chk -pem $ROOT/.xos/truststore/certs/user.crt
+		if [ $? != 0 ]; then
+			echo "  configure policy admin"
+			xos-policy-admin-am  -vo $CONFIGUREVO  --force
+			xos-policy-admin-gm  -vo $CONFIGUREVO  --force
+			(cd $ETC/xos/nss_pam; tar zcf mapdata-$(date +"%s").tgz mapdata)
+			echo "  policy admin configured"
+			xos-policy-admin-chk -pem $ROOT/.xos/truststore/certs/user.crt
+			if [ $? != 0 ]; then
+				error_echo "problem in xos-policy-admin configuration. Please check."
+			fi
+		fi
+	fi
+fi
+
+if [[ $DOIT == true && $CONFIGONLY == false ]]; then
+	service xosd stop;
+	sleep 3;
+	for xdpid in $(lsof -i tcp:60000 2>&1 | grep -iv "pid user" | awk '{print $2}' | sort -u); do
+		kill -9 $xdpid;
+	done
+	sleep 2;
+	service xosd start;
+	sleep 3;
+fi
+
+goodluck=false
+
+if [ $CONFIGONLY == false ]; then
+	if [ $packagercanode == installed ] && [ $packagediximain == installed ]; then
+		val=$(rca_list_registered | grep ResourceID | grep "${MYIP}:60000" | wc -w)
+		if [ $val != 0 ]; then
+			log_echo "this already has a resource certificate. No need for rca_apply"
+			goodluck=true
+		else
+			log_echo "apply for a resource certificate"
+			sleep $sleepxosd
+			sleepxosd=1
+			rca_request
+			rca_apply
+			if [ $run_rca_server == true ]; then
+				echo " I am running the RCA server, confirm rca_apply"
+				sleep $sleepxosd
+				rca_list_pending
+				echo "rca_confirm ${MYIP}:60000"
+				sleep $sleepxosd
+				rca_confirm ${MYIP}:60000
+				sleep $sleepxosd
+				rca_list_pending
+				rca_list_registered
+				rca_request
+				if [ ! -d /etc/xos/truststore/certs/incoming ]; then
+					echo " creating directory /etc/xos/truststore/certs/incoming"
+					mkdir -p /etc/xos/truststore/certs/incoming
+				fi
+				chmod 777 /etc/xos/truststore/certs/incoming
+				if [ X$CONFIGUREVO != X ]; then
+					echo "request certificate for vo $CONFIGUREVO"
+					echo "dixi_test -RCA avo $CONFIGUREVO ${MYIP}:60000"
+					sleep $sleepxosd
+					dixi_test -RCA avo $CONFIGUREVO ${MYIP}:60000
+					echo "cp /etc/xos/truststore/certs/incoming/attrcert${CONFIGUREVO}ext.crt /etc/xos/truststore/certs/"
+					cp /etc/xos/truststore/certs/incoming/attrcert${CONFIGUREVO}ext.crt /etc/xos/truststore/certs/
+				fi
+				gooluck=true
+				
+			else
+				log_echo "configuration of this node is suspended: \n
+				run script confirmResource on the rca node \n
+				and terminate the configuration with script finishConfig on this node"
+				log_echo "note: a rca_apply request has already been issued. First check with
+				rca_list_pending that it has been recorded. If the list is empty
+				execute rca_apply before running confirmResource on the rca node"
+				
+			fi
+		fi
+	fi
+fi
+
+if [ $kernelconnector != true ]; then
+	if [ $errornokernelconfig == true ]; then
+		log_echo "Kernel connectors could not be checked, check their presence manually
+		or install the /boot/config-$(uname -r) file"
+	else
+		error_echo "Current kernel not compiled with kernel connectors compiled in (not modules)"
+		error_echo "Please, select/install another kernel"
+	fi
+else
+	[ $kernelOK == false ] && error_echo "You are not running a valid XtreemOS kernel, please reboot and select an xos kernel"
+fi
+
+log_echo "xosautoconfig finished its job. To review all changed configuration files";
+log_echo "head out to $backup_dir";
+
+if [[ $goodluck == true ]]; then
+	echo "     good luck ;-)";
+fi
+
+
+exit 0;
