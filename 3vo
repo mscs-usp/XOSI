@@ -78,6 +78,7 @@ ssh-xos `hostname`
 
 
 
+
 [root@paraxos5 ~]# service xosd stop
 Stopping xosd:                                                  [  OK  ]
 
