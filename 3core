@@ -4,9 +4,10 @@ urpmi.addmedia cd2 /mnt/2009/cd2/i586/media/main2/
 urpmi.addmedia dvd /mnt/2009/dvd/i586/media/main/
 urpmi.addmedia xos /mnt/xos/i586/media/main/
 
-mv /usr/sbin/xosautoconfig /usr/sbin/xosautoconfig.old
-cp ./xosautoconfig /usr/sbin/xosautoconfig
-chmod +x /usr/sbin/xosautoconfig
+mv /usr/lib/xos/xosautoconfig/xosautoconfig /usr/lib/xos/xosautoconfig/xosautoconfig.old
+cd /root/XOSI
+cp ./xosautoconfig /usr/lib/xos/xosautoconfig
+chmod +x /usr/lib/xos/xosautoconfig/xosautoconfig
 
 cd /etc/xos/xosautoconfig/
 xosautoconfig --setmedia
