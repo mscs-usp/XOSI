@@ -1,0 +1,20 @@
+
+
+pour Xtreemfs, kill gconfd et tous les process java
+
+dans /etc/xos/config/xosd_stages, etat des services
+
+console web
+
+http://localhost:30638   xtreemfs 
+
+http://localhost:9000   srds
+
+http://localhost:3998   orverlay
+
+
+
+
+if ssh-xos don't work, asking for your regular password,
+check in the file ~/.ssh/config_xos   you have permission on all
+the files!
