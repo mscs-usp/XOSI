@@ -20,7 +20,10 @@ alias gt="echo git branch --track franck origin/franck"
 alias gp="git push"
 
 git_commit_and_push() { 
+   mkdir -f ~/bof
+   mv ~/.ssh/config* ~/.ssh/bof
    git commit -a -m "$1"; git push;
+   mv ~/.ssh/bof/* ~/.ssh/
 }
 
 git_commit() { 
