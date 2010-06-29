@@ -265,7 +265,7 @@
      (goto-char (point-min)) (query-replace "Ù" "&Ugrave;" nil nil nil)
      (goto-char (point-min)) (query-replace "Ú" "&Uacute;" nil nil nil)
      (goto-char (point-min)) (query-replace "Û" "&Ucirc;" nil nil nil)
-     (goto-char (point-min)) (query-replace "Ü" "&Uuml;" nil nil nil)k
+     (goto-char (point-min)) (query-replace "Ü" "&Uuml;" nil nil nil)
      (goto-char (point-min)) (query-replace "Ý" "&Yacute;" nil nil nil)
      (goto-char (point-min)) (query-replace "Þ" "&THORN;" nil nil nil)
      (goto-char (point-min)) (query-replace "ß" "&szlig;" nil nil nil)
