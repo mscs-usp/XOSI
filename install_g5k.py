@@ -86,6 +86,10 @@ for n in alias:
      urpmi emacs --auto
      urpmi x11 --auto
      urpmi expect --auto
+     urpmi gfortran --auto
+     urpmi gnuplot --auto
+     urpmi gcc-c++
+     urpmi rsh
 git clone ssh://skortas@frontend/home/skortas/XOSI
 git clone ssh://skortas@frontend/home/skortas/XOST
 git clone ssh://skortas@frontend/home/skortas/XOSO
@@ -94,6 +98,15 @@ git clone ssh://skortas@frontend/home/skortas/XOSZ
      ln -s XOSI/CONF/bashrc-xos .bashrc-xos
      echo "export XOSHOST=__ALIAS__" >> .bashrc
      echo ". /root/.bashrc-xos" >> .bashrc
+     cd XOSZ
+     tar xvfz lam-6.5.9.tar.gz
+     cd lam-6.5.9
+     ./configure --with-fc=gfortran
+     make -j 4
+     make install
+     cd ../../SRC
+     make -f Makefile.mpi clean
+     make -f Makefile.mpi
      
      """
   cmd = str.replace(cmd,"__HOST__",n)

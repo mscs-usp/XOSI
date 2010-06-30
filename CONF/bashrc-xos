@@ -1,1 +1,36 @@
     PS1="[\u@\h $XOSHOST \W]\\$ "
+
+alias ga="gitk --all &"
+alias gg="git gui & " 
+alias gm="git merge " 
+alias go="git checkout "
+alias gi="git commit "
+alias gb="git branch"
+alias gba="git branch -all"
+alias grh="git reset --hard"
+alias grs="git reset --soft"
+alias gd="git diff"
+alias gc="git clean "
+alias gs="git stash "
+alias gt="echo git branch --track franck origin/franck"
+alias gp="git push"
+
+git_commit_and_push() { 
+   git commit -a -m "$1"; git push;
+}
+
+git_commit() { 
+   git commit -a -m "$1";
+}
+
+git_rebase() { 
+   git rebase -i HEAD~$1;
+}
+
+alias gic=git_commit
+alias gip=git_commit_and_push
+
+alias grb=git_rebase
+alias grbc="git rebase --continue"
+
+
