@@ -78,41 +78,60 @@ for n in alias:
      ssh root@__HOST__ hostname __HOST__
      scp ~/.ssh/id_rsa root@__HOST__:.ssh/
      scp ~/.ssh/id_rsa_sk.pub root@__HOST__:.ssh/
+     scp compile.sh root@__HOST__:. 
      scp cmd.sh root@__HOST__:. """
 
   order = """
-     cat .ssh/id_rsa_sk.pub >> .ssh/authorized_keys
-     urpmi git --auto
-     urpmi emacs --auto
-     urpmi x11 --auto
-     urpmi expect --auto
-     urpmi gfortran --auto
-     urpmi gnuplot --auto
-     urpmi gcc-c++
-     urpmi rsh
+cat .ssh/id_rsa_sk.pub >> .ssh/authorized_keys
+urpmi git --auto
+urpmi emacs --auto
+urpmi x11 --auto
+urpmi expect --auto
+urpmi gfortran --auto
+urpmi openmpi --auto
+urpmi gnuplot --auto
+urpmi gcc-c++ --auto
+urpmi rsh --auto
+
+adduser sk
+cd /home/sk
+git clone ssh://skortas@frontend/home/skortas/MAESTRO
 git clone ssh://skortas@frontend/home/skortas/XOSI
 git clone ssh://skortas@frontend/home/skortas/XOST
 git clone ssh://skortas@frontend/home/skortas/XOSO
 git clone ssh://skortas@frontend/home/skortas/XOSZ
-     ln -s XOSI/CONF/emacs.g5k .emacs
-     ln -s XOSI/CONF/bashrc-xos .bashrc-xos
-     echo "export XOSHOST=__ALIAS__" >> .bashrc
-     echo ". /root/.bashrc-xos" >> .bashrc
-     cd XOSZ
-     tar xvfz lam-6.5.9.tar.gz
-     cd lam-6.5.9
-     ./configure --with-fc=gfortran
-     make -j 4
-     make install
-     cd ../../SRC
-     make -f Makefile.mpi clean
-     make -f Makefile.mpi
-     
+cd
+\\ln -s /home/sk/XOSI/CONF/emacs.g5k .emacs
+\\ln -s /home/sk/XOSI/CONF/bashrc-xos .bashrc-xos
+echo "export XOSHOST=__ALIAS__" >> .bashrc
+echo ". /root/.bashrc-xos" >> .bashrc
+
+cd /home/sk
+\\ln -s /home/sk/XOSI/CONF/emacs.g5k .emacs
+\\ln -s /home/sk/XOSI/CONF/bashrc-xos .bashrc-xos
+echo "export XOSHOST=__ALIAS__" >> .bashrc
+echo ". /home/sk/.bashrc-xos" >> .bashrc
+
+cp -R /root/.ssh .
+
+cd /home
+chown -R sk.sk sk     
      """
+
+  compile = """
+cd /home/sk/XOSZ/SRC
+make -f Makefile.mpi clean
+make -f Makefile.mpi
+   """
+
   cmd = str.replace(cmd,"__HOST__",n)
   cmd = str.replace(cmd,"__ALIAS__",alias[n])
   fic = open("cmd.sh","w")
   fic.write(order)
+  fic.close()
+
+  fic = open("compile.sh","w")
+  fic.write(compile)
   fic.close()
 
    
