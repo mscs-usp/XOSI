@@ -4,6 +4,7 @@ import socket
 import sys
 
 debug = False
+debug=1
 
 # read nodes from OAR env
 
@@ -70,89 +71,70 @@ def writeFile(filename,s,**rep):
   f.write("\n")
   f.close()
 
-globalDefs = """#global definitions
-
-#PROXY=http://proxypac.edf.fr:3128
-PROXY=noProxy
-
-NTP=ntp1.irisa.fr
-
-GLOBALVOPSIP=__IP0__
-SCALARISBOOTIP=__IP0__
-OWBOOTSTRAPIP=__IP0__
-RSSBOOTSTRAPIP=__IP0__
-DIXIROOTHOST=__XOS0__
-DIXIROOTIP=__IP0__
-DIRHOSTIP=__IP0__
-MRCHOSTIP=__IP0__
-OSDHOSTIP=__IP0__
-USESSL=false
-"""
-localDefs = """#local definitions
-
-SETMEDIA=false
-CONFIGUREVO=
-MYHOSTNAME=__HOST__
-MYIP=__IP__
-MYINTERFACE=eth0_rename
-MYDISK=/dev/sda3
-MYNODETYPE=
-XOSDADDRESSEXTERNALADDRESS=__IP__
-XOSDADDRESSHOST=__IP__
-ADDRESSHOST=__IP__
-NOPROMPT=true
-"""
-
-  
-# creations de hosts, globalDEfs, localDefs, nodeType
-# pour chacun des noeuds
-
-try:
-  os.rmtree("OUT")
-except:
-  pass
-
-try:
-  os.mkdir("OUT")
-except:
-  pass
-
-writeFile("OUT/hosts",hosts)
-
-for n in alias:
-  dir = "OUT/%s"%n
-  try:
-    os.mkdir(dir)
-  except:
-    pass
-  writeFile("%s/globalDefs"%dir,globalDefs,__XOS0__=xos0,__IP0__=ip0)
-  writeFile("%s/localDefs"%dir,localDefs,__HOST__=n,__IP__=ip[n])
-  writeFile("%s/nodeTypes"%dir,"head-node: %s\n resource-node: %s" % \
-            (xos0,resources))
   
 
 for n in alias:
   cmd = """
      ssh root@__HOST__ hostname __HOST__
-     scp OUT/hosts root@__HOST__:/etc/hosts
-     scp OUT/hosts root@__HOST__:/etc/xos/xosautoconfig/etc/hosts
-     scp OUT/__HOST__/* root@__HOST__:/etc/xos/xosautoconfig/
      scp ~/.ssh/id_rsa root@__HOST__:.ssh/
      scp ~/.ssh/id_rsa_sk.pub root@__HOST__:.ssh/
-     ssh root@__HOST__ 'cat .ssh/id_rsa_sk.pub >> .ssh/authorized_keys'
-     ssh root@__HOST__ 'urpmi git-core --auto'
-     ssh root@__HOST__ 'urpmi emacs --auto'
-     ssh root@__HOST__ 'urpmi expect --auto'
-     ssh root@__HOST__ 'git clone ssh://skortas@paramount/home/orsay/skortas/XOSI'
-     ssh root@__HOST__ 'git clone ssh://skortas@paramount/home/orsay/skortas/XOST'
-     ssh root@__HOST__ 'ln -s XOSI/CONF/emacs.g5k .emacs'
-     ssh root@__HOST__ 'ln -s XOSI/CONF/bashrc-xos .bashrc-xos'
-     ssh root@__HOST__ 'echo "export XOSHOST=__ALIAS__" >> .bashrc'
-     ssh root@__HOST__ 'echo ". /root/.bashrc-xos" >> .bashrc'
-     
+     scp compile.sh root@__HOST__:. 
+     scp cmd.sh root@__HOST__:. """
+
+  order = """
+cat .ssh/id_rsa_sk.pub >> .ssh/authorized_keys
+urpmi git --auto
+urpmi emacs --auto
+urpmi x11 --auto
+urpmi expect --auto
+urpmi gfortran --auto
+urpmi openmpi --auto
+urpmi gnuplot --auto
+urpmi gcc-c++ --auto
+urpmi rsh --auto
+
+adduser sk
+cd /home/sk
+git clone ssh://skortas@frontend/home/skortas/MAESTRO
+git clone ssh://skortas@frontend/home/skortas/XOSI
+git clone ssh://skortas@frontend/home/skortas/XOST
+git clone ssh://skortas@frontend/home/skortas/XOSO
+git clone ssh://skortas@frontend/home/skortas/XOSZ
+cd
+\\ln -s /home/sk/XOSI/CONF/emacs.g5k .emacs
+\\ln -s /home/sk/XOSI/CONF/bashrc-xos .bashrc-xos
+echo "export XOSHOST=__ALIAS__" >> .bashrc
+echo ". /root/.bashrc-xos" >> .bashrc
+
+cd /home/sk
+\\ln -s /home/sk/XOSI/CONF/emacs.g5k .emacs
+\\ln -s /home/sk/XOSI/CONF/bashrc-xos .bashrc-xos
+echo "export XOSHOST=__ALIAS__" >> .bashrc
+echo ". /home/sk/.bashrc-xos" >> .bashrc
+
+cp -R /root/.ssh .
+
+cd /home
+chown -R sk.sk sk     
      """
+
+  compile = """
+cd /home/sk/XOSZ/SRC
+make -f Makefile.mpi clean
+make -f Makefile.mpi
+   """
+
   cmd = str.replace(cmd,"__HOST__",n)
   cmd = str.replace(cmd,"__ALIAS__",alias[n])
+  fic = open("cmd.sh","w")
+  fic.write(order)
+  fic.close()
+
+  fic = open("compile.sh","w")
+  fic.write(compile)
+  fic.close()
+
+   
   if debug:
     print cmd
 
